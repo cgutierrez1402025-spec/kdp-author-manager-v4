@@ -22,6 +22,8 @@ class BookPromotionResource extends Resource
 
     protected static ?string $navigationLabel = 'Promociones';
 
+    protected static ?string $navigationGroup = 'Publicaciones';
+
     protected static ?string $recordTitleAttribute = 'promotion_name';
 
     public static function form(Schema $schema): Schema
@@ -37,7 +39,8 @@ class BookPromotionResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            RelationManagers\DailyResultsRelationManager::class,
+            RelationManagers\CostsRelationManager::class,
         ];
     }
 

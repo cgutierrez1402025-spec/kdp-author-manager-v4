@@ -3,111 +3,181 @@
 namespace App\Services;
 
 use App\Models\IllustrationAnchor;
-use App\Models\ManuscriptVersion;
 use App\Models\Illustration;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\DB;
+use App\Models\ManuscriptVersion;
+use Illuminate\Support\Facades\Storage;
+use Symfony\Component\DomCrawler\Crawler;
 
 class IllustrationAnchoringService
 {
-    public function applyAnchor(IllustrationAnchor $anchor): ManuscriptVersion|false
+    public function applyToManuscript(IllustrationAnchor $anchor): array
     {
-        return DB::transaction(function () use ($anchor) {
-            $manuscript = $anchor->manuscriptVersion;
-            $illustration = $anchor->illustration;
+        $manuscript = ManuscriptVersion::find($anchor->manuscript_version_id);
 
-            if (!$manuscript || !$illustration) {
-                return false;
+        if (! $manuscript) {
+            return [
+                'success' => false,
+                'error' => 'Manuscript version not found',
+            ];
+        }
+
+        $illustration = Illustration::find($anchor->illustration_id);
+
+        if (! $illustration) {
+            return [
+                'success' => false,
+                'error' => 'Illustration not found',
+            ];
+        }
+
+        try {
+            $html = $manuscript->html_content;
+            $modifiedHtml = $this->insertImageAtAnchor($html, $anchor, $illustration);
+
+            if ($modifiedHtml === $html) {
+                return [
+                    'success' => false,
+                    'error' => 'No insertion point found',
+                ];
             }
 
-            $html = $manuscript->html_content ?? '';
-
-            $insertionPoint = $this->findInsertionPoint($html, $anchor);
-
-            if ($insertionPoint === false) {
-                Log::warning("Could not find insertion point for anchor {$anchor->id}");
-                return false;
-            }
-
-            $imageTag = $this->buildImageTag($illustration, $anchor);
-            $newHtml = $this->insertAtPosition($html, $imageTag, $insertionPoint, $anchor);
-
-            $newVersion = ManuscriptVersion::create([
-                'work_id' => $manuscript->work_id,
-                'work_language_id' => $manuscript->work_language_id,
-                'parent_version_id' => $manuscript->id,
-                'edition_id' => $manuscript->edition_id,
-                'version_number' => $this->nextVersionNumber($manuscript),
-                'name' => 'Anchored: ' . $illustration->title,
-                'status' => 'draft',
-                'html_content' => $newHtml,
-                'is_candidate' => false,
-                'is_final' => false,
-                'is_published' => false,
-                'created_by' => $manuscript->created_by,
+            $newVersion = $manuscript->createChildVersion([
+                'html_content' => $modifiedHtml,
+                'change_summary' => "Added illustration: {$illustration->title}",
             ]);
 
-            $anchor->status = 'applied';
-            $anchor->save();
+            $anchor->update([
+                'applied' => true,
+                'applied_html_content' => $modifiedHtml,
+                'applied_version_id' => $newVersion->id,
+                'applied_at' => now(),
+            ]);
 
-            app(VersionManager::class)->processVersion($newVersion);
+            $illustration->increment('usage_count');
 
-            return $newVersion;
-        });
+            return [
+                'success' => true,
+                'new_version' => $newVersion,
+                'html_preview' => $this->getPreviewHtml($modifiedHtml, $anchor),
+            ];
+        } catch (\Exception $e) {
+            return [
+                'success' => false,
+                'error' => $e->getMessage(),
+            ];
+        }
     }
 
-    protected function findInsertionPoint(string $html, IllustrationAnchor $anchor): int|false
+    protected function insertImageAtAnchor(string $html, IllustrationAnchor $anchor, Illustration $illustration): string
     {
-        if ($anchor->search_text) {
-            $pos = stripos($html, $anchor->search_text);
-            return $pos !== false ? $pos + strlen($anchor->search_text) : false;
+        if ($anchor->html_marker) {
+            return $this->insertByHtmlMarker($html, $anchor, $illustration);
         }
 
         if ($anchor->css_selector) {
-            preg_match('/<' . preg_quote($anchor->css_selector, '/') . '[^>]*>/i', $html, $matches, PREG_OFFSET_CAPTURE);
-            return $matches ? ($matches[0][1] + strlen($matches[0][0])) : false;
+            return $this->insertByCssSelector($html, $anchor, $illustration);
         }
 
-        if ($anchor->html_marker) {
-            $pos = stripos($html, $anchor->html_marker);
-            return $pos !== false ? $pos + strlen($anchor->html_marker) : false;
+        if ($anchor->search_text) {
+            return $this->insertBySearchText($html, $anchor, $illustration);
         }
 
-        return false;
+        return $html;
     }
 
-    protected function buildImageTag(Illustration $illustration, IllustrationAnchor $anchor): string
+    protected function insertByHtmlMarker(string $html, IllustrationAnchor $anchor, Illustration $illustration): string
     {
-        $alt = $illustration->alt_text ?? $illustration->title;
-        $url = $illustration->file_optimized ?? $illustration->file_original;
-        
-        return sprintf(
-            '<img src="%s" alt="%s" class="anchor-%d" />',
-            $url,
-            $alt,
-            $anchor->id
+        $imageTag = $this->buildImageTag($illustration);
+
+        return str_replace(
+            $anchor->html_marker,
+            $anchor->html_marker . $imageTag,
+            $html
         );
     }
 
-    protected function insertAtPosition(string $html, string $tag, int $position, IllustrationAnchor $anchor): string
+    protected function insertByCssSelector(string $html, IllustrationAnchor $anchor, Illustration $illustration): string
     {
-        $before = substr($html, 0, $position);
-        $after = substr($html, $position);
-        
-        $insertion = $anchor->position_type 
-            ? ($anchor->position_type === 'before' ? $tag . $before . $after : $before . $after . $tag)
-            : $before . $tag . $after;
+        $crawler = new Crawler($html);
+        $imageTag = $this->buildImageTag($illustration);
 
-        return $insertion;
+        $crawler->filter($anchor->css_selector)->each(function (Crawler $node, $i) use ($anchor, &$html, $imageTag) {
+            if ($i === 0) {
+                $node->getNode(0)->appendChild(
+                    $node->getDocument()->createElement('div', $imageTag)
+                );
+            }
+        });
+
+        return $crawler->html();
     }
 
-    protected function nextVersionNumber(ManuscriptVersion $manuscript): string
+    protected function insertBySearchText(string $html, IllustrationAnchor $anchor, Illustration $illustration): string
     {
-        $latest = ManuscriptVersion::where('work_id', $manuscript->work_id)
-            ->where('work_language_id', $manuscript->work_language_id)
-            ->orderByDesc('id')
-            ->first();
+        $imageTag = $this->buildImageTag($illustration);
 
-        return $latest ? (string) (((int) $latest->version_number) + 1) : '1';
+        return str_replace(
+            $anchor->search_text,
+            $anchor->search_text . $imageTag,
+            $html
+        );
+    }
+
+    protected function buildImageTag(Illustration $illustration): string
+    {
+        $path = $illustration->file_optimized ?? $illustration->file_original;
+        $url = $path ? Storage::url($path) : $illustration->external_url ?? '';
+
+        $alt = e($illustration->title);
+        $alignment = 'inline';
+
+        return sprintf(
+            '<img src="%s" alt="%s" class="illustration %s" data-illustration-id="%d" />',
+            $url,
+            $alt,
+            $class,
+            $illustration->id
+        );
+    }
+
+    protected function getPreviewHtml(string $html, IllustrationAnchor $anchor): string
+    {
+        $anchorRegex = '/(<[^>]*>)?(.*?)'.preg_quote($anchor->search_text ?? $anchor->html_marker ?? '', '/').'(.*?)<\/p>/is';
+
+        if (preg_match($anchorRegex, $html, $matches)) {
+            return $matches[0] ?? $html;
+        }
+
+        return substr($html, 0, 500);
+    }
+
+    public function previewInsertion(IllustrationAnchor $anchor): array
+    {
+        $manuscript = ManuscriptVersion::find($anchor->manuscript_version_id);
+
+        if (! $manuscript) {
+            return [
+                'success' => false,
+                'error' => 'Manuscript version not found',
+            ];
+        }
+
+        $illustration = Illustration::find($anchor->illustration_id);
+
+        if (! $illustration) {
+            return [
+                'success' => false,
+                'error' => 'Illustration not found',
+            ];
+        }
+
+        $html = $manuscript->html_content;
+        $previewHtml = $this->insertImageAtAnchor($html, $anchor, $illustration);
+
+        return [
+            'success' => true,
+            'html' => $previewHtml,
+            'image_tag' => $this->buildImageTag($illustration),
+        ];
     }
 }

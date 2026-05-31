@@ -38,4 +38,25 @@ class KdpSelectPeriod extends Model
     {
         return $this->hasMany(BookPromotion::class);
     }
+
+    public function getRemainingFreeDays(): int
+    {
+        return $this->free_promo_days_remaining ?? 0;
+    }
+
+    public function decrementFreeDays(int $days = 1): void
+    {
+        $this->increment('free_promo_days_used', $days);
+        $this->decrement('free_promo_days_remaining', $days);
+    }
+
+    public function isExpired(): bool
+    {
+        return $this->end_date->isPast();
+    }
+
+    public function isActive(): bool
+    {
+        return $this->status === 'active' && $this->start_date->isFuture() === false && $this->end_date->isFuture();
+    }
 }

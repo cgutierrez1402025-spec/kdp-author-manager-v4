@@ -18,6 +18,15 @@ class Marketplace extends Model
         'currency',
     ];
 
+    protected static function boot(): void
+    {
+        parent::boot();
+
+        static::addGlobalScope('ordered', function ($builder) {
+            $builder->orderBy('name');
+        });
+    }
+
     public function platform(): BelongsTo
     {
         return $this->belongsTo(Platform::class);
@@ -31,5 +40,15 @@ class Marketplace extends Model
     public function bookPromotions(): HasMany
     {
         return $this->hasMany(BookPromotion::class);
+    }
+
+    public function scopeForPlatform(string $platform): self
+    {
+        return $this->whereHas('platform', fn ($q) => $q->where('name', $platform));
+    }
+
+    public function getDisplayNameAttribute(): string
+    {
+        return "{$this->name} ({$this->currency})";
     }
 }

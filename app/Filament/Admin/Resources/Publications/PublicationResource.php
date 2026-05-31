@@ -22,6 +22,8 @@ class PublicationResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'format';
 
+    protected static ?string $navigationGroup = 'Publicaciones';
+
     public static function form(Schema $schema): Schema
     {
         return PublicationForm::configure($schema);
@@ -35,7 +37,7 @@ class PublicationResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            RelationManagers\KdpMetadataRelationManager::class,
         ];
     }
 

@@ -22,6 +22,8 @@ class PlatformResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'name';
 
+    protected static ?string $navigationGroup = 'Publicaciones';
+
     public static function form(Schema $schema): Schema
     {
         return PlatformForm::configure($schema);
@@ -35,7 +37,7 @@ class PlatformResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            RelationManagers\MarketplacesRelationManager::class,
         ];
     }
 

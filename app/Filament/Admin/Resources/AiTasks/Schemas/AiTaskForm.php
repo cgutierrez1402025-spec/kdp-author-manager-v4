@@ -1,0 +1,38 @@
+<?php
+
+namespace App\Filament\Admin\Resources\AiTasks\Schemas;
+
+use Filament\Forms;
+use Filament\Schemas\Schema;
+
+class AiTaskForm
+{
+    public static function configure(Schema $schema): Schema
+    {
+        return $schema
+            ->components([
+                Forms\Components\Section::make('Tarea de IA')
+                    ->schema([
+                        Forms\Components\Select::make('work_id')
+                            ->relationship('work', 'title_public')
+                            ->label('Obra')
+                            ->required(),
+
+                        Forms\Components\Select::make('preferred_ai_tool_id')
+                            ->relationship('preferredAiTool', 'name')
+                            ->label('Herramienta IA Preferida')
+                            ->nullable(),
+
+                        Forms\Components\TextInput::make('task_type')
+                            ->label('Tipo de Tarea')
+                            ->required()
+                            ->maxLength(100),
+
+                        Forms\Components\Textarea::make('notes')
+                            ->label('Notas')
+                            ->rows(3),
+                    ])
+                    ->columns(2),
+            ]);
+    }
+}

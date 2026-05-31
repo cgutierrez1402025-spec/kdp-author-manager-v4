@@ -1,0 +1,47 @@
+<?php
+
+namespace App\Filament\Admin\Resources\PromotionCosts;
+
+use App\Filament\Admin\Resources\PromotionCosts\Pages\CreatePromotionCost;
+use App\Filament\Admin\Resources\PromotionCosts\Pages\EditPromotionCost;
+use App\Filament\Admin\Resources\PromotionCosts\Pages\ListPromotionCosts;
+use App\Filament\Admin\Resources\PromotionCosts\Schemas\PromotionCostForm;
+use App\Filament\Admin\Resources\PromotionCosts\Tables\PromotionCostsTable;
+use App\Models\PromotionCost;
+use BackedEnum;
+use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
+use Filament\Support\Icons\Heroicon;
+use Filament\Tables\Table;
+
+class PromotionCostResource extends Resource
+{
+    protected static ?string $model = PromotionCost::class;
+
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCreditCard;
+
+    protected static ?string $navigationLabel = 'Costos de Promoción';
+
+    protected static ?string $navigationGroup = 'Publicaciones';
+
+    protected static ?string $recordTitleAttribute = 'cost_type';
+
+    public static function form(Schema $schema): Schema
+    {
+        return PromotionCostForm::configure($schema);
+    }
+
+    public static function table(Table $table): Table
+    {
+        return PromotionCostsTable::configure($table);
+    }
+
+    public static function getPages(): array
+    {
+        return [
+            'index' => ListPromotionCosts::route('/'),
+            'create' => CreatePromotionCost::route('/create'),
+            'edit' => EditPromotionCost::route('/{record}/edit'),
+        ];
+    }
+}
