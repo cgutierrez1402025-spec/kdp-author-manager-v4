@@ -13,25 +13,29 @@ RUN apk add --no-cache \
     sqlite-dev \
     && docker-php-ext-install \
     pdo \
+    pdo_pgsql \
     pdo_sqlite \
     mbstring \
     zip \
     intl \
+    opcache \
     && docker-php-ext-enable \
     pdo \
+    pdo_pgsql \
     pdo_sqlite \
     mbstring \
     zip \
-    intl
+    intl \
+    opcache
 
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # Copy composer files
-COPY composer.json ./
+COPY composer.json composer.lock ./
 
 # Install PHP dependencies
-RUN composer install --no-dev --no-scripts --prefer-dist --no-interaction --ignore-platform-reqs
+RUN composer install --prefer-dist --no-interaction --ignore-platform-reqs
 
 # Copy application code
 COPY . .
@@ -63,7 +67,15 @@ RUN apk add --no-cache \
     oniguruma \
     libzip \
     icu \
-    sqlite-libs
+    sqlite-libs \
+    && docker-php-ext-install \
+    pdo \
+    pdo_pgsql \
+    pdo_sqlite \
+    mbstring \
+    zip \
+    intl \
+    opcache
 
 # Copy PHP application from builder
 COPY --from=builder /app /app
@@ -71,10 +83,11 @@ COPY --from=builder /app /app
 # Copy compiled assets from frontend builder
 COPY --from=frontend /app/public/build /app/public/build
 
-# Create necessary directories
-RUN mkdir -p /app/bootstrap/cache /app/storage \
+# Create necessary directories and initialize database
+RUN mkdir -p /app/bootstrap/cache /app/storage /app/database \
+    && touch /app/database/database.sqlite \
     && chown -R www-data:www-data /app \
-    && chmod -R 755 /app/bootstrap/cache /app/storage
+    && chmod -R 755 /app/bootstrap/cache /app/storage /app/database
 
 # Copy nginx config
 COPY nginx.conf /etc/nginx/nginx.conf

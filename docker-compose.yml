@@ -11,6 +11,7 @@ services:
     environment:
       - APP_ENV=production
       - APP_DEBUG=false
+      - APP_KEY=base64:WCJx1q/j3ZnTwGfKJu+ILW8FYCvU0fIUeFYKMZwvzA0=
       - DB_CONNECTION=sqlite
       - QUEUE_CONNECTION=database
       - CACHE_STORE=database
@@ -18,24 +19,16 @@ services:
     volumes:
       - ./storage:/app/storage
       - ./bootstrap/cache:/app/bootstrap/cache
-      - database:/app/database
-    depends_on:
-      - db
+      - ./database:/app/database
     restart: unless-stopped
     networks:
       - laravel
-
-  db:
-    image: alpine:latest
-    container_name: laravel-db-init
-    volumes:
-      - database:/app/database
-    entrypoint: sh -c "mkdir -p /app/database && touch /app/database/database.sqlite"
-    networks:
-      - laravel
-
-volumes:
-  database:
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
 networks:
   laravel:
