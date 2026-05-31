@@ -34,8 +34,8 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 # Copy composer files
 COPY composer.json ./
 
-# Install PHP dependencies (without dev)
-RUN composer install --no-dev --prefer-dist --no-interaction --ignore-platform-reqs
+# Install PHP dependencies (with dev for build)
+RUN composer install --prefer-dist --no-interaction --ignore-platform-reqs 2>&1 | tail -20
 
 # Copy application code
 COPY . .
