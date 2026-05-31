@@ -32,10 +32,10 @@ RUN apk add --no-cache \
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # Copy composer files
-COPY composer.json composer.lock ./
+COPY composer.json ./
 
-# Install PHP dependencies
-RUN composer install --prefer-dist --no-interaction --ignore-platform-reqs
+# Install PHP dependencies (without dev)
+RUN composer install --no-dev --prefer-dist --no-interaction --ignore-platform-reqs
 
 # Copy application code
 COPY . .
@@ -59,7 +59,7 @@ FROM php:8.4-fpm-alpine
 
 WORKDIR /app
 
-# Install runtime dependencies only
+# Install runtime dependencies only (no build tools)
 RUN apk add --no-cache \
     nginx \
     supervisor \
@@ -67,17 +67,14 @@ RUN apk add --no-cache \
     oniguruma \
     libzip \
     icu \
-    sqlite-libs \
-    && docker-php-ext-install \
-    pdo \
-    pdo_pgsql \
-    pdo_sqlite \
-    mbstring \
-    zip \
-    intl \
-    opcache
+    sqlite-libs
 
-# Copy PHP application from builder
+# Copy PHP configuration and extensions from builder
+COPY --from=builder /usr/local/etc /usr/local/etc
+COPY --from=builder /usr/local/lib/php /usr/local/lib/php
+COPY --from=builder /usr/local/bin/composer /usr/local/bin/composer
+
+# Copy PHP application from builder (includes vendor)
 COPY --from=builder /app /app
 
 # Copy compiled assets from frontend builder
@@ -92,6 +89,8 @@ RUN mkdir -p /app/bootstrap/cache /app/storage /app/database \
 # Copy nginx config
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY docker-entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
 # Expose port
 EXPOSE 8000
@@ -99,5 +98,5 @@ EXPOSE 8000
 # Set environment
 ENV APP_ENV=production
 
-# Run supervisord
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+# Run entrypoint
+CMD ["/entrypoint.sh"]

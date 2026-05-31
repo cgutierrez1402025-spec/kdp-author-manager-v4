@@ -1,17 +1,16 @@
-version: '3.8'
-
 services:
   laravel:
     build:
       context: .
       dockerfile: Dockerfile
     container_name: laravel-app
+    entrypoint: /entrypoint.sh
     ports:
       - "8000:8000"
     environment:
       - APP_ENV=production
       - APP_DEBUG=false
-      - APP_KEY=base64:WCJx1q/j3ZnTwGfKJu+ILW8FYCvU0fIUeFYKMZwvzA0=
+      - APP_KEY=base64:p68+25OKYkMrhR6Bq/MXBJk55c8DhA77BvT9fj+P0cg=
       - DB_CONNECTION=sqlite
       - QUEUE_CONNECTION=database
       - CACHE_STORE=database
@@ -33,3 +32,4 @@ services:
 networks:
   laravel:
     driver: bridge
+
