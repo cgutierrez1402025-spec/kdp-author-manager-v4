@@ -8,25 +8,23 @@ use App\Filament\Admin\Resources\Prompts\Pages\ListPrompts;
 use App\Filament\Admin\Resources\Prompts\Schemas\PromptForm;
 use App\Filament\Admin\Resources\Prompts\Tables\PromptsTable;
 use App\Models\Prompt;
-use BackedEnum;
+use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Schemas\Schema;
-use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 
 class PromptResource extends Resource
 {
     protected static ?string $model = Prompt::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedChatBubbleBottomCenterText;
+    protected static ?string $navigationIcon = 'heroicon-o-document-text';
 
     protected static ?string $navigationLabel = 'Prompts';
 
     protected static ?string $recordTitleAttribute = 'title';
 
-    public static function form(Schema $schema): Schema
+    public static function form(Form $form): Form
     {
-        return PromptForm::configure($schema);
+        return PromptForm::configure($form);
     }
 
     public static function table(Table $table): Table

@@ -2,25 +2,20 @@
 
 namespace Filament\Widgets\Concerns;
 
+use Exception;
 use Filament\Tables\Contracts\HasTable;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
-use Livewire\Attributes\Locked;
 use Livewire\Attributes\Reactive;
-use LogicException;
 
 use function Livewire\trigger;
 
-trait InteractsWithPageTable /** @phpstan-ignore trait.unused */
+trait InteractsWithPageTable
 {
     /** @var array<string, int> */
     #[Reactive]
     public $paginators = [];
-
-    #[Reactive]
-    public ?int $tableRecordsCount = null;
 
     /**
      * @var array<string, string | array<string, string | null> | null>
@@ -30,6 +25,9 @@ trait InteractsWithPageTable /** @phpstan-ignore trait.unused */
 
     #[Reactive]
     public ?string $tableGrouping = null;
+
+    #[Reactive]
+    public ?string $tableGroupingDirection = null;
 
     /**
      * @var array<string, mixed> | null
@@ -47,19 +45,19 @@ trait InteractsWithPageTable /** @phpstan-ignore trait.unused */
     public $tableSearch = '';
 
     #[Reactive]
-    public ?string $tableSort = null;
+    public ?string $tableSortColumn = null;
+
+    #[Reactive]
+    public ?string $tableSortDirection = null;
 
     #[Reactive]
     public ?string $activeTab = null;
-
-    #[Reactive] #[Locked]
-    public ?Model $parentRecord = null;
 
     protected HasTable $tablePage;
 
     protected function getTablePage(): string
     {
-        throw new LogicException('You must define a `getTablePage()` method on your widget that returns the name of a Livewire component.');
+        throw new Exception('You must define a `getTablePage()` method on your widget that returns the name of a Livewire component.');
     }
 
     /**
@@ -78,25 +76,18 @@ trait InteractsWithPageTable /** @phpstan-ignore trait.unused */
 
         /** @var HasTable $tableComponent */
         $page = app('livewire')->new($this->getTablePage());
+        trigger('mount', $page, $this->getTablePageMountParameters(), null, null);
 
-        trigger('mount', $page, [], null, null, []);
-
-        foreach ([
-            'activeTab' => $this->activeTab,
-            'paginators' => $this->paginators,
-            'parentRecord' => $this->parentRecord,
-            'tableColumnSearches' => $this->tableColumnSearches,
-            'tableFilters' => $this->tableFilters,
-            'tableGrouping' => $this->tableGrouping,
-            'tableRecordsPerPage' => $this->tableRecordsPerPage,
-            'tableSearch' => $this->tableSearch,
-            'tableSort' => $this->tableSort,
-            ...$this->getTablePageMountParameters(),
-        ] as $property => $value) {
-            $page->{$property} = $value;
-        }
-
-        $page->bootedInteractsWithTable();
+        $page->activeTab = $this->activeTab;
+        $page->paginators = $this->paginators;
+        $page->tableColumnSearches = $this->tableColumnSearches;
+        $page->tableFilters = $this->tableFilters;
+        $page->tableGrouping = $this->tableGrouping;
+        $page->tableGroupingDirection = $this->tableGroupingDirection;
+        $page->tableRecordsPerPage = $this->tableRecordsPerPage;
+        $page->tableSearch = $this->tableSearch;
+        $page->tableSortColumn = $this->tableSortColumn;
+        $page->tableSortDirection = $this->tableSortDirection;
 
         return $this->tablePage = $page;
     }

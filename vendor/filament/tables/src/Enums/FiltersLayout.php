@@ -10,14 +10,6 @@ enum FiltersLayout
 
     case BelowContent;
 
-    case BeforeContent;
-
-    case AfterContent;
-
-    case BeforeContentCollapsible;
-
-    case AfterContentCollapsible;
-
     case Dropdown;
 
     case Modal;

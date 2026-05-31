@@ -1,10 +1,8 @@
 ---
 title: Chart widgets
 ---
-import AutoScreenshot from "@components/AutoScreenshot.astro"
-import Aside from "@components/Aside.astro"
 
-## Introduction
+## Overview
 
 Filament comes with many "chart" widget templates, which you can use to display real-time, interactive charts.
 
@@ -16,7 +14,7 @@ php artisan make:filament-widget BlogPostsChart --chart
 
 There is a single `ChartWidget` class that is used for all charts. The type of chart is set by the `getType()` method. In this example, that method returns the string `'line'`.
 
-The `protected ?string $heading` variable is used to set the heading that describes the chart. If you need to set the heading dynamically, you can override the `getHeading()` method.
+The `protected static ?string $heading` variable is used to set the heading that describes the chart. If you need to set the heading dynamically, you can override the `getHeading()` method.
 
 The `getData()` method is used to return an array of datasets and labels. Each dataset is a labeled array of points to plot on the chart, and each label is a string. This structure is identical to the [Chart.js](https://www.chartjs.org/docs) library, which Filament uses to render charts. You may use the [Chart.js documentation](https://www.chartjs.org/docs) to fully understand the possibilities to return from `getData()`, based on the chart type.
 
@@ -29,7 +27,7 @@ use Filament\Widgets\ChartWidget;
 
 class BlogPostsChart extends ChartWidget
 {
-    protected ?string $heading = 'Blog Posts';
+    protected static ?string $heading = 'Blog Posts';
 
     protected function getData(): array
     {
@@ -53,8 +51,6 @@ class BlogPostsChart extends ChartWidget
 
 Now, check out your widget in the dashboard.
 
-<AutoScreenshot name="widgets/chart/line" alt="Line chart" version="5.x" />
-
 ## Available chart types
 
 Below is a list of available chart widget classes which you may extend, and their corresponding [Chart.js](https://www.chartjs.org/docs) documentation page, for inspiration on what to return from `getData()`:
@@ -68,30 +64,12 @@ Below is a list of available chart widget classes which you may extend, and thei
 - Radar chart - [Chart.js documentation](https://www.chartjs.org/docs/latest/charts/radar)
 - Scatter chart - [Chart.js documentation](https://www.chartjs.org/docs/latest/charts/scatter)
 
-For example, you could use a bar chart by returning `'bar'` from the `getType()` method:
-
-<AutoScreenshot name="widgets/chart/bar" alt="Bar chart" version="5.x" />
-
-Here are examples of the other available chart types:
-
-<AutoScreenshot name="widgets/chart/pie" alt="Pie chart" version="5.x" />
-
-<AutoScreenshot name="widgets/chart/doughnut" alt="Doughnut chart" version="5.x" />
-
-<AutoScreenshot name="widgets/chart/radar" alt="Radar chart" version="5.x" />
-
-<AutoScreenshot name="widgets/chart/polar-area" alt="Polar area chart" version="5.x" />
-
-<AutoScreenshot name="widgets/chart/scatter" alt="Scatter chart" version="5.x" />
-
-<AutoScreenshot name="widgets/chart/bubble" alt="Bubble chart" version="5.x" />
-
 ## Customizing the chart color
 
-You can customize the [color](../styling/colors) of the chart data by setting the `$color` property:
+You can customize the color of the chart data by setting the `$color` property to either `danger`, `gray`, `info`, `primary`, `success` or `warning`:
 
 ```php
-protected string $color = 'info';
+protected static string $color = 'info';
 ```
 
 If you're looking to customize the color further, or use multiple colors across multiple datasets, you can still make use of Chart.js's [color options](https://www.chartjs.org/docs/latest/general/colors.html) in the data:
@@ -147,9 +125,7 @@ protected function getData(): array
 
 ## Filtering chart data
 
-### Basic Select filter
-
-You can set up chart filters to change the data that is presented. Commonly, this is used to change the time period that chart data is rendered for.
+You can set up chart filters to change the data shown on chart. Commonly, this is used to change the time period that chart data is rendered for.
 
 To set a default filter value, set the `$filter` property:
 
@@ -182,117 +158,6 @@ protected function getData(): array
 }
 ```
 
-<AutoScreenshot name="widgets/chart/filter" alt="Chart with filter" version="5.x" />
-
-### Custom filters
-
-You can use [schema components](../schemas) to build custom filters for your chart widget. This approach offers a more flexible way to define filters.
-
-To get started, use the `HasFiltersSchema` trait and implement the `filtersSchema()` method:
-
-```php
-use Filament\Forms\Components\DatePicker;
-use Filament\Schemas\Schema;
-use Filament\Widgets\ChartWidget\Concerns\HasFiltersSchema;
-
-class BlogPostsChart extends ChartWidget
-{
-    use HasFiltersSchema;
-    
-    // ...
-    
-    public function filtersSchema(Schema $schema): Schema
-    {
-        return $schema->components([
-            DatePicker::make('startDate')
-                ->default(now()->subDays(30)),
-            DatePicker::make('endDate')
-                ->default(now()),
-        ]);
-    }
-}
-```
-
-The filter values are accessible via the `$this->filters` array. You can use these values inside your `getData()` method:
-
-```php
-protected function getData(): array
-{
-    $startDate = $this->filters['startDate'] ?? null;
-    $endDate = $this->filters['endDate'] ?? null;
-
-    return [
-        // ...
-    ];
-}
-```
-
-The `$this->filters` array will always reflect the current form data. Please note that this data is not validated, as it is available live and not intended to be used for anything other than querying the database. You must ensure that the data is valid before using it.
-
-<AutoScreenshot name="widgets/chart/custom-filters" alt="Chart with custom filters" version="5.x" />
-
-<Aside variant="info">
-    If you want to add filters that apply to multiple widgets at once, see [filtering widget data](overview#filtering-widget-data) in the dashboard.
-</Aside>
-
-#### Deferring filter updates
-
-By default, filters using the `filtersSchema()` method update the chart data immediately as they are changed. However, for complex queries or better user experience, you may want to **defer** filter updates until the user clicks an "Apply" button.
-
-When deferred, filter changes are only applied when the user clicks the "Apply" button. This ensures that the chart only re-renders when the user has finished adjusting all of their filters.
-
-The chart will display data using the default filter values when the page first loads, ensuring users see meaningful data immediately without needing to take action.
-
-To enable deferred filters, set the `$hasDeferredFilters` property to `true`:
-
-```php
-use Filament\Widgets\ChartWidget\Concerns\HasFiltersSchema;
-
-class BlogPostsChart extends ChartWidget
-{
-    use HasFiltersSchema;
-
-    protected bool $hasDeferredFilters = true;
-
-    // ...
-}
-```
-
-If you need dynamic control over whether filters are deferred, you may override the `hasDeferredFilters()` method:
-
-```php
-public function hasDeferredFilters(): bool
-{
-    return auth()->user()->prefersDeferredFilters();
-}
-```
-
-#### Resetting filters to defaults
-
-When using deferred filters, a "Reset" link appears in the filter dropdown footer alongside the "Apply" button. Clicking this link restores all filters to their default values as defined in the `filtersSchema()` method. For example, if you set `->default(now()->subDays(30))` on a `DatePicker`, the reset action will restore that default date, not an empty value.
-
-#### Customizing filter actions
-
-You may customize the apply and reset actions that appear when using deferred filters. All methods that are available to [customize action trigger buttons](../actions/overview) can be used:
-
-```php
-use Filament\Actions\Action;
-
-public function filtersApplyAction(Action $action): Action
-{
-    return $action
-        ->label('Update Chart')
-        ->color('success');
-}
-
-public function filtersResetAction(Action $action): Action
-{
-    return $action
-        ->label('Clear Filters')
-        ->color('danger');
-}
-```
-
 ## Live updating chart data (polling)
 
 By default, chart widgets refresh their data every 5 seconds.
@@ -300,13 +165,13 @@ By default, chart widgets refresh their data every 5 seconds.
 To customize this, you may override the `$pollingInterval` property on the class to a new interval:
 
 ```php
-protected ?string $pollingInterval = '10s';
+protected static ?string $pollingInterval = '10s';
 ```
 
 Alternatively, you may disable polling altogether:
 
 ```php
-protected ?string $pollingInterval = null;
+protected static ?string $pollingInterval = null;
 ```
 
 ## Setting a maximum chart height
@@ -314,17 +179,15 @@ protected ?string $pollingInterval = null;
 You may place a maximum height on the chart to ensure that it doesn't get too big, using the `$maxHeight` property:
 
 ```php
-protected ?string $maxHeight = '300px';
+protected static ?string $maxHeight = '300px';
 ```
-
-<AutoScreenshot name="widgets/chart/max-height" alt="Chart with maximum height" version="5.x" />
 
 ## Setting chart configuration options
 
 You may specify an `$options` variable on the chart class to control the many configuration options that the Chart.js library provides. For instance, you could turn off the [legend](https://www.chartjs.org/docs/latest/configuration/legend.html) for a line chart:
 
 ```php
-protected ?array $options = [
+protected static ?array $options = [
     'plugins' => [
         'legend' => [
             'display' => false,
@@ -380,8 +243,6 @@ public function getDescription(): ?string
 }
 ```
 
-<AutoScreenshot name="widgets/chart/description" alt="Chart with description" version="5.x" />
-
 ## Disabling lazy loading
 
 By default, widgets are lazy-loaded. This means that they will only be loaded when they are visible on the page.
@@ -389,18 +250,8 @@ By default, widgets are lazy-loaded. This means that they will only be loaded wh
 To disable this behavior, you may override the `$isLazy` property on the widget class:
 
 ```php
-protected static bool $isLazy = false;
+protected static bool $isLazy = true;
 ```
-
-## Making the chart collapsible
-
-You may allow the chart to be collapsible by setting the `$isCollapsible` property on the widget class to be `true`:
-
-```php
-protected bool $isCollapsible = true;
-```
-
-<AutoScreenshot name="widgets/chart/collapsible" alt="Collapsible chart" version="5.x" />
 
 ## Using custom Chart.js plugins
 
@@ -425,20 +276,9 @@ window.filamentChartJsPlugins ??= []
 window.filamentChartJsPlugins.push(ChartDataLabels)
 ```
 
-This is equivalent to including the plugins "inline" via `new Chart(..., { plugins: [...] })` when instantiating a Chart.js chart.
+It's important to initialise the array if it has not been already, before pushing onto it. This ensures that mutliple JavaScript files (especially those from Filament plugins) that register Chart.js plugins do not overwrite each other, regardless of the order they are booted in.
 
-It's important to initialise the array if it has not been already, before pushing onto it. This ensures that multiple JavaScript files (especially those from Filament plugins) that register Chart.js plugins do not overwrite each other, regardless of the order they are booted in.
-
-You can push as many plugins to the array as you would like to install, you do not need a separate file to import each plugin.
-
-Additionally, you can also register any "global plugins" which will use `Chart.register([...])` in the `window.filamentChartJsGlobalPlugins` array:
-
-```javascript
-import ChartDataLabels from 'chartjs-plugin-datalabels'
-
-window.filamentChartJsGlobalPlugins ??= []
-window.filamentChartJsGlobalPlugins.push(ChartDataLabels)
-```
+You can push as many plugins to the `filamentChartJsPlugins` array as you would like to install, you do not need a separate file to import each plugin.
 
 ### Step 3: Compile the JavaScript file with Vite
 
@@ -478,4 +318,4 @@ FilamentAsset::register([
 ]);
 ```
 
-You can find out more about [asset registration](../advanced/assets), and even [register assets for a specific panel](../panel-configuration#registering-assets-for-a-panel).
+You can find out more about [asset registration](../support/assets), and even [register assets for a specific panel](../panels/configuration#registering-assets-for-a-panel).

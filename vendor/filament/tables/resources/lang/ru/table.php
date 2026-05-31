@@ -2,45 +2,13 @@
 
 return [
 
-    'column_manager' => [
+    'column_toggle' => [
 
         'heading' => 'Столбцы',
-
-        'actions' => [
-
-            'apply' => [
-                'label' => 'Применить столбцы',
-            ],
-
-            'reset' => [
-                'label' => 'Сбросить',
-            ],
-
-        ],
 
     ],
 
     'columns' => [
-
-        'actions' => [
-            'label' => 'Действие|Действия',
-        ],
-
-        'select' => [
-
-            'loading_message' => 'Загрузка...',
-
-            'no_options_message' => 'Нет доступных вариантов.',
-
-            'no_search_results_message' => 'Нет вариантов, соответствующих вашему запросу.',
-
-            'placeholder' => 'Выберите значение',
-
-            'searching_message' => 'Поиск...',
-
-            'search_prompt' => 'Введите текст для поиска...',
-
-        ],
 
         'text' => [
 
@@ -127,7 +95,7 @@ return [
             'label' => 'Открыть действия',
         ],
 
-        'column_manager' => [
+        'toggle_columns' => [
             'label' => 'Переключить столбцы',
         ],
 
@@ -173,13 +141,7 @@ return [
         ],
 
         'select' => [
-
             'placeholder' => 'Все',
-
-            'relationship' => [
-                'empty_option_label' => 'Нет',
-            ],
-
         ],
 
         'trashed' => [
@@ -262,7 +224,5 @@ return [
         ],
 
     ],
-
-    'default_model_label' => 'запись',
 
 ];

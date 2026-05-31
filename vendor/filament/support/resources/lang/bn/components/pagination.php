@@ -2,9 +2,9 @@
 
 return [
 
-    'label' => 'পৃষ্ঠা নেভিগেশন',
+    'label' => 'পৃষ্ঠা সংখ্যাগুলো',
 
-    'overview' => '{1} ১টি ফলাফল দেখানো হচ্ছে|[2,*] :total এর মধ্যে :first থেকে :last পর্যন্ত দেখানো হচ্ছে',
+    'overview' => ':total এর, :first থেকে :last পর্যন্ত দেখানো হচ্ছে',
 
     'fields' => [
 
@@ -22,16 +22,8 @@ return [
 
     'actions' => [
 
-        'first' => [
-            'label' => 'প্রথম',
-        ],
-
         'go_to_page' => [
-            'label' => ':page পৃষ্ঠায় যান',
-        ],
-
-        'last' => [
-            'label' => 'শেষ',
+            'label' => ':page পৃষ্টায় যান',
         ],
 
         'next' => [

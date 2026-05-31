@@ -15,7 +15,7 @@ export default function colorPickerFormComponent({
     return {
         state,
 
-        init() {
+        init: function () {
             if (!(this.state === null || this.state === '')) {
                 this.setState(this.state)
             }
@@ -23,17 +23,6 @@ export default function colorPickerFormComponent({
             if (isAutofocused) {
                 this.togglePanelVisibility(this.$refs.input)
             }
-
-            this.$watch(
-                'state',
-                Alpine.debounce((value) => {
-                    if (!CSS.supports('color', value)) {
-                        return
-                    }
-
-                    this.$refs.picker.color = value
-                }, 200),
-            )
 
             this.$refs.input.addEventListener('change', (event) => {
                 this.setState(event.target.value)
@@ -68,7 +57,7 @@ export default function colorPickerFormComponent({
             }
         },
 
-        togglePanelVisibility() {
+        togglePanelVisibility: function () {
             if (isDisabled) {
                 return
             }
@@ -76,18 +65,18 @@ export default function colorPickerFormComponent({
             this.$refs.panel.toggle(this.$refs.input)
         },
 
-        setState(value) {
+        setState: function (value) {
             this.state = value
 
             this.$refs.input.value = value
-            this.$refs.picker.color = value
+            this.$refs.panel.color = value
         },
 
-        isOpen() {
+        isOpen: function () {
             return this.$refs.panel.style.display === 'block'
         },
 
-        commitState() {
+        commitState: function () {
             if (
                 JSON.stringify(this.$wire.__instance.canonical) ===
                 JSON.stringify(this.$wire.__instance.ephemeral)

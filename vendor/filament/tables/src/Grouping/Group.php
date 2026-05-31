@@ -8,7 +8,7 @@ use Carbon\CarbonInterface;
 use Closure;
 use Filament\Support\Components\Component;
 use Filament\Support\Contracts\HasLabel as LabelInterface;
-use Filament\Support\Services\RelationshipOrderer;
+use Filament\Tables\Table;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Model;
@@ -192,10 +192,7 @@ class Group extends Component
             ->ucfirst();
     }
 
-    /**
-     * @param  Model | array<string, mixed>  $record
-     */
-    public function getDescription(Model | array $record, string | Htmlable | null $title): string | Htmlable | null
+    public function getDescription(Model $record, string | Htmlable | null $title): string | Htmlable | null
     {
         if (! $this->getDescriptionFromRecordUsing) {
             return null;
@@ -207,17 +204,14 @@ class Group extends Component
                 'record' => $record,
                 'title' => $title,
             ],
-            typedInjections: ($record instanceof Model) ? [
+            typedInjections: [
                 Model::class => $record,
                 $record::class => $record,
-            ] : [],
+            ],
         );
     }
 
-    /**
-     * @param  Model | array<string, mixed>  $record
-     */
-    public function getStringKey(Model | array $record): ?string
+    public function getStringKey(Model $record): ?string
     {
         $key = $this->getKey($record);
 
@@ -236,10 +230,7 @@ class Group extends Component
         return filled($key) ? strval($key) : null;
     }
 
-    /**
-     * @param  Model | array<string, mixed>  $record
-     */
-    public function getKey(Model | array $record): mixed
+    public function getKey(Model $record): mixed
     {
         $column = $this->getColumn();
 
@@ -250,20 +241,17 @@ class Group extends Component
                     'column' => $column,
                     'record' => $record,
                 ],
-                typedInjections: ($record instanceof Model) ? [
+                typedInjections: [
                     Model::class => $record,
                     $record::class => $record,
-                ] : [],
+                ],
             );
         }
 
         return Arr::get($record, $this->getColumn());
     }
 
-    /**
-     * @param  Model | array<string, mixed>  $record
-     */
-    public function getTitle(Model | array $record): string | Htmlable | null
+    public function getTitle(Model $record): string | Htmlable | null
     {
         $column = $this->getColumn();
 
@@ -274,10 +262,10 @@ class Group extends Component
                     'column' => $column,
                     'record' => $record,
                 ],
-                typedInjections: ($record instanceof Model) ? [
+                typedInjections: [
                     Model::class => $record,
                     $record::class => $record,
-                ] : [],
+                ],
             );
         } else {
             $title = Arr::get($record, $column);
@@ -287,16 +275,12 @@ class Group extends Component
             $title = $title->getLabel();
         }
 
-        if ($title instanceof Htmlable) {
-            return $title;
-        }
-
         if (filled($title) && $this->isDate()) {
             if (! ($title instanceof CarbonInterface)) {
                 $title = Carbon::parse($title);
             }
 
-            $title = $title->translatedFormat($this->getTable()->getDefaultDateDisplayFormat());
+            $title = $title->translatedFormat(Table::$defaultDateDisplayFormat);
         }
 
         return $title;
@@ -334,20 +318,44 @@ class Group extends Component
             ]) ?? $query;
         }
 
-        if (filled($relationshipName = $this->getRelationshipName())) {
-            return $query->orderBy(
-                app(RelationshipOrderer::class)->buildSubquery($query, $relationshipName, $this->getRelationshipAttribute()),
-                $direction
-            );
-        }
-
-        return $query->orderBy($this->getRelationshipAttribute(), $direction);
+        return $query->orderBy($this->getSortColumnForQuery($query, $this->getRelationshipAttribute()), $direction);
     }
 
     /**
-     * @param  Model | array<string, mixed>  $record
+     * @param  array<string> | null  $relationships
      */
-    public function scopeQuery(EloquentBuilder $query, Model | array $record): EloquentBuilder
+    protected function getSortColumnForQuery(EloquentBuilder $query, string $sortColumn, ?array $relationships = null, ?Relation $lastRelationship = null): string | Builder
+    {
+        $relationships ??= ($relationshipName = $this->getRelationshipName()) ?
+            explode('.', $relationshipName) :
+            [];
+
+        if (! count($relationships)) {
+            return $lastRelationship ? $lastRelationship->getQuery()->getModel()->qualifyColumn($sortColumn) : $sortColumn;
+        }
+
+        $currentRelationshipName = array_shift($relationships);
+
+        $relationship = $this->getRelationship($query->getModel(), $currentRelationshipName);
+
+        $relatedQuery = $relationship->getRelated()::query();
+
+        return $relationship
+            ->getRelationExistenceQuery(
+                $relatedQuery,
+                $query,
+                [$currentRelationshipName => $this->getSortColumnForQuery(
+                    $relatedQuery,
+                    $sortColumn,
+                    $relationships,
+                    $relationship,
+                )],
+            )
+            ->applyScopes()
+            ->getQuery();
+    }
+
+    public function scopeQuery(EloquentBuilder $query, Model $record): EloquentBuilder
     {
         if ($this->scopeQueryUsing) {
             return $this->evaluate(
@@ -357,10 +365,10 @@ class Group extends Component
                     'query' => $query,
                     'record' => $record,
                 ],
-                typedInjections: ($record instanceof Model) ? [
+                typedInjections: [
                     Model::class => $record,
                     $record::class => $record,
-                ] : [],
+                ],
             ) ?? $query;
         }
 
@@ -369,7 +377,7 @@ class Group extends Component
         return $query;
     }
 
-    public function scopeQueryByKey(EloquentBuilder $query, ?string $key): EloquentBuilder
+    public function scopeQueryByKey(EloquentBuilder $query, string $key): EloquentBuilder
     {
         $column = $this->getColumn();
 
@@ -388,7 +396,7 @@ class Group extends Component
             return $query->whereHas(
                 $relationshipName,
                 fn (EloquentBuilder $query) => $this->applyDefaultScopeToQuery($query, $this->getRelationshipAttribute(), $key),
-            )->when(blank($key), fn (EloquentBuilder $query) => $query->orWhereDoesntHave($relationshipName));
+            );
         }
 
         return $this->applyDefaultScopeToQuery($query, $column, $key);
@@ -412,12 +420,6 @@ class Group extends Component
         $relationship = null;
 
         foreach (explode('.', $name ?? $this->getRelationshipName()) as $nestedRelationshipName) {
-            if ($record->hasAttribute($nestedRelationshipName)) {
-                $relationship = null;
-
-                break;
-            }
-
             if (! $record->isRelation($nestedRelationshipName)) {
                 $relationship = null;
 

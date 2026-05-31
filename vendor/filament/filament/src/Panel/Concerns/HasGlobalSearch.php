@@ -3,18 +3,15 @@
 namespace Filament\Panel\Concerns;
 
 use Closure;
-use Filament\Enums\GlobalSearchPosition;
-use Filament\GlobalSearch\Providers\Contracts\GlobalSearchProvider;
-use Filament\GlobalSearch\Providers\DefaultGlobalSearchProvider;
+use Exception;
+use Filament\GlobalSearch\Contracts\GlobalSearchProvider;
+use Filament\GlobalSearch\DefaultGlobalSearchProvider;
 use Filament\Support\Enums\Platform;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Stringable;
-use InvalidArgumentException;
 
 trait HasGlobalSearch
 {
-    protected GlobalSearchPosition | Closure | null $globalSearchPosition = null;
-
     protected string | Closure | null $globalSearchDebounce = null;
 
     /**
@@ -26,16 +23,13 @@ trait HasGlobalSearch
 
     protected string | Closure | null $globalSearchFieldSuffix = null;
 
-    protected bool $isGlobalSearchResourceOptIn = false;
-
-    public function globalSearch(string | bool $provider = true, GlobalSearchPosition | Closure | null $position = null): static
+    public function globalSearch(string | bool $provider = true): static
     {
         if (is_string($provider) && (! in_array(GlobalSearchProvider::class, class_implements($provider)))) {
-            throw new InvalidArgumentException("Global search provider {$provider} does not implement the [" . GlobalSearchProvider::class . '] interface.');
+            throw new Exception("Global search provider {$provider} does not implement the " . GlobalSearchProvider::class . ' interface.');
         }
 
         $this->globalSearchProvider = $provider;
-        $this->globalSearchPosition = $position;
 
         return $this;
     }
@@ -100,11 +94,6 @@ trait HasGlobalSearch
         return $this;
     }
 
-    public function getGlobalSearchPosition(): GlobalSearchPosition
-    {
-        return $this->evaluate($this->globalSearchPosition) ?? ($this->hasTopbar() ? GlobalSearchPosition::Topbar : GlobalSearchPosition::Sidebar);
-    }
-
     public function getGlobalSearchDebounce(): string
     {
         return $this->evaluate($this->globalSearchDebounce) ?? '500ms';
@@ -121,18 +110,6 @@ trait HasGlobalSearch
     public function getGlobalSearchFieldSuffix(): ?string
     {
         return $this->evaluate($this->globalSearchFieldSuffix);
-    }
-
-    public function globalSearchResourceOptIn(bool $condition = true): static
-    {
-        $this->isGlobalSearchResourceOptIn = $condition;
-
-        return $this;
-    }
-
-    public function isGlobalSearchResourceOptIn(): bool
-    {
-        return $this->isGlobalSearchResourceOptIn;
     }
 
     public function getGlobalSearchProvider(): ?GlobalSearchProvider

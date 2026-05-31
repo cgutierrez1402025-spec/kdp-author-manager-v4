@@ -223,7 +223,7 @@ return [
 
     'markdown_editor' => [
 
-        'tools' => [
+        'toolbar_buttons' => [
             'attach_files' => 'Bashkangjit skedarët',
             'blockquote' => 'Blockquote',
             'bold' => 'i theksuar',
@@ -308,7 +308,7 @@ return [
 
         ],
 
-        'tools' => [
+        'toolbar_buttons' => [
             'attach_files' => 'Bashkangjit skedarët',
             'blockquote' => 'Blockquote',
             'bold' => 'I theksuar',
@@ -395,6 +395,22 @@ return [
 
     'tags_input' => [
         'placeholder' => 'Tag i ri',
+    ],
+
+    'wizard' => [
+
+        'actions' => [
+
+            'previous_step' => [
+                'label' => 'Pas',
+            ],
+
+            'next_step' => [
+                'label' => 'Para',
+            ],
+
+        ],
+
     ],
 
 ];

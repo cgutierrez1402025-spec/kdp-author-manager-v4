@@ -8,25 +8,23 @@ use App\Filament\Admin\Resources\KdpSelectPeriods\Pages\ListKdpSelectPeriods;
 use App\Filament\Admin\Resources\KdpSelectPeriods\Schemas\KdpSelectPeriodForm;
 use App\Filament\Admin\Resources\KdpSelectPeriods\Tables\KdpSelectPeriodsTable;
 use App\Models\KdpSelectPeriod;
-use BackedEnum;
+use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Schemas\Schema;
-use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 
 class KdpSelectPeriodResource extends Resource
 {
     protected static ?string $model = KdpSelectPeriod::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCalendarDays;
+    protected static ?string $navigationIcon = 'heroicon-o-document-text';
 
     protected static ?string $navigationLabel = 'Períodos KDP Select';
 
     protected static ?string $recordTitleAttribute = 'id';
 
-    public static function form(Schema $schema): Schema
+    public static function form(Form $form): Form
     {
-        return KdpSelectPeriodForm::configure($schema);
+        return KdpSelectPeriodForm::configure($form);
     }
 
     public static function table(Table $table): Table

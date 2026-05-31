@@ -3,14 +3,14 @@
 namespace App\Filament\Admin\Resources\Platforms\Schemas;
 
 use Filament\Forms;
-use Filament\Schemas\Schema;
+use Filament\Forms\Form;
 
 class PlatformForm
 {
-    public static function configure(Schema $schema): Schema
+    public static function configure(Form $form): Form
     {
-        return $schema
-            ->components([
+        return $form
+            ->schema([
                 Forms\Components\Section::make('Información de Plataforma')
                     ->schema([
                         Forms\Components\TextInput::make('name')

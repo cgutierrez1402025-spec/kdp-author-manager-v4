@@ -3,14 +3,14 @@
 namespace App\Filament\Admin\Resources\Marketplaces\Schemas;
 
 use Filament\Forms;
-use Filament\Schemas\Schema;
+use Filament\Forms\Form;
 
 class MarketplaceForm
 {
-    public static function configure(Schema $schema): Schema
+    public static function configure(Form $form): Form
     {
-        return $schema
-            ->components([
+        return $form
+            ->schema([
                 Forms\Components\Section::make('Información de Marketplace')
                     ->schema([
                         Forms\Components\Select::make('platform_id')

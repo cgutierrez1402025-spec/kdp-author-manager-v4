@@ -2,7 +2,7 @@
 
 return [
 
-    'column_manager' => [
+    'column_toggle' => [
 
         'heading' => 'Kolonat',
 
@@ -84,7 +84,7 @@ return [
             'label' => 'Veprime me shumicë',
         ],
 
-        'column_manager' => [
+        'toggle_columns' => [
             'label' => 'Ndrysho kolonat',
         ],
 

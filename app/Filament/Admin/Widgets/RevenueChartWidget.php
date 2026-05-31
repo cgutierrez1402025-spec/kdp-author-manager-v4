@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Cache;
 
 class RevenueChartWidget extends Widget
 {
-    protected string $view = 'filament.widgets.revenue-chart';
+    protected static string $view = 'filament.widgets.revenue-chart';
 
     protected static ?int $sort = 2;
 
@@ -22,7 +22,7 @@ class RevenueChartWidget extends Widget
                     $query->where('year', '>', now()->subYear()->year)
                         ->orWhere(function ($q) {
                             $q->where('year', now()->subYear()->year)
-                              ->where('month', '>=', now()->subMonths(6)->month);
+                                ->where('month', '>=', now()->subMonths(6)->month);
                         });
                 })
                 ->groupBy('year', 'month')

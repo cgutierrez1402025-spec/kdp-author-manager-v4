@@ -45,7 +45,7 @@ return [
             'label' => 'Otvorene akcije',
         ],
 
-        'column_manager' => [
+        'toggle_columns' => [
             'label' => 'Preklopiti kolone',
         ],
 

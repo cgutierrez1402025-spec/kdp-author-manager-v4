@@ -2,39 +2,16 @@
 
 return [
 
-    'column_manager' => [
+    'column_toggle' => [
 
         'heading' => 'ستوونەکان',
-
-        'actions' => [
-
-            'apply' => [
-                'label' => 'جێبەجێکردنی ستونەکان',
-            ],
-
-            'reset' => [
-                'label' => 'ڕێکخستنەوە',
-            ],
-
-        ],
 
     ],
 
     'columns' => [
 
-        'actions' => [
-            'label' => 'کردار|کردارەکان',
-        ],
-
         'text' => [
-
-            'actions' => [
-                'collapse_list' => 'پیشاندانی :count کەمتر',
-                'expand_list' => 'پیشاندانی :count زیاتر',
-            ],
-
-            'more_list_items' => 'هەروەها :count زیاتر',
-
+            'more_list_items' => 'وە :count ی زیاتر',
         ],
 
     ],
@@ -42,15 +19,11 @@ return [
     'fields' => [
 
         'bulk_select_page' => [
-            'label' => 'هەڵبژاردن/لابردنی هەڵبژاردنەکان بۆ هەموو تۆمارەکان بۆ کۆمەڵەی کردارەکان.',
+            'label' => 'دیاریکردن/لابردنی دیاریکردنەکان بۆ هەموو تۆمارەکان بۆ کۆمەڵەی کردارەکان.',
         ],
 
         'bulk_select_record' => [
-            'label' => 'هەڵبژاردن/لابردنی هەڵبژێردراوەژان بۆ :key بۆ کۆمەڵەی کردارەکان.',
-        ],
-
-        'bulk_select_group' => [
-            'label' => 'هەڵبژاردن/لابردنی گرووپی :title بۆ کۆمەڵەی کردارەکان.',
+            'label' => 'دیاریکردن/لابردنی دیاریکراوەکان بۆ :key بۆ کۆمەڵەی کردارەکان.',
         ],
 
         'search' => [
@@ -100,7 +73,7 @@ return [
         ],
 
         'filter' => [
-            'label' => 'پاڵاوتن',
+            'label' => 'فلتەر',
         ],
 
         'group' => [
@@ -111,7 +84,7 @@ return [
             'label' => 'کۆمەڵی کردارەکان',
         ],
 
-        'column_manager' => [
+        'toggle_columns' => [
             'label' => 'پشاندان/لابردنی ستوونەکان',
         ],
 
@@ -129,52 +102,42 @@ return [
 
         'actions' => [
 
-            'apply' => [
-                'label' => 'جێبەجێکردنی پاڵاوتنەکان',
-            ],
-
             'remove' => [
-                'label' => 'لابردنی پاڵاوتن',
+                'label' => 'سڕینەوەی فلتەر',
             ],
 
             'remove_all' => [
-                'label' => 'لابردنی هەموو پاڵاوتنەکان',
-                'tooltip' => 'لابردنی هەموو پاڵاوتنەکان',
+                'label' => 'سڕینەوەی هەموو فلتەرەکان',
+                'tooltip' => 'سڕینەوەی هەموو فلتەرەکان',
             ],
 
             'reset' => [
-                'label' => 'ڕێکخسنتەوە',
+                'label' => 'دۆخی سەرەتا',
             ],
 
         ],
 
-        'heading' => 'پاڵاوتنەکان',
+        'heading' => 'فلتەرەکان',
 
-        'indicator' => 'پاڵاوتنە چالاککراوەکان',
+        'indicator' => 'فلتەرە چالاککراوەکان',
 
         'multi_select' => [
             'placeholder' => 'هەموو',
         ],
 
         'select' => [
-
             'placeholder' => 'هەموو',
-
-            'relationship' => [
-                'empty_option_label' => 'هیچ',
-            ],
-
         ],
 
         'trashed' => [
 
-            'label' => 'تۆمارە سڕاوەکان',
+            'label' => 'تۆمارە سڕدراوەکان',
 
-            'only_trashed' => 'تەنها تۆمارە سڕاوەکان',
+            'only_trashed' => 'تەنها تۆمارە سڕدراوەکان',
 
-            'with_trashed' => 'لەگەل تۆمارە سڕاوەکان',
+            'with_trashed' => 'لەگەل تۆمارە سڕدراوەکان',
 
-            'without_trashed' => 'بەبێ تۆمارە سڕاوەکان',
+            'without_trashed' => 'بەبێ تۆمارە سڕدراوەکان',
 
         ],
 
@@ -185,12 +148,13 @@ return [
         'fields' => [
 
             'group' => [
-                'label' => 'کۆمەڵکردن بە',
+                'label' => 'کۆمەڵ کردن بە',
+                'placeholder' => 'کۆمەڵ کردن بە',
             ],
 
             'direction' => [
 
-                'label' => 'ئاڕاستەی کۆمەڵکردن',
+                'label' => 'ئاڕاستەی کۆمەڵ کردن',
 
                 'options' => [
                     'asc' => 'کەم بۆ زۆر',
@@ -207,7 +171,7 @@ return [
 
     'selection_indicator' => [
 
-        'selected_count' => '1 ڕیز هەڵبژێردراوە|:count ڕیز هەڵبژێردراوە',
+        'selected_count' => '١ ڕیز دیاریکراوە|:count ڕیز دیاریکراوە',
 
         'actions' => [
 
@@ -245,7 +209,5 @@ return [
         ],
 
     ],
-
-    'default_model_label' => 'تۆمار',
 
 ];

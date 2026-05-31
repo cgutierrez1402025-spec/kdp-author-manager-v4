@@ -8,17 +8,15 @@ use App\Filament\Admin\Resources\EventBooks\Pages\ListEventBooks;
 use App\Filament\Admin\Resources\EventBooks\Schemas\EventBookForm;
 use App\Filament\Admin\Resources\EventBooks\Tables\EventBooksTable;
 use App\Models\EventBook;
-use BackedEnum;
+use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Schemas\Schema;
-use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 
 class EventBookResource extends Resource
 {
     protected static ?string $model = EventBook::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBookOpen;
+    protected static ?string $navigationIcon = 'heroicon-o-document-text';
 
     protected static ?string $navigationLabel = 'Libros en Eventos';
 
@@ -26,9 +24,9 @@ class EventBookResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'id';
 
-    public static function form(Schema $schema): Schema
+    public static function form(Form $form): Form
     {
-        return EventBookForm::configure($schema);
+        return EventBookForm::configure($form);
     }
 
     public static function table(Table $table): Table

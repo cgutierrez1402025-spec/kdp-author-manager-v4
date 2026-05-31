@@ -2,9 +2,9 @@
 
 return [
 
-    'title' => 'יצירת :label',
+    'title' => 'צור :label',
 
-    'breadcrumb' => 'יצירה',
+    'breadcrumb' => 'חדש',
 
     'form' => [
 
@@ -19,7 +19,7 @@ return [
             ],
 
             'create_another' => [
-                'label' => 'צור וצור עוד אחד',
+                'label' => 'צור ואז עוד אחד',
             ],
 
         ],

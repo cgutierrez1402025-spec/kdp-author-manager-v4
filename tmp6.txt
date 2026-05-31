@@ -1,0 +1,37 @@
+
+   Symfony\Component\ErrorHandler\Error\FatalError 
+
+  Cannot use Filament\Tables\Table as Table because the name is already in use
+
+  at app/Filament/Admin/Resources/ActivityLogs/ActivityLogResource.php:7
+      3▕ namespace App\Filament\Admin\Resources\ActivityLogs;
+      4▕ 
+      5▕ use Filament\Resources\Resource;
+      6▕ use Filament\Tables\Table;use Filament\Forms\Form;
+  ➜   7▕ use Filament\Tables\Table;
+      8▕ use App\Models\ActivityLog;
+      9▕ 
+     10▕ class ActivityLogResource extends Resource
+     11▕ {
+
+
+   Whoops\Exception\ErrorException 
+
+  Cannot use Filament\Tables\Table as Table because the name is already in use
+
+  at app/Filament/Admin/Resources/ActivityLogs/ActivityLogResource.php:7
+      3▕ namespace App\Filament\Admin\Resources\ActivityLogs;
+      4▕ 
+      5▕ use Filament\Resources\Resource;
+      6▕ use Filament\Tables\Table;use Filament\Forms\Form;
+  ➜   7▕ use Filament\Tables\Table;
+      8▕ use App\Models\ActivityLog;
+      9▕ 
+     10▕ class ActivityLogResource extends Resource
+     11▕ {
+
+      [2m+1 vendor frames [22m
+
+  2   [internal]:0
+      Whoops\Run::handleShutdown()
+

@@ -12,13 +12,7 @@ class IdentifyTenant
 {
     public function handle(Request $request, Closure $next): mixed
     {
-        // Security: Tenant identification occurs in this middleware. Global
-        // scopes for tenant isolation are only active AFTER this runs.
-        // Queries in earlier middleware or service providers will not
-        // be tenant-scoped. Ensure tenant-aware middleware uses
-        // `isPersistent: true` for Livewire AJAX enforcement.
-
-        $panel = Filament::getCurrentOrDefaultPanel();
+        $panel = Filament::getCurrentPanel();
 
         if (! $panel->hasTenancy()) {
             return $next($request);

@@ -14,6 +14,4 @@ return [
 
     ],
 
-    'navigation_label' => 'Visa',
-
 ];

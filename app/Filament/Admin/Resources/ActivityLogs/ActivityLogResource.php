@@ -2,36 +2,38 @@
 
 namespace App\Filament\Admin\Resources\ActivityLogs;
 
-use App\Filament\Admin\Resources\ActivityLogs\Pages\ListActivityLogs;
-use App\Filament\Admin\Resources\ActivityLogs\Tables\ActivityLogsTable;
-use App\Models\ActivityLog;
-use BackedEnum;
+use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Schemas\Schema;
-use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 
-class e extends Resource
+class ActivityLogResource extends Resource
 {
-    protected static ?string $model = ActivityLog::class;
+    protected static ?string $navigationIcon = 'heroicon-o-document-text';
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedDocumentText;
+    protected static ?string $navigationGroup = 'Logs';
 
-    protected static ?string $navigationLabel = 'Registro de Actividad';
-
-    protected static ?string $navigationGroup = 'Gestión';
-
-    protected static ?string $recordTitleAttribute = 'action';
+    public static function form(Form $form): Form
+    {
+        return $form
+            ->schema([
+                //
+            ]);
+    }
 
     public static function table(Table $table): Table
     {
-        return ActivityLogsTable::configure($table);
-    }
-
-    public static function getPages(): array
-    {
-        return [
-            'index' => ListActivityLogs::route('/'),
-        ];
+        return $table
+            ->columns([
+                //
+            ])
+            ->filters([
+                //
+            ])
+            ->actions([
+                //
+            ])
+            ->bulkActions([
+                //
+            ]);
     }
 }

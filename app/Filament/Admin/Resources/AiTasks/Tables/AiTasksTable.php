@@ -2,7 +2,6 @@
 
 namespace App\Filament\Admin\Resources\AiTasks\Tables;
 
-use App\Filament\Admin\Resources\AiTasks\AiTaskResource;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -14,7 +13,7 @@ class AiTasksTable
     public static function configure(Table $table): Table
     {
         return $table
-            ->modifyQueryQueryUsing(fn ($query) => $query->with(['work', 'preferredAiTool']))
+            ->modifyQueryUsing(fn ($query) => $query->with(['work', 'preferredAiTool']))
             ->columns([
                 TextColumn::make('work.title_public')
                     ->label('Obra')

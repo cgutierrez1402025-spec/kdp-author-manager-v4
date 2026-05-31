@@ -5,8 +5,8 @@ namespace App\Filament\Admin\Resources\Checklists\Tables;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
-use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ProgressBarColumn;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
 class ChecklistsTable

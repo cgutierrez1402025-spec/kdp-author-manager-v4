@@ -3,14 +3,14 @@
 namespace App\Filament\Admin\Resources\Checklists\Schemas;
 
 use Filament\Forms;
-use Filament\Schemas\Schema;
+use Filament\Forms\Form;
 
 class ChecklistForm
 {
-    public static function configure(Schema $schema): Schema
+    public static function configure(Form $form): Form
     {
-        return $schema
-            ->components([
+        return $form
+            ->schema([
                 Forms\Components\Section::make('Lista de Verificación')
                     ->schema([
                         Forms\Components\Select::make('work_id')

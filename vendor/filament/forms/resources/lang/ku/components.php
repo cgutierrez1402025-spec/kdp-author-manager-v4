@@ -223,7 +223,7 @@ return [
 
     'markdown_editor' => [
 
-        'tools' => [
+        'toolbar_buttons' => [
             'attach_files' => 'لکاندنی فایل',
             'blockquote' => 'هێڵی وتە',
             'bold' => 'تۆخ کردن',
@@ -308,7 +308,7 @@ return [
 
         ],
 
-        'tools' => [
+        'toolbar_buttons' => [
             'attach_files' => 'لکاندنی فایل',
             'blockquote' => 'هێڵی وتە',
             'bold' => 'تۆخ کردن',
@@ -395,6 +395,22 @@ return [
 
     'tags_input' => [
         'placeholder' => 'تاگی نوێ',
+    ],
+
+    'wizard' => [
+
+        'actions' => [
+
+            'previous_step' => [
+                'label' => 'پێشوو',
+            ],
+
+            'next_step' => [
+                'label' => 'دواتر',
+            ],
+
+        ],
+
     ],
 
 ];

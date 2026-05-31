@@ -1,0 +1,37 @@
+
+   Symfony\Component\ErrorHandler\Error\FatalError 
+
+  Could not check compatibility between App\Filament\Admin\Resources\BookPromotions\RelationManagers\CostsRelationManager::form(Filament\Schemas\Schema $schema): Filament\Schemas\Schema and Filament\Resources\RelationManagers\RelationManager::form(Filament\Forms\Form $form): Filament\Forms\Form, because class Filament\Schemas\Schema is not available
+
+  at app/Filament/Admin/Resources/BookPromotions/RelationManagers/CostsRelationManager.php:28
+     24▕     public static ?string $title = 'Costos';
+     25▕ 
+     26▕     // ... resto del código igual
+     27▕ 
+  ➜  28▕     public function form(Schema $schema): Schema
+     29▕     {
+     30▕         return $schema
+     31▕             ->components([
+     32▕                 Select::make('cost_type')
+
+
+   Whoops\Exception\ErrorException 
+
+  Could not check compatibility between App\Filament\Admin\Resources\BookPromotions\RelationManagers\CostsRelationManager::form(Filament\Schemas\Schema $schema): Filament\Schemas\Schema and Filament\Resources\RelationManagers\RelationManager::form(Filament\Forms\Form $form): Filament\Forms\Form, because class Filament\Schemas\Schema is not available
+
+  at app/Filament/Admin/Resources/BookPromotions/RelationManagers/CostsRelationManager.php:28
+     24▕     public static ?string $title = 'Costos';
+     25▕ 
+     26▕     // ... resto del código igual
+     27▕ 
+  ➜  28▕     public function form(Schema $schema): Schema
+     29▕     {
+     30▕         return $schema
+     31▕             ->components([
+     32▕                 Select::make('cost_type')
+
+      [2m+1 vendor frames [22m
+
+  2   [internal]:0
+      Whoops\Run::handleShutdown()
+

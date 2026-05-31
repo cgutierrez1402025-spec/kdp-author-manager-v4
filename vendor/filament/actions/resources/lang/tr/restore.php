@@ -32,11 +32,11 @@ return [
 
     'multiple' => [
 
-        'label' => 'Seçileni geri yükle',
+        'label' => 'Seçiliyi geri yükle',
 
         'modal' => [
 
-            'heading' => ':label seçileni geri yükle',
+            'heading' => ':label seçiliyi geri yükle',
 
             'actions' => [
 
@@ -52,18 +52,6 @@ return [
 
             'restored' => [
                 'title' => 'Kayıtlar geri yüklendi',
-            ],
-
-            'restored_partial' => [
-                'title' => ':total kayıttan :count kayıt geri yüklendi',
-                'missing_authorization_failure_message' => ':count kayıt geri yüklemek için gereken izniniz yok.',
-                'missing_processing_failure_message' => ':count geri yüklenemedi.',
-            ],
-
-            'restored_none' => [
-                'title' => 'Kayıtlar geri yüklenemedi',
-                'missing_authorization_failure_message' => ':count kayıt geri yüklemek için gereken izniniz yok.',
-                'missing_processing_failure_message' => ':count geri yüklenemedi.',
             ],
 
         ],

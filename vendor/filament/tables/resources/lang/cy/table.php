@@ -45,7 +45,7 @@ return [
             'label' => 'Gweithredoedd agored',
         ],
 
-        'column_manager' => [
+        'toggle_columns' => [
             'label' => 'Toglo colofnau',
         ],
 

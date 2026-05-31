@@ -8,23 +8,21 @@ use App\Filament\Admin\Resources\Works\Pages\ListWorks;
 use App\Filament\Admin\Resources\Works\Schemas\WorkForm;
 use App\Filament\Admin\Resources\Works\Tables\WorksTable;
 use App\Models\Work;
-use BackedEnum;
+use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Schemas\Schema;
-use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 
 class WorkResource extends Resource
 {
     protected static ?string $model = Work::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static ?string $navigationIcon = 'heroicon-o-document-text';
 
     protected static ?string $recordTitleAttribute = 'title_public';
 
-    public static function form(Schema $schema): Schema
+    public static function form(Form $form): Form
     {
-        return WorkForm::configure($schema);
+        return WorkForm::configure($form);
     }
 
     public static function table(Table $table): Table

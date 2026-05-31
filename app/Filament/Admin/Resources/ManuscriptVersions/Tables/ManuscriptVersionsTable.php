@@ -18,7 +18,7 @@ class ManuscriptVersionsTable
     public static function configure(Table $table): Table
     {
         return $table
-            ->modifyQueryQueryUsing(fn ($query) => $query->with(['work', 'workLanguage', 'edition', 'creator']))
+            ->modifyQueryUsing(fn ($query) => $query->with(['work', 'workLanguage', 'edition', 'creator']))
             ->columns([
                 TextColumn::make('work.title_public')
                     ->label('Obra')

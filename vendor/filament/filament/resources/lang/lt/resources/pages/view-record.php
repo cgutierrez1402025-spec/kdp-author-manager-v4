@@ -6,8 +6,6 @@ return [
 
     'breadcrumb' => 'Peržiūrėti',
 
-    'navigation_label' => 'Peržiūrėti',
-
     'content' => [
 
         'tab' => [

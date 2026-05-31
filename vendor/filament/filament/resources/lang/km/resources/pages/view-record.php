@@ -2,18 +2,16 @@
 
 return [
 
-    'title' => 'មើល :label',
+    'title' => 'ស្លាក​សញ្ញា :label',
 
-    'breadcrumb' => 'មើល',
+    'breadcrumb' => 'ស្លាក​សញ្ញា',
 
     'content' => [
 
         'tab' => [
-            'label' => 'មើល',
+            'label' => 'ស្លាក​សញ្ញា',
         ],
 
     ],
-
-    'navigation_label' => 'មើល',
 
 ];

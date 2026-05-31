@@ -88,7 +88,7 @@ return [
 
     'markdown_editor' => [
 
-        'tools' => [
+        'toolbar_buttons' => [
             'attach_files' => 'Ambatisha faili',
             'bold' => 'Nzito',
             'bullet_list' => 'Orodha ya vitone',
@@ -170,7 +170,7 @@ return [
 
         ],
 
-        'tools' => [
+        'toolbar_buttons' => [
             'attach_files' => 'Ambatisha faili',
             'blockquote' => 'Nukuu ya kuzuia',
             'bold' => 'Nzito',
@@ -234,6 +234,22 @@ return [
 
     'tags_input' => [
         'placeholder' => 'Lebo mpya',
+    ],
+
+    'wizard' => [
+
+        'actions' => [
+
+            'previous_step' => [
+                'label' => 'Nyuma',
+            ],
+
+            'next_step' => [
+                'label' => 'Mbele',
+            ],
+
+        ],
+
     ],
 
 ];

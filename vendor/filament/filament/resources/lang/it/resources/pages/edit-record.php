@@ -6,8 +6,6 @@ return [
 
     'breadcrumb' => 'Modifica',
 
-    'navigation_label' => 'Modifica',
-
     'form' => [
 
         'actions' => [

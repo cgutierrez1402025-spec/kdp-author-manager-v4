@@ -2,45 +2,13 @@
 
 return [
 
-    'column_manager' => [
+    'column_toggle' => [
 
         'heading' => 'ستون‌ها',
-
-        'actions' => [
-
-            'apply' => [
-                'label' => 'اعمال ستون‌ها',
-            ],
-
-            'reset' => [
-                'label' => 'بازنشانی ستون‌ها',
-            ],
-
-        ],
 
     ],
 
     'columns' => [
-
-        'actions' => [
-            'label' => 'عملیات|عملیات‌ها',
-        ],
-
-        'select' => [
-
-            'loading_message' => 'در حال بارگذاری...',
-
-            'no_options_message' => 'هیچ گزینه‌ای موجود نیست.',
-
-            'no_search_results_message' => 'هیچ گزینه‌ای با جستجوی شما مطابقت ندارد.',
-
-            'placeholder' => 'یک گزینه را انتخاب کنید',
-
-            'searching_message' => 'درحال جستجو...',
-
-            'search_prompt' => 'برای جستجو تایپ کنید...',
-
-        ],
 
         'text' => [
 
@@ -127,7 +95,7 @@ return [
             'label' => 'عملیات گروهی',
         ],
 
-        'column_manager' => [
+        'toggle_columns' => [
             'label' => 'باز / بستن ستون‌ها',
         ],
 
@@ -173,12 +141,7 @@ return [
         ],
 
         'select' => [
-
             'placeholder' => 'همه',
-
-            'relationship' => [
-                'empty_option_label' => 'هیچ',
-            ],
         ],
 
         'trashed' => [
@@ -201,6 +164,7 @@ return [
 
             'group' => [
                 'label' => 'گروه‌بندی براساس',
+                'placeholder' => 'گروه‌بندی براساس',
             ],
 
             'direction' => [
@@ -260,7 +224,5 @@ return [
         ],
 
     ],
-
-    'default_model_label' => 'رکورد',
 
 ];

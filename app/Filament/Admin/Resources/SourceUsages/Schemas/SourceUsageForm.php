@@ -3,14 +3,14 @@
 namespace App\Filament\Admin\Resources\SourceUsages\Schemas;
 
 use Filament\Forms;
-use Filament\Schemas\Schema;
+use Filament\Forms\Form;
 
 class SourceUsageForm
 {
-    public static function configure(Schema $schema): Schema
+    public static function configure(Form $form): Form
     {
-        return $schema
-            ->components([
+        return $form
+            ->schema([
                 Forms\Components\Section::make('Uso de Fuente')
                     ->schema([
                         Forms\Components\Select::make('source_id')

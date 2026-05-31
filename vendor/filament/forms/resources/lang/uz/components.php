@@ -278,7 +278,7 @@ return [
     ],
 
     'markdown_editor' => [
-        'tools' => [
+        'toolbar_buttons' => [
             'attach_files' => 'Fayl biriktirish',
             'blockquote' => 'Iqtibos',
             'bold' => 'Qalin',
@@ -367,7 +367,7 @@ return [
 
         ],
 
-        'tools' => [
+        'toolbar_buttons' => [
             'attach_files' => 'Fayl biriktirish',
             'blockquote' => 'Iqtibos',
             'bold' => 'Qalin',
@@ -475,6 +475,22 @@ return [
         'boolean' => [
             'true' => 'Ha',
             'false' => 'Yo\'q',
+        ],
+
+    ],
+
+    'wizard' => [
+
+        'actions' => [
+
+            'previous_step' => [
+                'label' => 'Orqaga',
+            ],
+
+            'next_step' => [
+                'label' => 'Keyingi',
+            ],
+
         ],
 
     ],

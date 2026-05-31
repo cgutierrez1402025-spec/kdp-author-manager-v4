@@ -7,7 +7,6 @@ use Closure;
 use Illuminate\Container\Container;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Attributes\Controllers\Middleware as MiddlewareAttribute;
 use Illuminate\Routing\Contracts\CallableDispatcher;
 use Illuminate\Routing\Contracts\ControllerDispatcher as ControllerDispatcherContract;
 use Illuminate\Routing\Controllers\HasMiddleware;
@@ -24,9 +23,6 @@ use Illuminate\Support\Traits\Macroable;
 use InvalidArgumentException;
 use Laravel\SerializableClosure\SerializableClosure;
 use LogicException;
-use ReflectionAttribute;
-use ReflectionClass;
-use ReflectionException;
 use Symfony\Component\Routing\Route as SymfonyRoute;
 
 use function Illuminate\Support\enum_value;
@@ -174,6 +170,7 @@ class Route
      * @param  array|string  $methods
      * @param  string  $uri
      * @param  \Closure|array  $action
+     * @return void
      */
     public function __construct($methods, $uri, $action)
     {
@@ -275,8 +272,6 @@ class Route
      * Get the controller instance for the route.
      *
      * @return mixed
-     *
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
     public function getController()
     {
@@ -515,7 +510,11 @@ class Route
      */
     public function parameterNames()
     {
-        return $this->parameterNames ?? $this->parameterNames = $this->compileParameterNames();
+        if (isset($this->parameterNames)) {
+            return $this->parameterNames;
+        }
+
+        return $this->parameterNames = $this->compileParameterNames();
     }
 
     /**
@@ -793,8 +792,7 @@ class Route
     public function getDomain()
     {
         return isset($this->action['domain'])
-            ? str_replace(['http://', 'https://'], '', $this->action['domain'])
-            : null;
+                ? str_replace(['http://', 'https://'], '', $this->action['domain']) : null;
     }
 
     /**
@@ -1007,12 +1005,6 @@ class Route
             $this->domain($this->action['domain']);
         }
 
-        if (isset($this->action['can'])) {
-            foreach ($this->action['can'] as $can) {
-                $this->can($can[0], $can[1] ?? []);
-            }
-        }
-
         return $this;
     }
 
@@ -1067,7 +1059,7 @@ class Route
      * Get or set the middlewares attached to the route.
      *
      * @param  array|string|null  $middleware
-     * @return ($middleware is null ? array : $this)
+     * @return $this|array
      */
     public function middleware($middleware = null)
     {
@@ -1102,8 +1094,8 @@ class Route
         $ability = enum_value($ability);
 
         return empty($models)
-            ? $this->middleware(['can:'.$ability])
-            : $this->middleware(['can:'.$ability.','.implode(',', Arr::wrap($models))]);
+                    ? $this->middleware(['can:'.$ability])
+                    : $this->middleware(['can:'.$ability.','.implode(',', Arr::wrap($models))]);
     }
 
     /**
@@ -1122,19 +1114,19 @@ class Route
             $this->getControllerMethod(),
         ];
 
-        $attributeMiddleware = $this->attributeProvidedControllerMiddleware($controllerClass, $controllerMethod);
+        if (is_a($controllerClass, HasMiddleware::class, true)) {
+            return $this->staticallyProvidedControllerMiddleware(
+                $controllerClass, $controllerMethod
+            );
+        }
 
-        return match (true) {
-            is_a($controllerClass, HasMiddleware::class, true) => array_merge(
-                $this->staticallyProvidedControllerMiddleware($controllerClass, $controllerMethod),
-                $attributeMiddleware,
-            ),
-            method_exists($controllerClass, 'getMiddleware') => array_merge(
-                $this->controllerDispatcher()->getMiddleware($this->getController(), $controllerMethod),
-                $attributeMiddleware,
-            ),
-            default => $attributeMiddleware,
-        };
+        if (method_exists($controllerClass, 'getMiddleware')) {
+            return $this->controllerDispatcher()->getMiddleware(
+                $this->getController(), $controllerMethod
+            );
+        }
+
+        return [];
     }
 
     /**
@@ -1146,66 +1138,15 @@ class Route
      */
     protected function staticallyProvidedControllerMiddleware(string $class, string $method)
     {
-        return (new Collection($class::middleware()))
-            ->map(function ($middleware) {
-                return $middleware instanceof Middleware
-                    ? $middleware
-                    : new Middleware($middleware);
-            })
-            ->reject(function ($middleware) use ($method) {
-                return static::methodExcludedByOptions(
-                    $method, ['only' => $middleware->only, 'except' => $middleware->except],
-                );
-            })
-            ->map
-            ->middleware
-            ->flatten()
-            ->values()
-            ->all();
-    }
-
-    /**
-     * Get the attribute provided controller middleware for the given class and method.
-     *
-     * @return array
-     */
-    protected function attributeProvidedControllerMiddleware(string $class, string $method)
-    {
-        try {
-            $reflectionClass = new ReflectionClass($class);
-            $reflectionMethod = $reflectionClass->getMethod($method);
-        } catch (ReflectionException) {
-            return [];
-        }
-
-        $attributes = new Collection;
-
-        $current = $reflectionClass;
-
-        while ($current) {
-            $classAttributes = array_reverse($current->getAttributes(
-                MiddlewareAttribute::class, ReflectionAttribute::IS_INSTANCEOF
-            ));
-
-            foreach ($classAttributes as $attribute) {
-                $attributes->prepend($attribute);
-            }
-
-            $current = $current->getParentClass();
-        }
-
-        return $attributes->merge(
-            $reflectionMethod->getAttributes(MiddlewareAttribute::class, ReflectionAttribute::IS_INSTANCEOF)
-        )->map(function (ReflectionAttribute $attribute) use ($method) {
-            $instance = $attribute->newInstance();
-
+        return (new Collection($class::middleware()))->map(function ($middleware) {
+            return $middleware instanceof Middleware
+                ? $middleware
+                : new Middleware($middleware);
+        })->reject(function ($middleware) use ($method) {
             return static::methodExcludedByOptions(
-                $method, ['only' => $instance->only, 'except' => $instance->except],
-            ) ? null : $instance->middleware;
-        })
-            ->filter()
-            ->values()
-            ->all();
+                $method, ['only' => $middleware->only, 'except' => $middleware->except]
+            );
+        })->map->middleware->flatten()->values()->all();
     }
 
     /**
@@ -1326,8 +1267,6 @@ class Route
      * Get the dispatcher for the route's controller.
      *
      * @return \Illuminate\Routing\Contracts\ControllerDispatcher
-     *
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
     public function controllerDispatcher()
     {
@@ -1345,10 +1284,14 @@ class Route
      */
     public static function getValidators()
     {
+        if (isset(static::$validators)) {
+            return static::$validators;
+        }
+
         // To match the route, we will use a chain of responsibility pattern with the
         // validator implementations. We will spin through each one making sure it
         // passes and then we will know if the route as a whole matches request.
-        return static::$validators ?? static::$validators = [
+        return static::$validators = [
             new UriValidator, new MethodValidator,
             new SchemeValidator, new HostValidator,
         ];
@@ -1371,9 +1314,9 @@ class Route
     /**
      * Get the optional parameter names for the route.
      *
-     * @return array<string, null>
+     * @return array
      */
-    public function getOptionalParameterNames()
+    protected function getOptionalParameterNames()
     {
         preg_match_all('/\{(\w+?)\?\}/', $this->uri(), $matches);
 

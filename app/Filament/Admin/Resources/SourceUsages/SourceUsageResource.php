@@ -8,25 +8,23 @@ use App\Filament\Admin\Resources\SourceUsages\Pages\ListSourceUsages;
 use App\Filament\Admin\Resources\SourceUsages\Schemas\SourceUsageForm;
 use App\Filament\Admin\Resources\SourceUsages\Tables\SourceUsagesTable;
 use App\Models\SourceUsage;
-use BackedEnum;
+use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Schemas\Schema;
-use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 
 class SourceUsageResource extends Resource
 {
     protected static ?string $model = SourceUsage::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedLink;
+    protected static ?string $navigationIcon = 'heroicon-o-document-text';
 
     protected static ?string $navigationLabel = 'Usos de Fuente';
 
     protected static ?string $recordTitleAttribute = 'id';
 
-    public static function form(Schema $schema): Schema
+    public static function form(Form $form): Form
     {
-        return SourceUsageForm::configure($schema);
+        return SourceUsageForm::configure($form);
     }
 
     public static function table(Table $table): Table

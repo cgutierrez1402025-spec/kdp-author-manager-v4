@@ -4,11 +4,11 @@ return [
 
     'single' => [
 
-        'label' => 'עריכה',
+        'label' => 'ערוך',
 
         'modal' => [
 
-            'heading' => 'עריכת :label',
+            'heading' => 'ערך את :label',
 
             'actions' => [
 

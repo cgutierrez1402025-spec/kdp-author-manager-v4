@@ -8,17 +8,15 @@ use App\Filament\Admin\Resources\KdpMetadatas\Pages\ListKdpMetadatas;
 use App\Filament\Admin\Resources\KdpMetadatas\Schemas\KdpMetadataForm;
 use App\Filament\Admin\Resources\KdpMetadatas\Tables\KdpMetadatasTable;
 use App\Models\KdpMetadata;
-use BackedEnum;
+use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Schemas\Schema;
-use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 
 class KdpMetadataResource extends Resource
 {
     protected static ?string $model = KdpMetadata::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedTag;
+    protected static ?string $navigationIcon = 'heroicon-o-document-text';
 
     protected static ?string $navigationLabel = 'Metadatos KDP';
 
@@ -26,9 +24,9 @@ class KdpMetadataResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'title';
 
-    public static function form(Schema $schema): Schema
+    public static function form(Form $form): Form
     {
-        return KdpMetadataForm::configure($schema);
+        return KdpMetadataForm::configure($form);
     }
 
     public static function table(Table $table): Table

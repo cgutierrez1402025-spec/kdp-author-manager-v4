@@ -15,7 +15,7 @@ return [
         ],
 
         'open_database_notifications' => [
-            'label' => 'Notifications',
+            'label' => 'Open notifications',
         ],
 
         'open_user_menu' => [
@@ -58,15 +58,6 @@ return [
 
     'logo' => [
         'alt' => ':name logo',
-    ],
-
-    'tenant_menu' => [
-
-        'search_field' => [
-            'label' => 'Tenant search',
-            'placeholder' => 'Search',
-        ],
-
     ],
 
 ];

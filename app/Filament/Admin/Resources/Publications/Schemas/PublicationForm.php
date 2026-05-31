@@ -3,15 +3,15 @@
 namespace App\Filament\Admin\Resources\Publications\Schemas;
 
 use Filament\Forms;
-use Filament\Schemas\Components\Wizard;
-use Filament\Schemas\Schema;
+use Filament\Forms\Components\Wizard;
+use Filament\Forms\Form;
 
 class PublicationForm
 {
-    public static function configure(Schema $schema): Schema
+    public static function configure(Form $form): Form
     {
-        return $schema
-            ->components([
+        return $form
+            ->schema([
                 Wizard::make([
                     Wizard\Step::make('work_selection')
                         ->label('Seleccionar Obra')
@@ -44,6 +44,7 @@ class PublicationForm
                                 ->relationship('manuscriptVersion', 'name', modifyQueryUsing: function ($query, $get) {
                                     $workId = $get('../../work_id');
                                     $workLanguageId = $get('work_language_id');
+
                                     return $query->where('work_id', $workId)
                                         ->where('work_language_id', $workLanguageId)
                                         ->where('is_final', true);

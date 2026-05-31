@@ -8,17 +8,15 @@ use App\Filament\Admin\Resources\Tasks\Pages\ListTasks;
 use App\Filament\Admin\Resources\Tasks\Schemas\TaskForm;
 use App\Filament\Admin\Resources\Tasks\Tables\TasksTable;
 use App\Models\Task;
-use BackedEnum;
+use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Schemas\Schema;
-use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 
 class TaskResource extends Resource
 {
     protected static ?string $model = Task::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedClipboardDocumentList;
+    protected static ?string $navigationIcon = 'heroicon-o-document-text';
 
     protected static ?string $navigationLabel = 'Tareas';
 
@@ -26,9 +24,9 @@ class TaskResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'title';
 
-    public static function form(Schema $schema): Schema
+    public static function form(Form $form): Form
     {
-        return TaskForm::configure($schema);
+        return TaskForm::configure($form);
     }
 
     public static function table(Table $table): Table

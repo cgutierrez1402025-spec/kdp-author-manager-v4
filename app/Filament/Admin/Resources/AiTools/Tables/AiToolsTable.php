@@ -2,12 +2,11 @@
 
 namespace App\Filament\Admin\Resources\AiTools\Tables;
 
-use App\Filament\Admin\Resources\AiTools\AiToolResource;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
-use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\RatingColumn;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
@@ -16,7 +15,7 @@ class AiToolsTable
     public static function configure(Table $table): Table
     {
         return $table
-            ->modifyQueryQueryUsing(fn ($query) => $query->with('prompts'))
+            ->modifyQueryUsing(fn ($query) => $query->with('prompts'))
             ->columns([
                 TextColumn::make('name')
                     ->label('Nombre')

@@ -18,7 +18,7 @@ trait CanSortRecords
 
     protected string | Htmlable | Closure | null $defaultSortOptionLabel = null;
 
-    protected bool | Closure $hasDefaultKeySort = true;
+    protected bool | Closure $hasDefaultKeySort = false;
 
     public function defaultSort(string | Closure | null $column, string | Closure | null $direction = 'asc'): static
     {

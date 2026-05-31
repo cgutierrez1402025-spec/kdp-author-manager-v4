@@ -11,7 +11,6 @@ use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Database\ConnectionResolverInterface as Resolver;
 use Illuminate\Database\Events\MigrationEnded;
 use Illuminate\Database\Events\MigrationsEnded;
-use Illuminate\Database\Events\MigrationSkipped;
 use Illuminate\Database\Events\MigrationsStarted;
 use Illuminate\Database\Events\MigrationStarted;
 use Illuminate\Database\Events\NoPendingMigrations;
@@ -55,7 +54,7 @@ class Migrator
     /**
      * The custom connection resolver callback.
      *
-     * @var (\Closure(\Illuminate\Database\ConnectionResolverInterface, ?string): \Illuminate\Database\Connection)|null
+     * @var \Closure|null
      */
     protected static $connectionResolverCallback;
 
@@ -101,6 +100,7 @@ class Migrator
      * @param  \Illuminate\Database\ConnectionResolverInterface  $resolver
      * @param  \Illuminate\Filesystem\Filesystem  $files
      * @param  \Illuminate\Contracts\Events\Dispatcher|null  $dispatcher
+     * @return void
      */
     public function __construct(
         MigrationRepositoryInterface $repository,
@@ -183,7 +183,7 @@ class Migrator
         // First we will just make sure that there are any migrations to run. If there
         // aren't, we will just make a note of it to the developer so they're aware
         // that all of the migrations have been run against this database system.
-        if ($migrations === []) {
+        if (count($migrations) === 0) {
             $this->fireMigrationEvent(new NoPendingMigrations('up'));
 
             $this->write(Info::class, 'Nothing to migrate');
@@ -241,22 +241,12 @@ class Migrator
             return $this->pretendToRun($migration, 'up');
         }
 
-        $shouldRunMigration = $migration instanceof Migration
-            ? $migration->shouldRun()
-            : true;
+        $this->write(Task::class, $name, fn () => $this->runMigration($migration, 'up'));
 
-        if (! $shouldRunMigration) {
-            $this->fireMigrationEvent(new MigrationSkipped($name));
-
-            $this->write(Task::class, $name, fn () => MigrationResult::Skipped->value);
-        } else {
-            $this->write(Task::class, $name, fn () => $this->runMigration($migration, 'up', $name));
-
-            // Once we have run a migrations class, we will log that it was run in this
-            // repository so that we don't try to run it next time we do a migration
-            // in the application. A migration repository keeps the migrate order.
-            $this->repository->log($name, $batch);
-        }
+        // Once we have run a migrations class, we will log that it was run in this
+        // repository so that we don't try to run it next time we do a migration
+        // in the application. A migration repository keeps the migrate order.
+        $this->repository->log($name, $batch);
     }
 
     /**
@@ -290,7 +280,7 @@ class Migrator
      * Get the migrations for a rollback operation.
      *
      * @param  array<string, mixed>  $options
-     * @return object{id: int, migration: string, batch: int}[]
+     * @return array
      */
     protected function getMigrationsForRollback(array $options)
     {
@@ -362,7 +352,7 @@ class Migrator
         // the database back into its "empty" state ready for the migrations.
         $migrations = array_reverse($this->repository->getRan());
 
-        if ($migrations === []) {
+        if (count($migrations) === 0) {
             $this->write(Info::class, 'Nothing to rollback.');
 
             return [];
@@ -389,7 +379,7 @@ class Migrator
         $migrations = (new Collection($migrations))->map(fn ($m) => (object) ['migration' => $m])->all();
 
         return $this->rollbackMigrations(
-            $migrations, $paths, ['pretend' => $pretend]
+            $migrations, $paths, compact('pretend')
         );
     }
 
@@ -414,7 +404,7 @@ class Migrator
             return $this->pretendToRun($instance, 'down');
         }
 
-        $this->write(Task::class, $name, fn () => $this->runMigration($instance, 'down', $name));
+        $this->write(Task::class, $name, fn () => $this->runMigration($instance, 'down'));
 
         // Once we have successfully run the migration "down" we will remove it from
         // the migration repository so it will be considered to have not been run
@@ -429,26 +419,26 @@ class Migrator
      * @param  string  $method
      * @return void
      */
-    protected function runMigration($migration, $method, $name = null)
+    protected function runMigration($migration, $method)
     {
         $connection = $this->resolveConnection(
             $migration->getConnection()
         );
 
-        $callback = function () use ($connection, $migration, $method, $name) {
+        $callback = function () use ($connection, $migration, $method) {
             if (method_exists($migration, $method)) {
-                $this->fireMigrationEvent(new MigrationStarted($migration, $method, $name));
+                $this->fireMigrationEvent(new MigrationStarted($migration, $method));
 
                 $this->runMethod($connection, $migration, $method);
 
-                $this->fireMigrationEvent(new MigrationEnded($migration, $method, $name));
+                $this->fireMigrationEvent(new MigrationEnded($migration, $method));
             }
         };
 
         $this->getSchemaGrammar($connection)->supportsSchemaTransactions()
             && $migration->withinTransaction
-                ? $connection->transaction($callback)
-                : $callback();
+                    ? $connection->transaction($callback)
+                    : $callback();
     }
 
     /**
@@ -551,8 +541,8 @@ class Migrator
 
         if (is_object($migration)) {
             return method_exists($migration, '__construct')
-                ? $this->files->getRequire($path)
-                : clone $migration;
+                    ? $this->files->getRequire($path)
+                    : clone $migration;
         }
 
         return new $class;
@@ -655,10 +645,8 @@ class Migrator
     /**
      * Execute the given callback using the given connection as the default connection.
      *
-     * @template TReturn
-     *
      * @param  string  $name
-     * @param  (callable(): TReturn)  $callback
+     * @param  callable  $callback
      * @return mixed
      */
     public function usingConnection($name, callable $callback)
@@ -667,11 +655,7 @@ class Migrator
 
         $this->setConnection($name);
 
-        try {
-            return $callback();
-        } finally {
-            $this->setConnection($previousConnection);
-        }
+        return tap($callback(), fn () => $this->setConnection($previousConnection));
     }
 
     /**
@@ -713,7 +697,7 @@ class Migrator
     /**
      * Set a connection resolver callback.
      *
-     * @param  \Closure(\Illuminate\Database\ConnectionResolverInterface, ?string): \Illuminate\Database\Connection  $callback
+     * @param  \Closure  $callback
      * @return void
      */
     public static function resolveConnectionsUsing(Closure $callback)

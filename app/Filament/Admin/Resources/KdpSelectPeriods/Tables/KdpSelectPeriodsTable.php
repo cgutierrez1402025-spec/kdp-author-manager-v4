@@ -14,7 +14,7 @@ class KdpSelectPeriodsTable
     public static function configure(Table $table): Table
     {
         return $table
-            ->modifyQueryQueryUsing(fn ($query) => $query->with('publication.work'))
+            ->modifyQueryUsing(fn ($query) => $query->with('publication.work'))
             ->columns([
                 TextColumn::make('publication.work.title_public')
                     ->label('Obra')

@@ -1,0 +1,37 @@
+
+   Symfony\Component\ErrorHandler\Error\FatalError 
+
+  Could not check compatibility between App\Filament\Admin\Resources\ActivityLogs\ActivityLogResource::form(App\Filament\Admin\Resources\ActivityLogs\Filament\Forms\Form $form): App\Filament\Admin\Resources\ActivityLogs\Filament\Forms\Form and Filament\Resources\Resource::form(Filament\Forms\Form $form): Filament\Forms\Form, because class App\Filament\Admin\Resources\ActivityLogs\Filament\Forms\Form is not available
+
+  at app/Filament/Admin/Resources/ActivityLogs/ActivityLogResource.php:18
+     14▕     protected static ?string $navigationIcon = 'heroicon-o-document-text';
+     15▕     
+     16▕     protected static ?string $navigationGroup = 'Logs';
+     17▕     
+  ➜  18▕     public static function form(Filament\Forms\Form $form): Filament\Forms\Form
+     19▕     {
+     20▕         return $form
+     21▕             ->schema([
+     22▕                 //
+
+
+   Whoops\Exception\ErrorException 
+
+  Could not check compatibility between App\Filament\Admin\Resources\ActivityLogs\ActivityLogResource::form(App\Filament\Admin\Resources\ActivityLogs\Filament\Forms\Form $form): App\Filament\Admin\Resources\ActivityLogs\Filament\Forms\Form and Filament\Resources\Resource::form(Filament\Forms\Form $form): Filament\Forms\Form, because class App\Filament\Admin\Resources\ActivityLogs\Filament\Forms\Form is not available
+
+  at app/Filament/Admin/Resources/ActivityLogs/ActivityLogResource.php:18
+     14▕     protected static ?string $navigationIcon = 'heroicon-o-document-text';
+     15▕     
+     16▕     protected static ?string $navigationGroup = 'Logs';
+     17▕     
+  ➜  18▕     public static function form(Filament\Forms\Form $form): Filament\Forms\Form
+     19▕     {
+     20▕         return $form
+     21▕             ->schema([
+     22▕                 //
+
+      [2m+1 vendor frames [22m
+
+  2   [internal]:0
+      Whoops\Run::handleShutdown()
+

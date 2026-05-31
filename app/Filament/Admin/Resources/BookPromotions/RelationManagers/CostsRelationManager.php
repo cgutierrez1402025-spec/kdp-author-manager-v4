@@ -2,31 +2,30 @@
 
 namespace App\Filament\Admin\Resources\BookPromotions\RelationManagers;
 
-use App\Models\PromotionCost;
-use Filament\Actions\CreateAction;
-use Filament\Actions\EditAction;
-use Filament\Actions\DeleteAction;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
-use Filament\Schemas\Schema;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Form;
+use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Tables\Actions\CreateAction;
+use Filament\Tables\Actions\DeleteAction;
+use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Filament\Resources\RelationManagers\RelationManager;
 
 class CostsRelationManager extends RelationManager
 {
-    protected static ?string $relationship = 'costs';
+    protected static string $relationship = 'costs';
 
     protected static ?string $recordTitleAttribute = 'cost_type';
 
-    public static ?string $title = 'Costos';
+    protected static ?string $title = 'Costos';
 
-    public function form(Schema $schema): Schema
+    public function form(Form $form): Form
     {
-        return $schema
-            ->components([
+        return $form
+            ->schema([
                 Select::make('cost_type')
                     ->label('Tipo de Costo')
                     ->options([
@@ -93,12 +92,12 @@ class CostsRelationManager extends RelationManager
                     ->date()
                     ->sortable(),
             ])
-            ->recordActions([
+            ->headerActions([
+                CreateAction::make(),
+            ])
+            ->actions([
                 EditAction::make(),
                 DeleteAction::make(),
-            ])
-            ->toolbarActions([
-                CreateAction::make(),
             ]);
     }
 }

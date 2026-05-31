@@ -5,7 +5,7 @@ return [
     'actions' => [
 
         'open_documentation' => [
-            'label' => 'بەڵگەنامە',
+            'label' => 'Documentation',
         ],
 
         'open_github' => [

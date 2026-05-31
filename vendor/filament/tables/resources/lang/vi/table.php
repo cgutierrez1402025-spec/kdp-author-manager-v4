@@ -2,21 +2,9 @@
 
 return [
 
-    'column_manager' => [
+    'column_toggle' => [
 
         'heading' => 'Cột',
-
-        'actions' => [
-
-            'apply' => [
-                'label' => 'Áp dụng cột',
-            ],
-
-            'reset' => [
-                'label' => 'Đặt lại',
-            ],
-
-        ],
 
     ],
 
@@ -29,12 +17,11 @@ return [
         'text' => [
 
             'actions' => [
-                'collapse_list' => 'Hiển thị giảm :count',
-                'expand_list' => 'Hiển thị thêm :count',
+                'collapse_list' => 'Hiển thị :count ít hơn',
+                'expand_list' => 'Hiển thị :count nhiều hơn',
             ],
 
-            'more_list_items' => 'và thêm :count',
-
+            'more_list_items' => 'và :count cột khác',
         ],
 
     ],
@@ -50,7 +37,7 @@ return [
         ],
 
         'bulk_select_group' => [
-            'label' => 'Chọn/bỏ chọn nhóm :title để thực hiện tác vụ hàng loạt.',
+            'label' => 'Chọn/bỏ chọn nhóm :title để thực hiện các hành động hàng loạt.',
         ],
 
         'search' => [
@@ -111,8 +98,8 @@ return [
             'label' => 'Tác vụ hàng loạt',
         ],
 
-        'column_manager' => [
-            'label' => 'Quản lý cột',
+        'toggle_columns' => [
+            'label' => 'Chuyển đổi cột',
         ],
 
     ],
@@ -150,20 +137,14 @@ return [
 
         'heading' => 'Bộ lọc',
 
-        'indicator' => 'Bộ lọc đang áp dụng',
+        'indicator' => 'Bộ lọc hoạt động',
 
         'multi_select' => [
             'placeholder' => 'Tất cả',
         ],
 
         'select' => [
-
             'placeholder' => 'Tất cả',
-
-            'relationship' => [
-                'empty_option_label' => 'Không có',
-            ],
-
         ],
 
         'trashed' => [
@@ -208,7 +189,7 @@ return [
 
     'selection_indicator' => [
 
-        'selected_count' => 'Đã chọn 1 bản ghi|Đã chọn :count bản ghi',
+        'selected_count' => '1 bản ghi đã chọn|:count bản ghi đã chọn',
 
         'actions' => [
 
@@ -246,7 +227,5 @@ return [
         ],
 
     ],
-
-    'default_model_label' => 'bản ghi',
 
 ];

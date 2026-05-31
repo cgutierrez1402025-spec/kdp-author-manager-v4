@@ -8,23 +8,21 @@ use App\Filament\Admin\Resources\Sources\Pages\ListSources;
 use App\Filament\Admin\Resources\Sources\Schemas\SourceForm;
 use App\Filament\Admin\Resources\Sources\Tables\SourcesTable;
 use App\Models\Source;
-use BackedEnum;
+use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Schemas\Schema;
-use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 
 class SourceResource extends Resource
 {
     protected static ?string $model = Source::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBookOpen;
+    protected static ?string $navigationIcon = 'heroicon-o-document-text';
 
     protected static ?string $recordTitleAttribute = 'title';
 
-    public static function form(Schema $schema): Schema
+    public static function form(Form $form): Form
     {
-        return SourceForm::configure($schema);
+        return SourceForm::configure($form);
     }
 
     public static function table(Table $table): Table

@@ -104,7 +104,7 @@ return [
 
     'markdown_editor' => [
 
-        'tools' => [
+        'toolbar_buttons' => [
             'attach_files' => 'Atodi ffeiliau',
             'bold' => 'Trwm',
             'bullet_list' => 'Rhestr bwled',
@@ -186,7 +186,7 @@ return [
 
         ],
 
-        'tools' => [
+        'toolbar_buttons' => [
             'attach_files' => 'Atodi ffeiliau',
             'blockquote' => 'Dyfynnod Bloc',
             'bold' => 'Trwm',
@@ -250,6 +250,22 @@ return [
 
     'tags_input' => [
         'placeholder' => 'Tag newydd',
+    ],
+
+    'wizard' => [
+
+        'actions' => [
+
+            'previous_step' => [
+                'label' => 'Yn ôl',
+            ],
+
+            'next_step' => [
+                'label' => 'Nesaf',
+            ],
+
+        ],
+
     ],
 
 ];

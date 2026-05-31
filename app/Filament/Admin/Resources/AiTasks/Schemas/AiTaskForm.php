@@ -3,14 +3,14 @@
 namespace App\Filament\Admin\Resources\AiTasks\Schemas;
 
 use Filament\Forms;
-use Filament\Schemas\Schema;
+use Filament\Forms\Form;
 
 class AiTaskForm
 {
-    public static function configure(Schema $schema): Schema
+    public static function configure(Form $form): Form
     {
-        return $schema
-            ->components([
+        return $form
+            ->schema([
                 Forms\Components\Section::make('Tarea de IA')
                     ->schema([
                         Forms\Components\Select::make('work_id')

@@ -17,9 +17,6 @@ trait HasExtraEntryWrapperAttributes
      */
     public function extraEntryWrapperAttributes(array | Closure $attributes, bool $merge = false): static
     {
-        // Security: Attribute values are not escaped when rendered. Never
-        // pass unsanitized user input as attribute names or values.
-
         if ($merge) {
             $this->extraEntryWrapperAttributes[] = $attributes;
         } else {
@@ -37,7 +34,7 @@ trait HasExtraEntryWrapperAttributes
         $temporaryAttributeBag = new ComponentAttributeBag;
 
         foreach ($this->extraEntryWrapperAttributes as $extraEntryWrapperAttributes) {
-            $temporaryAttributeBag = $temporaryAttributeBag->merge($this->evaluate($extraEntryWrapperAttributes), escape: false);
+            $temporaryAttributeBag = $temporaryAttributeBag->merge($this->evaluate($extraEntryWrapperAttributes));
         }
 
         return $temporaryAttributeBag->getAttributes();

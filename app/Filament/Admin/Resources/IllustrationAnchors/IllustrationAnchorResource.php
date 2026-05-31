@@ -8,17 +8,15 @@ use App\Filament\Admin\Resources\IllustrationAnchors\Pages\ListIllustrationAncho
 use App\Filament\Admin\Resources\IllustrationAnchors\Schemas\IllustrationAnchorForm;
 use App\Filament\Admin\Resources\IllustrationAnchors\Tables\IllustrationAnchorsTable;
 use App\Models\IllustrationAnchor;
-use BackedEnum;
+use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Schemas\Schema;
-use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 
 class IllustrationAnchorResource extends Resource
 {
     protected static ?string $model = IllustrationAnchor::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedPhoto;
+    protected static ?string $navigationIcon = 'heroicon-o-document-text';
 
     protected static ?string $navigationLabel = 'Anclajes de Ilustraciones';
 
@@ -26,9 +24,9 @@ class IllustrationAnchorResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'anchor_type';
 
-    public static function form(Schema $schema): Schema
+    public static function form(Form $form): Form
     {
-        return IllustrationAnchorForm::configure($schema);
+        return IllustrationAnchorForm::configure($form);
     }
 
     public static function table(Table $table): Table

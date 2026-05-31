@@ -7,12 +7,24 @@ use Filament\Widgets\Widget;
 
 class PromotionRoiDashboard extends Widget
 {
-    protected string $view = 'filament.widgets.promotion-roi-dashboard';
+    protected static string $view = 'filament.widgets.promotion-roi-dashboard';  // ✅ Corregido: static
 
     public ?BookPromotion $record = null;
 
     protected function getViewData(): array
     {
+        if (! $this->record) {
+            return [
+                'record' => null,
+                'totalCosts' => 0,
+                'totalRevenue' => 0,
+                'roi' => 0,
+                'roiPercentage' => 0,
+                'dailyResults' => collect(),
+                'chartData' => [],
+            ];
+        }
+
         $dailyResults = $this->record->dailyResults()
             ->select(['date', 'net_royalties', 'paid_units', 'free_units_promo'])
             ->orderBy('date')

@@ -3,7 +3,6 @@
  * Changes:
  * - Removal of line 1 to 15, awaiting https://github.com/Ionaru/easy-markdown-editor/pull/263
  * - Added `moveToNextField()` and `moveToPreviousField()` functions, and changed `Tab` and `Shift-Tab` key bindings to only indent the content when there is a selection in the editor. See https://github.com/filamentphp/filament/pull/16144.
- * - Wrapped the indent/outdent operations in `toggleCodeBlock()` in `cm.operation()` so they group into a single CodeMirror undo step. See https://github.com/filamentphp/filament/pull/19890.
  */
 
 // Some variables
@@ -825,18 +824,16 @@ function toggleCodeBlock(editor) {
             next_line_indented =
                 next_line_last_tok &&
                 token_state(next_line_last_tok).indentedCode
-        cm.operation(function () {
-            if (next_line_indented) {
-                cm.replaceRange('\n', {
-                    line: block_end + 1,
-                    ch: 0,
-                })
-            }
+        if (next_line_indented) {
+            cm.replaceRange('\n', {
+                line: block_end + 1,
+                ch: 0,
+            })
+        }
 
-            for (var i = block_start; i <= block_end; i++) {
-                cm.indentLine(i, 'subtract')
-            }
-        })
+        for (var i = block_start; i <= block_end; i++) {
+            cm.indentLine(i, 'subtract') // TODO: this doesn't get tracked in the history, so can't be undone :(
+        }
         cm.focus()
     } else {
         // insert code formatting

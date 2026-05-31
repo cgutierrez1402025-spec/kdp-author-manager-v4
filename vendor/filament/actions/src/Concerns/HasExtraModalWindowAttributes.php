@@ -17,9 +17,6 @@ trait HasExtraModalWindowAttributes
      */
     public function extraModalWindowAttributes(array | Closure $attributes, bool $merge = false): static
     {
-        // Security: Attribute values are not escaped when rendered. Never
-        // pass unsanitized user input as attribute names or values.
-
         if ($merge) {
             $this->extraModalWindowAttributes[] = $attributes;
         } else {
@@ -37,7 +34,7 @@ trait HasExtraModalWindowAttributes
         $temporaryAttributeBag = new ComponentAttributeBag;
 
         foreach ($this->extraModalWindowAttributes as $extraModalWindowAttributes) {
-            $temporaryAttributeBag = $temporaryAttributeBag->merge($this->evaluate($extraModalWindowAttributes), escape: false);
+            $temporaryAttributeBag = $temporaryAttributeBag->merge($this->evaluate($extraModalWindowAttributes));
         }
 
         return $temporaryAttributeBag->getAttributes();

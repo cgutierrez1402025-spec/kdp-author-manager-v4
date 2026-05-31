@@ -14,7 +14,7 @@ class MarketplacesTable
     public static function configure(Table $table): Table
     {
         return $table
-            ->modifyQueryQueryUsing(fn ($query) => $query->with('platform'))
+            ->modifyQueryUsing(fn ($query) => $query->with('platform'))
             ->columns([
                 TextColumn::make('platform.name')
                     ->label('Plataforma')

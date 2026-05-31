@@ -2,7 +2,6 @@
 
 namespace App\Filament\Admin\Resources\Prompts\Pages;
 
-use App\Models\Prompt;
 use App\Filament\Admin\Resources\Prompts\PromptResource;
 use Filament\Actions\Action;
 use Filament\Actions\EditAction;
@@ -34,6 +33,7 @@ class EditPrompt extends EditRecord
                 ])
                 ->action(function (array $data): array {
                     $prompt = $this->resolveRecord();
+
                     return $prompt->execute($data['input_override'] ?? '');
                 })
                 ->modalContent(function (array $data) {

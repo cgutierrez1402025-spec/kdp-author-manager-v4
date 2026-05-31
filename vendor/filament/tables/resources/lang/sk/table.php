@@ -2,21 +2,9 @@
 
 return [
 
-    'column_manager' => [
+    'column_toggle' => [
 
         'heading' => 'Stĺpce',
-
-        'actions' => [
-
-            'apply' => [
-                'label' => 'Použiť stĺpce',
-            ],
-
-            'reset' => [
-                'label' => 'Resetovať stĺpce',
-            ],
-
-        ],
 
     ],
 
@@ -24,22 +12,6 @@ return [
 
         'actions' => [
             'label' => 'Akcia|Akcie',
-        ],
-
-        'select' => [
-
-            'loading_message' => 'Načítava sa...',
-
-            'no_options_message' => 'Nie sú dostupné žiadne možnosti.',
-
-            'no_search_results_message' => 'Žiadne možnosti nezodpovedajú vášmu vyhľadávaniu.',
-
-            'placeholder' => 'Vyberte možnosť',
-
-            'searching_message' => 'Vyhľadáva sa...',
-
-            'search_prompt' => 'Začnite písať pre vyhľadávanie...',
-
         ],
 
         'text' => [
@@ -127,7 +99,7 @@ return [
             'label' => 'Hromadné akcie',
         ],
 
-        'column_manager' => [
+        'toggle_columns' => [
             'label' => 'Prepnúť stĺpce',
         ],
 
@@ -159,7 +131,7 @@ return [
             ],
 
             'reset' => [
-                'label' => 'Resetovať filtre',
+                'label' => 'Resetovať',
             ],
 
         ],
@@ -173,13 +145,7 @@ return [
         ],
 
         'select' => [
-
             'placeholder' => 'Všetko',
-
-            'relationship' => [
-                'empty_option_label' => 'Žiadna',
-            ],
-
         ],
 
         'trashed' => [
@@ -202,6 +168,7 @@ return [
 
             'group' => [
                 'label' => 'Zoskupiť podľa',
+                'placeholder' => 'Zoskupiť podľa',
             ],
 
             'direction' => [
@@ -261,7 +228,5 @@ return [
         ],
 
     ],
-
-    'default_model_label' => 'záznam',
 
 ];

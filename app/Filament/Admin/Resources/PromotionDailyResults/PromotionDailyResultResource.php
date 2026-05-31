@@ -8,17 +8,15 @@ use App\Filament\Admin\Resources\PromotionDailyResults\Pages\ListPromotionDailyR
 use App\Filament\Admin\Resources\PromotionDailyResults\Schemas\PromotionDailyResultForm;
 use App\Filament\Admin\Resources\PromotionDailyResults\Tables\PromotionDailyResultsTable;
 use App\Models\PromotionDailyResult;
-use BackedEnum;
+use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Schemas\Schema;
-use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 
 class PromotionDailyResultResource extends Resource
 {
     protected static ?string $model = PromotionDailyResult::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedChartBar;
+    protected static ?string $navigationIcon = 'heroicon-o-document-text';
 
     protected static ?string $navigationLabel = 'Resultados Diarios';
 
@@ -26,9 +24,9 @@ class PromotionDailyResultResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'date';
 
-    public static function form(Schema $schema): Schema
+    public static function form(Form $form): Form
     {
-        return PromotionDailyResultForm::configure($schema);
+        return PromotionDailyResultForm::configure($form);
     }
 
     public static function table(Table $table): Table

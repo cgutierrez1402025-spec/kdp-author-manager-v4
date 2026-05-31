@@ -2,12 +2,11 @@
 
 namespace App\Filament\Admin\Resources\Prompts\Tables;
 
-use App\Filament\Admin\Resources\Prompts\PromptResource;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
-use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\RatingColumn;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
@@ -16,7 +15,7 @@ class PromptsTable
     public static function configure(Table $table): Table
     {
         return $table
-            ->modifyQueryQueryUsing(fn ($query) => $query->with(['work', 'aiTool', 'task']))
+            ->modifyQueryUsing(fn ($query) => $query->with(['work', 'aiTool', 'task']))
             ->columns([
                 TextColumn::make('title')
                     ->label('Título')

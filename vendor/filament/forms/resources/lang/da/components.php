@@ -232,7 +232,7 @@ return [
 
     'markdown_editor' => [
 
-        'tools' => [
+        'toolbar_buttons' => [
             'attach_files' => 'Vedhæft filer',
             'blockquote' => 'Citere',
             'bold' => 'Fed',
@@ -330,7 +330,7 @@ return [
 
         ],
 
-        'tools' => [
+        'toolbar_buttons' => [
             'attach_files' => 'Vedhæft filer',
             'blockquote' => 'Citere',
             'bold' => 'Fed',
@@ -439,6 +439,22 @@ return [
         'boolean' => [
             'true' => 'Ja',
             'false' => 'Nej',
+        ],
+
+    ],
+
+    'wizard' => [
+
+        'actions' => [
+
+            'previous_step' => [
+                'label' => 'Tilbage',
+            ],
+
+            'next_step' => [
+                'label' => 'Næste',
+            ],
+
         ],
 
     ],

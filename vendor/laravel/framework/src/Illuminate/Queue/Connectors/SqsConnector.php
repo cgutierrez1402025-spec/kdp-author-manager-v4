@@ -24,7 +24,6 @@ class SqsConnector implements ConnectorInterface
             $config['credentials'] = $credentials;
         } elseif (! empty($config['key']) && ! empty($config['secret'])) {
             $config['credentials'] = Arr::only($config, ['key', 'secret']);
-
             if (! empty($config['token'])) {
                 $config['credentials']['token'] = $config['token'];
             }
@@ -32,13 +31,12 @@ class SqsConnector implements ConnectorInterface
 
         return new SqsQueue(
             new SqsClient(
-                Arr::except($config, ['token', 'overflow'])
+                Arr::except($config, ['token'])
             ),
             $config['queue'],
             $config['prefix'] ?? '',
             $config['suffix'] ?? '',
-            $config['after_commit'] ?? null,
-            $config['overflow'] ?? [],
+            $config['after_commit'] ?? null
         );
     }
 

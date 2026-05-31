@@ -3,29 +3,29 @@
 namespace App\Filament\Admin\Resources\BookPromotions\RelationManagers;
 
 use App\Models\PromotionDailyResult;
-use Filament\Actions\CreateAction;
-use Filament\Actions\EditAction;
-use Filament\Actions\DeleteAction;
 use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
-use Filament\Schemas\Schema;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Form;
+use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Tables\Actions\CreateAction;
+use Filament\Tables\Actions\DeleteAction;
+use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Filament\Resources\RelationManagers\RelationManager;
 
 class DailyResultsRelationManager extends RelationManager
 {
-    protected static ?string $relationship = 'dailyResults';
+    protected static string $relationship = 'dailyResults';  // ✅ Corregido: quitado el ?
 
     protected static ?string $recordTitleAttribute = 'date';
 
-    public static ?string $title = 'Resultados Diarios';
+    protected static ?string $title = 'Resultados Diarios';
 
-    public function form(Schema $schema): Schema
+    public function form(Form $form): Form
     {
-        return $schema
-            ->components([
+        return $form
+            ->schema([
                 DatePicker::make('date')
                     ->label('Fecha')
                     ->required(),
@@ -104,12 +104,12 @@ class DailyResultsRelationManager extends RelationManager
                     ->money('EUR')
                     ->sortable(),
             ])
-            ->recordActions([
+            ->headerActions([
+                CreateAction::make(),
+            ])
+            ->actions([
                 EditAction::make(),
                 DeleteAction::make(),
-            ])
-            ->toolbarActions([
-                CreateAction::make(),
             ]);
     }
 }

@@ -2,21 +2,21 @@
 
 namespace Filament\Pages\Concerns;
 
-trait ExposesTableToWidgets /** @phpstan-ignore trait.unused */
+trait ExposesTableToWidgets
 {
     public function getWidgetData(): array
     {
         return [
             'activeTab' => $this->activeTab,
             'paginators' => $this->paginators,
-            'parentRecord' => $this->parentRecord,
             'tableColumnSearches' => $this->tableColumnSearches,
             'tableFilters' => $this->tableFilters,
             'tableGrouping' => $this->tableGrouping,
-            'tableRecordsCount' => $this->getAllTableRecordsCount(),
+            'tableGroupingDirection' => $this->tableGroupingDirection,
             'tableRecordsPerPage' => $this->tableRecordsPerPage,
             'tableSearch' => $this->tableSearch,
-            'tableSort' => $this->tableSort,
+            'tableSortColumn' => $this->tableSortColumn,
+            'tableSortDirection' => $this->tableSortDirection,
         ];
     }
 }

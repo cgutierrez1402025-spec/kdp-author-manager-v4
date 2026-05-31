@@ -2,7 +2,7 @@
 
 return [
 
-    'column_manager' => [
+    'column_toggle' => [
 
         'heading' => 'Баганууд',
 
@@ -95,7 +95,7 @@ return [
             'label' => 'Багц үйлдэл',
         ],
 
-        'column_manager' => [
+        'toggle_columns' => [
             'label' => 'Баганыг нээх/хаах',
         ],
 

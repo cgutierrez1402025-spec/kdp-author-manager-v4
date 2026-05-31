@@ -2,29 +2,29 @@
 
 namespace App\Filament\Admin\Resources\Checklists\RelationManagers;
 
-use Filament\Actions\CreateAction;
-use Filament\Actions\EditAction;
-use Filament\Actions\DeleteAction;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
-use Filament\Schemas\Schema;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Columns\BooleanColumn;
-use Filament\Tables\Table;
+use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Tables\Actions\CreateAction;
+use Filament\Tables\Actions\DeleteAction;
+use Filament\Tables\Actions\EditAction;
+use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Table;
 
 class ItemsRelationManager extends RelationManager
 {
-    protected static ?string $relationship = 'items';
+    protected static string $relationship = 'items';  // ✅ Corregido: quitado el ?
 
     protected static ?string $recordTitleAttribute = 'item';
 
-    public static ?string $title = 'Elementos';
+    protected static ?string $title = 'Elementos';  // ✅ Corregido: cambiar public a protected static
 
-    public function form(Schema $schema): Schema
+    public function form(Form $form): Form  // ✅ Corregido: Schema → Form
     {
-        return $schema
-            ->components([
+        return $form
+            ->schema([  // ✅ Corregido: components() → schema()
                 TextInput::make('item')
                     ->label('Elemento')
                     ->required()
@@ -44,8 +44,9 @@ class ItemsRelationManager extends RelationManager
                     ->label('Elemento')
                     ->searchable(),
 
-                BooleanColumn::make('is_checked')
+                IconColumn::make('is_checked')  // ✅ Corregido: BooleanColumn → IconColumn
                     ->label('Completado')
+                    ->boolean()
                     ->trueIcon('heroicon-o-check-circle')
                     ->falseIcon('heroicon-o-x-circle'),
 
@@ -53,12 +54,12 @@ class ItemsRelationManager extends RelationManager
                     ->label('Completado por')
                     ->placeholder('N/A'),
             ])
-            ->recordActions([
+            ->headerActions([  // ✅ Corregido: toolbarActions() → headerActions()
+                CreateAction::make(),
+            ])
+            ->actions([  // ✅ Corregido: recordActions() → actions()
                 EditAction::make(),
                 DeleteAction::make(),
-            ])
-            ->toolbarActions([
-                CreateAction::make(),
             ]);
     }
 }

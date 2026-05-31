@@ -1,70 +1,32 @@
 @php
-    use Filament\Widgets\View\Components\ChartWidgetComponent;
-    use Illuminate\View\ComponentAttributeBag;
+    use Filament\Support\Facades\FilamentView;
 
     $color = $this->getColor();
     $heading = $this->getHeading();
     $description = $this->getDescription();
     $filters = $this->getFilters();
-    $isCollapsible = $this->isCollapsible();
-    $type = $this->getType();
-    $maxHeight = $this->getMaxHeight();
-    $hasMaxHeight = filled($maxHeight) && $maxHeight !== '100%';
 @endphp
 
 <x-filament-widgets::widget class="fi-wi-chart">
-    <x-filament::section
-        :description="$description"
-        :heading="$heading"
-        :collapsible="$isCollapsible"
-    >
-        @if ($filters || method_exists($this, 'getFiltersSchema'))
-            <x-slot name="afterHeader">
-                @if ($filters)
-                    <x-filament::input.wrapper
+    <x-filament::section :description="$description" :heading="$heading">
+        @if ($filters)
+            <x-slot name="headerEnd">
+                <x-filament::input.wrapper
+                    inline-prefix
+                    wire:target="filter"
+                    class="w-max sm:-my-2"
+                >
+                    <x-filament::input.select
                         inline-prefix
-                        wire:target="filter"
-                        class="fi-wi-chart-filter"
+                        wire:model.live="filter"
                     >
-                        <x-filament::input.select
-                            inline-prefix
-                            wire:model.live="filter"
-                        >
-                            @foreach ($filters as $value => $label)
-                                <option value="{{ $value }}">
-                                    {{ $label }}
-                                </option>
-                            @endforeach
-                        </x-filament::input.select>
-                    </x-filament::input.wrapper>
-                @endif
-
-                @if (method_exists($this, 'getFiltersSchema'))
-                    <x-filament::dropdown
-                        placement="bottom-end"
-                        shift
-                        width="xs"
-                        class="fi-wi-chart-filter"
-                    >
-                        <x-slot name="trigger">
-                            {{ $this->getFiltersTriggerAction() }}
-                        </x-slot>
-
-                        <div class="fi-wi-chart-filter-content">
-                            {{ $this->getFiltersSchema() }}
-
-                            @if (method_exists($this, 'hasDeferredFilters') && $this->hasDeferredFilters())
-                                <div
-                                    class="fi-wi-chart-filter-content-actions-ctn"
-                                >
-                                    {{ $this->getFiltersApplyAction() }}
-
-                                    {{ $this->getFiltersResetAction() }}
-                                </div>
-                            @endif
-                        </div>
-                    </x-filament::dropdown>
-                @endif
+                        @foreach ($filters as $value => $label)
+                            <option value="{{ $value }}">
+                                {{ $label }}
+                            </option>
+                        @endforeach
+                    </x-filament::input.select>
+                </x-filament::input.wrapper>
             </x-slot>
         @endif
 
@@ -74,51 +36,75 @@
             @endif
         >
             <div
-                x-load
+                @if (FilamentView::hasSpaMode())
+                    x-load="visible"
+                @else
+                    x-load
+                @endif
                 x-load-src="{{ \Filament\Support\Facades\FilamentAsset::getAlpineComponentSrc('chart', 'filament/widgets') }}"
                 wire:ignore
-                data-chart-type="{{ $type }}"
                 x-data="chart({
                             cachedData: @js($this->getCachedData()),
                             options: @js($this->getOptions()),
-                            type: @js($type),
+                            type: @js($this->getType()),
                         })"
-                {{
-                    (new ComponentAttributeBag)
-                        ->color(ChartWidgetComponent::class, $color)
-                        ->class([
-                            'fi-wi-chart-canvas-ctn',
-                            'fi-wi-chart-canvas-ctn-no-aspect-ratio' => $hasMaxHeight,
-                        ])
-                }}
+                @class([
+                    match ($color) {
+                        'gray' => null,
+                        default => 'fi-color-custom',
+                    },
+                    is_string($color) ? "fi-color-{$color}" : null,
+                ])
             >
                 <canvas
                     x-ref="canvas"
-                    @style([
-                        'width: 100%',
-                        'height: 100%; max-height: 100%' => ! $hasMaxHeight,
-                        "max-height: {$maxHeight}" => $hasMaxHeight,
-                    ])
+                    @if ($maxHeight = $this->getMaxHeight())
+                        style="max-height: {{ $maxHeight }}"
+                    @endif
                 ></canvas>
 
                 <span
                     x-ref="backgroundColorElement"
-                    class="fi-wi-chart-bg-color"
+                    @class([
+                        match ($color) {
+                            'gray' => 'text-gray-100 dark:text-gray-800',
+                            default => 'text-custom-50 dark:text-custom-400/10',
+                        },
+                    ])
+                    @style([
+                        \Filament\Support\get_color_css_variables(
+                            $color,
+                            shades: [50, 400],
+                            alias: 'widgets::chart-widget.background',
+                        ) => $color !== 'gray',
+                    ])
                 ></span>
 
                 <span
                     x-ref="borderColorElement"
-                    class="fi-wi-chart-border-color"
+                    @class([
+                        match ($color) {
+                            'gray' => 'text-gray-400',
+                            default => 'text-custom-500 dark:text-custom-400',
+                        },
+                    ])
+                    @style([
+                        \Filament\Support\get_color_css_variables(
+                            $color,
+                            shades: [400, 500],
+                            alias: 'widgets::chart-widget.border',
+                        ) => $color !== 'gray',
+                    ])
                 ></span>
 
                 <span
                     x-ref="gridColorElement"
-                    class="fi-wi-chart-grid-color"
+                    class="text-gray-200 dark:text-gray-800"
                 ></span>
 
                 <span
                     x-ref="textColorElement"
-                    class="fi-wi-chart-text-color"
+                    class="text-gray-500 dark:text-gray-400"
                 ></span>
             </div>
         </div>

@@ -3,9 +3,7 @@
 namespace Filament\Actions;
 
 use Filament\Actions\Concerns\CanCustomizeProcess;
-use Filament\Actions\View\ActionsIconAlias;
 use Filament\Support\Facades\FilamentIcon;
-use Filament\Support\Icons\Heroicon;
 use Illuminate\Database\Eloquent\Model;
 
 class DeleteAction extends Action
@@ -21,6 +19,8 @@ class DeleteAction extends Action
     {
         parent::setUp();
 
+        $this->requiresConfirmation();
+
         $this->label(__('filament-actions::delete.single.label'));
 
         $this->modalHeading(fn (): string => __('filament-actions::delete.single.modal.heading', ['label' => $this->getRecordTitle()]));
@@ -31,12 +31,9 @@ class DeleteAction extends Action
 
         $this->defaultColor('danger');
 
-        $this->tableIcon(FilamentIcon::resolve(ActionsIconAlias::DELETE_ACTION) ?? Heroicon::Trash);
-        $this->groupedIcon(FilamentIcon::resolve(ActionsIconAlias::DELETE_ACTION_GROUPED) ?? Heroicon::Trash);
+        $this->groupedIcon(FilamentIcon::resolve('actions::delete-action.grouped') ?? 'heroicon-m-trash');
 
-        $this->requiresConfirmation();
-
-        $this->modalIcon(FilamentIcon::resolve(ActionsIconAlias::DELETE_ACTION_MODAL) ?? Heroicon::OutlinedTrash);
+        $this->modalIcon(FilamentIcon::resolve('actions::delete-action.modal') ?? 'heroicon-o-trash');
 
         $this->keyBindings(['mod+d']);
 
@@ -49,7 +46,7 @@ class DeleteAction extends Action
         });
 
         $this->action(function (): void {
-            $result = $this->process(static fn (Model $record): ?bool => $record->delete());
+            $result = $this->process(static fn (Model $record) => $record->delete());
 
             if (! $result) {
                 $this->failure();

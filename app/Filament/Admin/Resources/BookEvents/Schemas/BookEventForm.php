@@ -3,14 +3,14 @@
 namespace App\Filament\Admin\Resources\BookEvents\Schemas;
 
 use Filament\Forms;
-use Filament\Schemas\Schema;
+use Filament\Forms\Form;
 
 class BookEventForm
 {
-    public static function configure(Schema $schema): Schema
+    public static function configure(Form $form): Form
     {
-        return $schema
-            ->components([
+        return $form
+            ->schema([
                 Forms\Components\Section::make('Detalles del Evento')
                     ->schema([
                         Forms\Components\TextInput::make('title')

@@ -14,7 +14,7 @@ class BookPromotionsTable
     public static function configure(Table $table): Table
     {
         return $table
-            ->modifyQueryQueryUsing(fn ($query) => $query->with(['publication.work', 'marketplace', 'kdpSelectPeriod']))
+            ->modifyQueryUsing(fn ($query) => $query->with(['publication.work', 'marketplace', 'kdpSelectPeriod']))
             ->columns([
                 TextColumn::make('publication.work.title_public')
                     ->label('Obra')

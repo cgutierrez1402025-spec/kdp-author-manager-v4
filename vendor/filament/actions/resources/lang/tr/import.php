@@ -13,14 +13,11 @@ return [
             'file' => [
                 'label' => 'Dosya',
                 'placeholder' => 'Bir CSV dosyası seçin',
-                'rules' => [
-                    'duplicate_columns' => '{0} Dosya birden fazla boş sütun başlığı içeremez.|{1,*} Dosya tekrar eden sütun başlığı içeremez: :columns.',
-                ],
             ],
 
             'columns' => [
-                'label' => 'Sütunlar',
-                'placeholder' => 'Sütunları eşleştirin',
+                'label' => 'Kolonlar',
+                'placeholder' => 'Kolonları eşleştirin',
             ],
 
         ],
@@ -73,9 +70,8 @@ return [
 
     'failure_csv' => [
         'file_name' => 'import-:import_id-:csv_name-failed-rows',
-        'error_header' => 'error',
+        'error_header' => 'hata',
         'system_error' => 'Sistem Hatası',
-        'column_mapping_required_for_new_record' => ':attribute sütunu dosyadaki bir sütun ile eşleştirilmedi, fakat bu sütun yeni kayıt oluşturmak için gerekli bir sütun.',
     ],
 
 ];

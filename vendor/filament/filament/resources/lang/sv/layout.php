@@ -60,13 +60,4 @@ return [
         'alt' => ':name logotyp',
     ],
 
-    'tenant_menu' => [
-
-        'search_field' => [
-            'label' => 'Sök bland klienter',
-            'placeholder' => 'Sök',
-        ],
-
-    ],
-
 ];

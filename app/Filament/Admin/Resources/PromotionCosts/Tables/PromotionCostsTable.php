@@ -14,7 +14,7 @@ class PromotionCostsTable
     public static function configure(Table $table): Table
     {
         return $table
-            ->modifyQueryQueryUsing(fn ($query) => $query->with('bookPromotion'))
+            ->modifyQueryUsing(fn ($query) => $query->with('bookPromotion'))
             ->columns([
                 TextColumn::make('bookPromotion.promotion_name')
                     ->label('Promoción')

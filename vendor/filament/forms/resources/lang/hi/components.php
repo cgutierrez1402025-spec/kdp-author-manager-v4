@@ -60,7 +60,7 @@ return [
 
     'markdown_editor' => [
 
-        'tools' => [
+        'toolbar_buttons' => [
             'attach_files' => 'फ़ाइलें जोड़ें',
             'bold' => 'स्पष्ट',
             'bullet_list' => 'बुलॅट सूची',
@@ -118,7 +118,7 @@ return [
 
         ],
 
-        'tools' => [
+        'toolbar_buttons' => [
             'attach_files' => 'फ़ाइलें जोड़ें',
             'blockquote' => 'ब्लॉककोट',
             'bold' => 'स्पष्ट',

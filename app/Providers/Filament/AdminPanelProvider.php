@@ -8,7 +8,6 @@ use App\Filament\Admin\Widgets\RecentActivityWidget;
 use App\Filament\Admin\Widgets\RevenueChartWidget;
 use App\Filament\Admin\Widgets\SummaryCardsWidget;
 use App\Filament\Admin\Widgets\TopWorksByRevenueWidget;
-use Filament\Auth\MultiFactor\App\AppAuthentication;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -64,13 +63,6 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->login()
             ->tenant(null)
-            ->requiresEmailVerification()
-            ->multiFactorAuthentication([
-                AppAuthentication::make()
-                    ->recoverable()
-                    ->recoveryCodeCount(8)
-                    ->brandName('KDP Author Manager'),
-            ])
-            ->multiFactorAuthenticationRequiredMiddlewareName(\App\Http\Middleware\EnsureMfaForRoles::class);
+            ->requiresEmailVerification();
     }
 }

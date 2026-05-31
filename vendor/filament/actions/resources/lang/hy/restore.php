@@ -8,7 +8,7 @@ return [
 
         'modal' => [
 
-            'heading' => 'Վերականգնել :label',
+            'heading' => 'Վերականգնել :labelը',
 
             'actions' => [
 
@@ -23,7 +23,7 @@ return [
         'notifications' => [
 
             'restored' => [
-                'title' => 'Վերականգնված է',
+                'title' => 'Գրառումը վերականգնվել է',
             ],
 
         ],
@@ -32,11 +32,11 @@ return [
 
     'multiple' => [
 
-        'label' => 'Վերականգնել ընտրածը',
+        'label' => 'Վերականգնել ընտրվածը',
 
         'modal' => [
 
-            'heading' => 'Վերականգնել ընտրած :label',
+            'heading' => 'Վերականգնել ընտրված :labelը',
 
             'actions' => [
 
@@ -51,19 +51,7 @@ return [
         'notifications' => [
 
             'restored' => [
-                'title' => 'Վերականգնված է',
-            ],
-
-            'restored_partial' => [
-                'title' => 'Վերականգնվեց :count-ը ընդհանուր :total-ից',
-                'missing_authorization_failure_message' => 'Դուք իրավունք չունեք վերականգնելու :count-ը։',
-                'missing_processing_failure_message' => ':count-ը հնարավոր չէր վերականգնել։',
-            ],
-
-            'restored_none' => [
-                'title' => 'Չհաջողվեց վերականգնել',
-                'missing_authorization_failure_message' => 'Դուք իրավունք չունեք վերականգնելու :count-ը։',
-                'missing_processing_failure_message' => ':count-ը հնարավոր չէր վերականգնել։',
+                'title' => 'Գրառումները վերականգնվել են։',
             ],
 
         ],

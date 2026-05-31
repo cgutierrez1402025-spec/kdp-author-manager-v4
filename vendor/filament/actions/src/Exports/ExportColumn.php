@@ -9,16 +9,9 @@ use Filament\Support\Concerns\HasCellState;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
-use InvalidArgumentException;
 
 class ExportColumn extends Component
 {
-    // Security: Export column values are written to CSV/XLSX without
-    // transformation. Values starting with `=`, `+`, `-`, or `@`
-    // may be interpreted as formulas by spreadsheet software.
-    // Use `formatStateUsing()` to sanitize untrusted user
-    // content, e.g. by prefixing with a single quote.
-
     use CanAggregateRelatedModels;
     use Concerns\CanFormatState;
     use HasCellState;
@@ -38,25 +31,12 @@ class ExportColumn extends Component
         $this->name($name);
     }
 
-    public static function make(?string $name = null): static
+    public static function make(string $name): static
     {
-        $exportColumnClass = static::class;
-
-        $name ??= static::getDefaultName();
-
-        if (blank($name)) {
-            throw new InvalidArgumentException("Export column of class [$exportColumnClass] must have a unique name, passed to the [make()] method.");
-        }
-
-        $static = app($exportColumnClass, ['name' => $name]);
+        $static = app(static::class, ['name' => $name]);
         $static->configure();
 
         return $static;
-    }
-
-    public static function getDefaultName(): ?string
-    {
-        return null;
     }
 
     public function name(string $name): static
@@ -146,7 +126,7 @@ class ExportColumn extends Component
             return $query;
         }
 
-        $relationshipName = $this->getRelationshipName($query->getModel());
+        $relationshipName = $this->getRelationshipName();
 
         if (array_key_exists($relationshipName, $query->getEagerLoads())) {
             return $query;
@@ -167,7 +147,7 @@ class ExportColumn extends Component
 
     protected function resolveDefaultClosureDependencyForEvaluationByType(string $parameterType): array
     {
-        $record = is_a($parameterType, Model::class, allow_string: true) ? $this->getRecord() : null;
+        $record = $this->getRecord();
 
         return match ($parameterType) {
             Exporter::class => [$this->getExporter()],

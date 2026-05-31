@@ -60,13 +60,4 @@ return [
         'alt' => ':name شعار',
     ],
 
-    'tenant_menu' => [
-
-        'search_field' => [
-            'label' => 'البحث عن جهة',
-            'placeholder' => 'بحث',
-        ],
-
-    ],
-
 ];

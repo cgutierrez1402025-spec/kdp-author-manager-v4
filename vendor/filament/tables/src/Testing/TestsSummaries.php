@@ -6,11 +6,10 @@ use Closure;
 use Filament\Tables\Columns\Summarizers\Summarizer;
 use Filament\Tables\Contracts\HasTable;
 use Illuminate\Testing\Assert;
-use Livewire\Component;
 use Livewire\Features\SupportTesting\Testable;
 
 /**
- * @method Component&HasTable instance()
+ * @method HasTable instance()
  *
  * @mixin Testable
  */
@@ -23,7 +22,7 @@ class TestsSummaries
             $this->assertTableColumnSummarizerExists($columnName, $summarizerId);
 
             $normalizeState = fn ($state): string => strval(
-                is_numeric($state) ? round(floatval($state), 4) : $state,
+                is_numeric($state) ? round(floatval($state), 5) : $state,
             );
 
             $state = is_array($state) ? array_map($normalizeState, $state) : $normalizeState($state);
@@ -43,7 +42,7 @@ class TestsSummaries
             Assert::assertEqualsCanonicalizing(
                 $state,
                 $actualState,
-                "Failed asserting that summarizer [$summarizerId], for column [{$columnName}], on the [{$livewireClass}] component, is set.",
+                message: "Failed asserting that summarizer [$summarizerId], for column [{$columnName}], on the [{$livewireClass}] component, is set.",
             );
 
             return $this;
@@ -57,7 +56,7 @@ class TestsSummaries
             $this->assertTableColumnSummarizerExists($columnName, $summarizerId);
 
             $normalizeState = fn ($state): string => strval(
-                is_numeric($state) ? round(floatval($state), 4) : $state,
+                is_numeric($state) ? round(floatval($state), 5) : $state,
             );
 
             $state = is_array($state) ? array_map($normalizeState, $state) : $normalizeState($state);
@@ -77,7 +76,7 @@ class TestsSummaries
             Assert::assertNotEqualsCanonicalizing(
                 $state,
                 $actualState,
-                "Failed asserting that summarizer [$summarizerId], for column [{$columnName}], on the [{$livewireClass}] component, is not set.",
+                message: "Failed asserting that summarizer [$summarizerId], for column [{$columnName}], on the [{$livewireClass}] component, is not set.",
             );
 
             return $this;
@@ -98,7 +97,7 @@ class TestsSummaries
             Assert::assertInstanceOf(
                 Summarizer::class,
                 $summarizer,
-                "Failed asserting that a table column with name [{$columnName}] has a summarizer with ID [{$summarizerId}] on the [{$livewireClass}] component. Please ensure that the ID is passed to the summarizer with [Summarizer::make('{$summarizerId}')].",
+                message: "Failed asserting that a table column with name [{$columnName}] has a summarizer with ID [{$summarizerId}] on the [{$livewireClass}] component. Please ensure that the ID is passed to the summarizer with [Summarizer::make('{$summarizerId}')].",
             );
 
             return $this;

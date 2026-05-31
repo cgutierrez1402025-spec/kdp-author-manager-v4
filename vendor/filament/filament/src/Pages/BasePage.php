@@ -5,22 +5,23 @@ namespace Filament\Pages;
 use Closure;
 use Filament\Actions\Concerns\InteractsWithActions;
 use Filament\Actions\Contracts\HasActions;
-use Filament\Schemas\Concerns\InteractsWithSchemas;
-use Filament\Schemas\Contracts\HasRenderHookScopes;
-use Filament\Schemas\Contracts\HasSchemas;
+use Filament\Forms\Concerns\InteractsWithForms;
+use Filament\Forms\Contracts\HasForms;
+use Filament\Infolists\Concerns\InteractsWithInfolists;
+use Filament\Infolists\Contracts\HasInfolists;
 use Filament\Support\Enums\Alignment;
-use Filament\Support\Enums\Width;
+use Filament\Support\Enums\MaxWidth;
 use Filament\Support\Exceptions\Halt;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Contracts\View\View;
 use Illuminate\Validation\ValidationException;
-use Livewire\Attributes\On;
 use Livewire\Component;
 
-abstract class BasePage extends Component implements HasActions, HasRenderHookScopes, HasSchemas
+abstract class BasePage extends Component implements HasActions, HasForms, HasInfolists
 {
     use InteractsWithActions;
-    use InteractsWithSchemas;
+    use InteractsWithForms;
+    use InteractsWithInfolists;
 
     protected static string $layout = 'filament-panels::components.layout.base';
 
@@ -30,11 +31,11 @@ abstract class BasePage extends Component implements HasActions, HasRenderHookSc
 
     protected ?string $subheading = null;
 
-    protected string $view;
+    protected static string $view;
 
     public static ?Closure $reportValidationErrorUsing = null;
 
-    protected Width | string | null $maxContentWidth = null;
+    protected ?string $maxContentWidth = null;
 
     /**
      * @var array<mixed>
@@ -46,9 +47,6 @@ abstract class BasePage extends Component implements HasActions, HasRenderHookSc
     public static bool $formActionsAreSticky = false;
 
     public static bool $hasInlineLabels = false;
-
-    #[On('refresh-page')]
-    public function refresh(): void {}
 
     public function render(): View
     {
@@ -62,7 +60,7 @@ abstract class BasePage extends Component implements HasActions, HasRenderHookSc
 
     public function getView(): string
     {
-        return $this->view;
+        return static::$view;
     }
 
     public function getLayout(): string
@@ -70,7 +68,7 @@ abstract class BasePage extends Component implements HasActions, HasRenderHookSc
         return static::$layout;
     }
 
-    public function getHeading(): string | Htmlable | null
+    public function getHeading(): string | Htmlable
     {
         return $this->heading ?? $this->getTitle();
     }
@@ -85,10 +83,10 @@ abstract class BasePage extends Component implements HasActions, HasRenderHookSc
         return static::$title ?? (string) str(class_basename(static::class))
             ->kebab()
             ->replace('-', ' ')
-            ->ucwords();
+            ->title();
     }
 
-    public function getMaxContentWidth(): Width | string | null
+    public function getMaxContentWidth(): MaxWidth | string | null
     {
         return $this->maxContentWidth;
     }

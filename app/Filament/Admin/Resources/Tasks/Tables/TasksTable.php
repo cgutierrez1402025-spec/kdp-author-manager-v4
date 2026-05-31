@@ -6,7 +6,6 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Columns\SelectColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
@@ -15,7 +14,7 @@ class TasksTable
     public static function configure(Table $table): Table
     {
         return $table
-            ->modifyQueryQueryUsing(fn ($query) => $query->with(['work', 'assignedTo']))
+            ->modifyQueryUsing(fn ($query) => $query->with(['work', 'assignedTo']))
             ->columns([
                 TextColumn::make('title')
                     ->label('Título')

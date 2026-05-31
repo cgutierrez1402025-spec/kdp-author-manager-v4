@@ -6,8 +6,6 @@ return [
 
     'breadcrumb' => 'Veure',
 
-    'navigation_label' => 'Veure',
-
     'content' => [
 
         'tab' => [

@@ -2,7 +2,7 @@
 
 return [
 
-    'title' => 'הצגת :label',
+    'title' => 'תצוגת :label',
 
     'breadcrumb' => 'הצגה',
 

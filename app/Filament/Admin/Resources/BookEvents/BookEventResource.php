@@ -8,17 +8,15 @@ use App\Filament\Admin\Resources\BookEvents\Pages\ListBookEvents;
 use App\Filament\Admin\Resources\BookEvents\Schemas\BookEventForm;
 use App\Filament\Admin\Resources\BookEvents\Tables\BookEventsTable;
 use App\Models\BookEvent;
-use BackedEnum;
+use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Schemas\Schema;
-use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 
 class BookEventResource extends Resource
 {
     protected static ?string $model = BookEvent::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCalendarDays;
+    protected static ?string $navigationIcon = 'heroicon-o-document-text';
 
     protected static ?string $navigationLabel = 'Eventos';
 
@@ -26,9 +24,9 @@ class BookEventResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'title';
 
-    public static function form(Schema $schema): Schema
+    public static function form(Form $form): Form
     {
-        return BookEventForm::configure($schema);
+        return BookEventForm::configure($form);
     }
 
     public static function table(Table $table): Table

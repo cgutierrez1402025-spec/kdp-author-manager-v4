@@ -2,18 +2,9 @@
 
 return [
 
-    'column_manager' => [
+    'column_toggle' => [
 
         'heading' => 'Colonne',
-
-        'actions' => [
-            'apply' => [
-                'label' => 'Applica colonne',
-            ],
-            'reset' => [
-                'label' => 'Reimposta',
-            ],
-        ],
 
     ],
 
@@ -31,15 +22,6 @@ return [
             ],
 
             'more_list_items' => 'e altri :count',
-        ],
-
-        'select' => [
-            'loading_message' => 'Caricamento...',
-            'no_options_message' => 'Nessuna opzione disponibile.',
-            'no_search_results_message' => 'Nessuna opzione corrisponde alla tua ricerca.',
-            'placeholder' => "Seleziona un'opzione",
-            'searching_message' => 'Ricerca...',
-            'search_prompt' => 'Digita per cercare...',
         ],
 
     ],
@@ -116,7 +98,7 @@ return [
             'label' => 'Azioni',
         ],
 
-        'column_manager' => [
+        'toggle_columns' => [
             'label' => 'Mostra/Nascondi colonne',
         ],
 
@@ -163,9 +145,6 @@ return [
 
         'select' => [
             'placeholder' => 'Tutti',
-            'relationship' => [
-                'empty_option_label' => 'Nessuno',
-            ],
         ],
 
         'trashed' => [
@@ -188,6 +167,7 @@ return [
 
             'group' => [
                 'label' => 'Raggruppa per',
+                'placeholder' => 'Raggruppa per',
             ],
 
             'direction' => [
@@ -247,7 +227,5 @@ return [
         ],
 
     ],
-
-    'default_model_label' => 'record',
 
 ];

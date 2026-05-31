@@ -60,13 +60,4 @@ return [
         'alt' => ':name logotipas',
     ],
 
-    'tenant_menu' => [
-
-        'search_field' => [
-            'label' => 'Nuomininko paieška',
-            'placeholder' => 'Paieška',
-        ],
-
-    ],
-
 ];

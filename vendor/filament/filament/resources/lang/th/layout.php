@@ -14,10 +14,6 @@ return [
             'label' => 'ออกจากระบบ',
         ],
 
-        'multi_factor_authentication' => [
-            'label' => 'การยืนยันตัวตนหลายขั้นตอน',
-        ],
-
         'open_database_notifications' => [
             'label' => 'เปิดการแจ้งเตือน',
         ],

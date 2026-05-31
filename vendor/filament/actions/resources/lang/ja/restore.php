@@ -4,44 +4,16 @@ return [
 
     'single' => [
 
-        'label' => '復元',
+        'label' => '復旧',
 
         'modal' => [
 
-            'heading' => ':labelを復元',
+            'heading' => ':label 復旧',
 
             'actions' => [
 
                 'restore' => [
-                    'label' => '復元',
-                ],
-
-            ],
-
-        ],
-
-        'notifications' => [
-
-            'restored' => [
-                'title' => '復元しました',
-            ],
-
-        ],
-
-    ],
-
-    'multiple' => [
-
-        'label' => '選択中を復元',
-
-        'modal' => [
-
-            'heading' => '選択中の::labelを復元',
-
-            'actions' => [
-
-                'restore' => [
-                    'label' => '復元',
+                    'label' => '復旧',
                 ],
 
             ],
@@ -54,16 +26,32 @@ return [
                 'title' => '復旧しました',
             ],
 
-            'restored_partial' => [
-                'title' => ':total件中:count件を復元しました',
-                'missing_authorization_failure_message' => ':count件を復元する権限がありません。',
-                'missing_processing_failure_message' => ':count件を復元できませんでした。',
+        ],
+
+    ],
+
+    'multiple' => [
+
+        'label' => '選択中を復旧',
+
+        'modal' => [
+
+            'heading' => '選択中の:labelを復旧',
+
+            'actions' => [
+
+                'restore' => [
+                    'label' => '復旧',
+                ],
+
             ],
 
-            'restored_none' => [
-                'title' => '復元に失敗しました',
-                'missing_authorization_failure_message' => ':count件を復元する権限がありません。',
-                'missing_processing_failure_message' => ':count件を復元できませんでした。',
+        ],
+
+        'notifications' => [
+
+            'restored' => [
+                'title' => '復旧しました',
             ],
 
         ],

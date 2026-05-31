@@ -2,21 +2,9 @@
 
 return [
 
-    'column_manager' => [
+    'column_toggle' => [
 
         'heading' => 'Spalten',
-
-        'actions' => [
-
-            'apply' => [
-                'label' => 'Spalten anwenden',
-            ],
-
-            'reset' => [
-                'label' => 'Zurücksetzen',
-            ],
-
-        ],
 
     ],
 
@@ -34,7 +22,6 @@ return [
             ],
 
             'more_list_items' => 'und :count weitere',
-
         ],
 
     ],
@@ -108,10 +95,10 @@ return [
         ],
 
         'open_bulk_actions' => [
-            'label' => 'Mehrfachaktionen',
+            'label' => 'Aktionen öffnen',
         ],
 
-        'column_manager' => [
+        'toggle_columns' => [
             'label' => 'Spalten auswählen',
         ],
 
@@ -157,13 +144,7 @@ return [
         ],
 
         'select' => [
-
             'placeholder' => 'Alle',
-
-            'relationship' => [
-                'empty_option_label' => 'Keine',
-            ],
-
         ],
 
         'trashed' => [
@@ -246,7 +227,5 @@ return [
         ],
 
     ],
-
-    'default_model_label' => 'Datensatz',
 
 ];

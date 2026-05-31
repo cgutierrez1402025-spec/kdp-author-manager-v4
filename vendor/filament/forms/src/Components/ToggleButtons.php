@@ -3,15 +3,7 @@
 namespace Filament\Forms\Components;
 
 use Closure;
-use Filament\Forms\View\FormsIconAlias;
-use Filament\Schemas\Components\StateCasts\BooleanStateCast;
-use Filament\Schemas\Components\StateCasts\Contracts\StateCast;
-use Filament\Schemas\Components\StateCasts\EnumArrayStateCast;
-use Filament\Schemas\Components\StateCasts\EnumStateCast;
-use Filament\Schemas\Components\StateCasts\OptionsArrayStateCast;
-use Filament\Schemas\Components\StateCasts\OptionStateCast;
 use Filament\Support\Facades\FilamentIcon;
-use Filament\Support\Icons\Heroicon;
 
 class ToggleButtons extends Field implements Contracts\CanDisableOptions
 {
@@ -24,7 +16,6 @@ class ToggleButtons extends Field implements Contracts\CanDisableOptions
     use Concerns\HasIcons;
     use Concerns\HasNestedRecursiveValidationRules;
     use Concerns\HasOptions;
-    use Concerns\HasTooltips;
 
     public const GROUPED_VIEW = 'filament-forms::components.toggle-buttons.grouped';
 
@@ -38,6 +29,25 @@ class ToggleButtons extends Field implements Contracts\CanDisableOptions
     protected bool | Closure $isInline = false;
 
     protected bool | Closure $areButtonLabelsHidden = false;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->default(fn (ToggleButtons $component): mixed => $component->isMultiple() ? [] : null);
+
+        $this->afterStateHydrated(static function (ToggleButtons $component, $state): void {
+            if (! $component->isMultiple()) {
+                return;
+            }
+
+            if (is_array($state)) {
+                return;
+            }
+
+            $component->state([]);
+        });
+    }
 
     public function grouped(): static
     {
@@ -57,11 +67,9 @@ class ToggleButtons extends Field implements Contracts\CanDisableOptions
         ]);
 
         $this->icons([
-            1 => FilamentIcon::resolve(FormsIconAlias::COMPONENTS_TOGGLE_BUTTONS_BOOLEAN_TRUE) ?? Heroicon::Check,
-            0 => FilamentIcon::resolve(FormsIconAlias::COMPONENTS_TOGGLE_BUTTONS_BOOLEAN_FALSE) ?? Heroicon::XMark,
+            1 => FilamentIcon::resolve('forms::components.toggle-buttons.boolean.true') ?? 'heroicon-m-check',
+            0 => FilamentIcon::resolve('forms::components.toggle-buttons.boolean.false') ?? 'heroicon-m-x-mark',
         ]);
-
-        $this->stateCast(app(BooleanStateCast::class, ['isStoredAsInt' => true]));
 
         return $this;
     }
@@ -111,59 +119,5 @@ class ToggleButtons extends Field implements Contracts\CanDisableOptions
         }
 
         return $state;
-    }
-
-    public function getEnumDefaultStateCast(): ?StateCast
-    {
-        $enum = $this->getEnum();
-
-        if (blank($enum)) {
-            return null;
-        }
-
-        return app(
-            $this->isMultiple() ? EnumArrayStateCast::class : EnumStateCast::class,
-            ['enum' => $enum],
-        );
-    }
-
-    /**
-     * @return array<StateCast>
-     */
-    public function getDefaultStateCasts(): array
-    {
-        if ($this->hasCustomStateCasts() || filled($this->getEnum())) {
-            return parent::getDefaultStateCasts();
-        }
-
-        if ($this->isMultiple()) {
-            return [app(OptionsArrayStateCast::class)];
-        }
-
-        return [app(OptionStateCast::class, ['isNullable' => true])];
-    }
-
-    /**
-     * @return ?array<string>
-     */
-    public function getInValidationRuleValues(): ?array
-    {
-        $values = parent::getInValidationRuleValues();
-
-        if ($values !== null) {
-            return $values;
-        }
-
-        return array_keys($this->getEnabledOptions());
-    }
-
-    public function hasInValidationOnMultipleValues(): bool
-    {
-        return $this->isMultiple();
-    }
-
-    public function hasNullableBooleanState(): bool
-    {
-        return true;
     }
 }

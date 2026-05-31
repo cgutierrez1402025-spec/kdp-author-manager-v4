@@ -3,14 +3,14 @@
 namespace App\Filament\Admin\Resources\Tasks\Schemas;
 
 use Filament\Forms;
-use Filament\Schemas\Schema;
+use Filament\Forms\Form;
 
 class TaskForm
 {
-    public static function configure(Schema $schema): Schema
+    public static function configure(Form $form): Form
     {
-        return $schema
-            ->components([
+        return $form
+            ->schema([
                 Forms\Components\Section::make('Detalles de Tarea')
                     ->schema([
                         Forms\Components\Select::make('work_id')

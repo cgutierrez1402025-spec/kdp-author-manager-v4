@@ -13,7 +13,7 @@ return [
             ],
 
             'mark_all_as_read' => [
-                'label' => 'Đánh dấu là đã đọc tất cả',
+                'label' => 'Đánh dấu tất cả là đã đọc',
             ],
 
         ],

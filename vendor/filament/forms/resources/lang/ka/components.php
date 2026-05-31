@@ -285,7 +285,7 @@ return [
 
     'markdown_editor' => [
 
-        'tools' => [
+        'toolbar_buttons' => [
             'attach_files' => 'ფაილების მიმაგრება',
             'blockquote' => 'ციტატა',
             'bold' => 'მსხვილი',
@@ -383,7 +383,7 @@ return [
 
         ],
 
-        'tools' => [
+        'toolbar_buttons' => [
             'attach_files' => 'ფაილების მიმაგრება',
             'blockquote' => 'ციტატა',
             'bold' => 'მსხვილი',
@@ -493,6 +493,22 @@ return [
         'boolean' => [
             'true' => 'კი',
             'false' => 'არა',
+        ],
+
+    ],
+
+    'wizard' => [
+
+        'actions' => [
+
+            'previous_step' => [
+                'label' => 'უკან',
+            ],
+
+            'next_step' => [
+                'label' => 'შემდეგი',
+            ],
+
         ],
 
     ],

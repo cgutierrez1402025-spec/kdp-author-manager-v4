@@ -17,10 +17,6 @@ trait HasRenderHooks
      */
     public function renderHook(string $name, Closure $hook, string | array | null $scopes = null): static
     {
-        if ($scopes === null) {
-            $scopes = [''];
-        }
-
         if (! is_array($scopes)) {
             $scopes = [$scopes];
         }

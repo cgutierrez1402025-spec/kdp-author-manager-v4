@@ -16,27 +16,31 @@ use PHPUnit\Event\Event;
 use PHPUnit\Event\Telemetry;
 
 /**
- * @immutable
+ * @psalm-immutable
  *
  * @no-named-arguments Parameter names are not covered by the backward compatibility promise for PHPUnit
  */
-final readonly class PreConditionFinished implements Event
+final class PreConditionFinished implements Event
 {
-    private Telemetry\Info $telemetryInfo;
-    private Code\TestMethod $test;
+    private readonly Telemetry\Info $telemetryInfo;
 
     /**
-     * @var list<Code\ClassMethod>
+     * @psalm-var class-string
      */
-    private array $calledMethods;
+    private readonly string $testClassName;
 
     /**
-     * @internal This method is not covered by the backward compatibility promise for PHPUnit
+     * @psalm-var list<Code\ClassMethod>
      */
-    public function __construct(Telemetry\Info $telemetryInfo, Code\TestMethod $test, Code\ClassMethod ...$calledMethods)
+    private readonly array $calledMethods;
+
+    /**
+     * @psalm-param class-string $testClassName
+     */
+    public function __construct(Telemetry\Info $telemetryInfo, string $testClassName, Code\ClassMethod ...$calledMethods)
     {
         $this->telemetryInfo = $telemetryInfo;
-        $this->test          = $test;
+        $this->testClassName = $testClassName;
         $this->calledMethods = $calledMethods;
     }
 
@@ -45,32 +49,22 @@ final readonly class PreConditionFinished implements Event
         return $this->telemetryInfo;
     }
 
-    public function test(): Code\TestMethod
-    {
-        return $this->test;
-    }
-
     /**
-     * @return class-string
-     *
-     * @deprecated https://github.com/sebastianbergmann/phpunit/issues/6140
+     * @psalm-return class-string
      */
     public function testClassName(): string
     {
-        return $this->test->className();
+        return $this->testClassName;
     }
 
     /**
-     * @return list<Code\ClassMethod>
+     * @psalm-return list<Code\ClassMethod>
      */
     public function calledMethods(): array
     {
         return $this->calledMethods;
     }
 
-    /**
-     * @return non-empty-string
-     */
     public function asString(): string
     {
         $buffer = 'Pre Condition Method Finished:';

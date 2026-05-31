@@ -17,9 +17,6 @@ trait HasExtraCellAttributes
      */
     public function extraCellAttributes(array | Closure $attributes, bool $merge = false): static
     {
-        // Security: Attribute values are not escaped when rendered. Never
-        // pass unsanitized user input as attribute names or values.
-
         if ($merge) {
             $this->extraCellAttributes[] = $attributes;
         } else {
@@ -37,7 +34,7 @@ trait HasExtraCellAttributes
         $temporaryAttributeBag = new ComponentAttributeBag;
 
         foreach ($this->extraCellAttributes as $extraCellAttributes) {
-            $temporaryAttributeBag = $temporaryAttributeBag->merge($this->evaluate($extraCellAttributes), escape: false);
+            $temporaryAttributeBag = $temporaryAttributeBag->merge($this->evaluate($extraCellAttributes));
         }
 
         return $temporaryAttributeBag->getAttributes();

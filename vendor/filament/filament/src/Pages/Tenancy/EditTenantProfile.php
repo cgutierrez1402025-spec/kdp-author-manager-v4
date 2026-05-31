@@ -5,15 +5,11 @@ namespace Filament\Pages\Tenancy;
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
 use Filament\Facades\Filament;
+use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Pages\Concerns;
 use Filament\Pages\Page;
 use Filament\Panel;
-use Filament\Schemas\Components\Actions;
-use Filament\Schemas\Components\Component;
-use Filament\Schemas\Components\EmbeddedSchema;
-use Filament\Schemas\Components\Form;
-use Filament\Schemas\Schema;
 use Filament\Support\Exceptions\Halt;
 use Filament\Support\Facades\FilamentView;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -25,12 +21,18 @@ use Throwable;
 use function Filament\authorize;
 
 /**
- * @property-read Schema $form
+ * @property Form $form
  */
 abstract class EditTenantProfile extends Page
 {
     use Concerns\CanUseDatabaseTransactions;
     use Concerns\HasRoutes;
+    use Concerns\InteractsWithFormActions;
+
+    /**
+     * @var view-string
+     */
+    protected static string $view = 'filament-panels::pages.tenancy.edit-tenant-profile';
 
     /**
      * @var array<string, mixed> | null
@@ -47,16 +49,16 @@ abstract class EditTenantProfile extends Page
 
     abstract public static function getLabel(): string;
 
-    public static function getRelativeRouteName(Panel $panel): string
+    public static function getRelativeRouteName(): string
     {
         return 'profile';
     }
 
-    public static function getRouteName(?Panel $panel = null): string
+    public static function getRouteName(?string $panel = null): string
     {
-        $panel ??= Filament::getCurrentOrDefaultPanel();
+        $panel = $panel ? Filament::getPanel($panel) : Filament::getCurrentPanel();
 
-        return $panel->generateRouteName('tenant.' . static::getRelativeRouteName($panel));
+        return $panel->generateRouteName('tenant.' . static::getRelativeRouteName());
     }
 
     public static function isTenantSubscriptionRequired(Panel $panel): bool
@@ -71,11 +73,6 @@ abstract class EditTenantProfile extends Page
         abort_unless(static::canView($this->tenant), 404);
 
         $this->fillForm();
-    }
-
-    public function hydrate(): void
-    {
-        abort_unless(static::canView($this->tenant), 404);
     }
 
     protected function fillForm(): void
@@ -181,17 +178,24 @@ abstract class EditTenantProfile extends Page
         return null;
     }
 
-    public function defaultForm(Schema $schema): Schema
+    public function form(Form $form): Form
     {
-        return $schema
-            ->operation('edit')
-            ->model($this->tenant)
-            ->statePath('data');
+        return $form;
     }
 
-    public function form(Schema $schema): Schema
+    /**
+     * @return array<int | string, string | Form>
+     */
+    protected function getForms(): array
     {
-        return $schema;
+        return [
+            'form' => $this->form(
+                $this->makeForm()
+                    ->operation('edit')
+                    ->model($this->tenant)
+                    ->statePath('data'),
+            ),
+        ];
     }
 
     /**
@@ -217,7 +221,7 @@ abstract class EditTenantProfile extends Page
         return static::getLabel();
     }
 
-    public static function getSlug(?Panel $panel = null): string
+    public static function getSlug(): string
     {
         return static::$slug ?? 'profile';
     }
@@ -229,32 +233,5 @@ abstract class EditTenantProfile extends Page
         } catch (AuthorizationException $exception) {
             return $exception->toResponse()->allowed();
         }
-    }
-
-    public function content(Schema $schema): Schema
-    {
-        return $schema
-            ->components([
-                $this->getFormContentComponent(),
-            ]);
-    }
-
-    public function getFormContentComponent(): Component
-    {
-        return Form::make([EmbeddedSchema::make('form')])
-            ->id('form')
-            ->livewireSubmitHandler('save')
-            ->footer([
-                Actions::make($this->getFormActions())
-                    ->alignment($this->getFormActionsAlignment())
-                    ->fullWidth($this->hasFullWidthFormActions())
-                    ->sticky($this->areFormActionsSticky())
-                    ->key('form-actions'),
-            ]);
-    }
-
-    protected function hasFullWidthFormActions(): bool
-    {
-        return false;
     }
 }

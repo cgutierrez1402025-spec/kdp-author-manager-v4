@@ -8,23 +8,21 @@ use App\Filament\Admin\Resources\Marketplaces\Pages\ListMarketplaces;
 use App\Filament\Admin\Resources\Marketplaces\Schemas\MarketplaceForm;
 use App\Filament\Admin\Resources\Marketplaces\Tables\MarketplacesTable;
 use App\Models\Marketplace;
-use BackedEnum;
+use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Schemas\Schema;
-use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 
 class MarketplaceResource extends Resource
 {
     protected static ?string $model = Marketplace::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedShoppingBag;
+    protected static ?string $navigationIcon = 'heroicon-o-document-text';
 
     protected static ?string $recordTitleAttribute = 'name';
 
-    public static function form(Schema $schema): Schema
+    public static function form(Form $form): Form
     {
-        return MarketplaceForm::configure($schema);
+        return MarketplaceForm::configure($form);
     }
 
     public static function table(Table $table): Table

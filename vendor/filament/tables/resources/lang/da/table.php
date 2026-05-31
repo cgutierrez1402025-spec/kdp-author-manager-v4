@@ -2,43 +2,13 @@
 
 return [
 
-    'column_manager' => [
+    'column_toggle' => [
 
         'heading' => 'Kolonner',
-
-        'actions' => [
-
-            'apply' => [
-                'label' => 'Anvend kolonner',
-            ],
-
-            'reset' => [
-                'label' => 'Nulstil',
-            ],
-
-        ],
 
     ],
 
     'columns' => [
-
-        'actions' => [
-            'label' => 'Handling|Handlinger',
-        ],
-
-        'select' => [
-
-            'loading_message' => 'Indlæser...',
-
-            'no_search_results_message' => 'Ingen muligheder der matcher din søgning.',
-
-            'placeholder' => 'Vælg en indstilling',
-
-            'searching_message' => 'Søger...',
-
-            'search_prompt' => 'Begynd at skrive for at søge ...',
-
-        ],
 
         'text' => [
 
@@ -122,7 +92,7 @@ return [
             'label' => 'Åbn handlinger',
         ],
 
-        'column_manager' => [
+        'toggle_columns' => [
             'label' => 'Vælg kolonner',
         ],
     ],
@@ -164,13 +134,7 @@ return [
         ],
 
         'select' => [
-
             'placeholder' => 'Alle',
-
-            'relationship' => [
-                'empty_option_label' => 'Ingen',
-            ],
-
         ],
 
         'trashed' => [

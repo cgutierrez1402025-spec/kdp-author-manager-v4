@@ -6,8 +6,6 @@ return [
 
     'breadcrumb' => 'Modifier',
 
-    'navigation_label' => 'Modifier',
-
     'form' => [
 
         'actions' => [
@@ -17,7 +15,7 @@ return [
             ],
 
             'save' => [
-                'label' => 'Sauvegarder les modifications',
+                'label' => 'Sauvegarder',
             ],
 
         ],

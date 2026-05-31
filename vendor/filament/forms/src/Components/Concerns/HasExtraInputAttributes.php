@@ -17,9 +17,6 @@ trait HasExtraInputAttributes
      */
     public function extraInputAttributes(array | Closure $attributes, bool $merge = false): static
     {
-        // Security: Attribute values are not escaped when rendered. Never
-        // pass unsanitized user input as attribute names or values.
-
         if ($merge) {
             $this->extraInputAttributes[] = $attributes;
         } else {
@@ -37,7 +34,7 @@ trait HasExtraInputAttributes
         $temporaryAttributeBag = new ComponentAttributeBag;
 
         foreach ($this->extraInputAttributes as $extraInputAttributes) {
-            $temporaryAttributeBag = $temporaryAttributeBag->merge($this->evaluate($extraInputAttributes), escape: false);
+            $temporaryAttributeBag = $temporaryAttributeBag->merge($this->evaluate($extraInputAttributes));
         }
 
         return $temporaryAttributeBag->getAttributes();

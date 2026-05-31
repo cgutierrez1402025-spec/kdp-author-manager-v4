@@ -60,13 +60,4 @@ return [
         'alt' => 'Logotip de :name',
     ],
 
-    'tenant_menu' => [
-
-        'search_field' => [
-            'label' => 'Cercar tenant',
-            'placeholder' => 'Cercar',
-        ],
-
-    ],
-
 ];

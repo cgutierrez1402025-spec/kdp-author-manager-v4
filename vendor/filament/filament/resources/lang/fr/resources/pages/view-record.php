@@ -6,8 +6,6 @@ return [
 
     'breadcrumb' => 'Afficher',
 
-    'navigation_label' => 'Afficher',
-
     'content' => [
 
         'tab' => [

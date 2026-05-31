@@ -2,11 +2,9 @@
 
 return [
 
-    'title' => 'עריכת :label',
+    'title' => 'ערוך :label',
 
     'breadcrumb' => 'עריכה',
-
-    'navigation_label' => 'עריכה',
 
     'form' => [
 

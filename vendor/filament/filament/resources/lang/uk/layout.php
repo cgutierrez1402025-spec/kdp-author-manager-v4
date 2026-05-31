@@ -60,12 +60,4 @@ return [
         'alt' => ':name лого',
     ],
 
-    'tenant_menu' => [
-
-        'search_field' => [
-            'label' => 'Пошук орендарів',
-            'placeholder' => 'Пошук',
-        ],
-
-    ],
 ];

@@ -3,14 +3,14 @@
 namespace App\Filament\Admin\Resources\Sources\Schemas;
 
 use Filament\Forms;
-use Filament\Schemas\Schema;
+use Filament\Forms\Form;
 
 class SourceForm
 {
-    public static function configure(Schema $schema): Schema
+    public static function configure(Form $form): Form
     {
-        return $schema
-            ->components([
+        return $form
+            ->schema([
                 Forms\Components\Section::make('Información de Fuente')
                     ->schema([
                         Forms\Components\Select::make('work_id')

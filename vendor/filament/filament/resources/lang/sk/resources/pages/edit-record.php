@@ -6,8 +6,6 @@ return [
 
     'breadcrumb' => 'Upraviť',
 
-    'navigation_label' => 'Upraviť',
-
     'form' => [
 
         'actions' => [

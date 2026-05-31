@@ -54,18 +54,6 @@ return [
                 'title' => 'Dipulihkan',
             ],
 
-            'restored_partial' => [
-                'title' => 'Dipulihkan :count daripada :total',
-                'missing_authorization_failure_message' => 'Anda tidak mempunyai kebenaran untuk memulihkan :count.',
-                'missing_processing_failure_message' => ':count tidak dapat dipulihkan.',
-            ],
-
-            'restored_none' => [
-                'title' => 'Tiada dipulihkan',
-                'missing_authorization_failure_message' => 'Anda tidak mempunyai kebenaran untuk memulihkan :count.',
-                'missing_processing_failure_message' => ':count tidak dapat dipulihkan.',
-            ],
-
         ],
 
     ],

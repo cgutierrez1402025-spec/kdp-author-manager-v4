@@ -129,15 +129,15 @@ return [
             'actions' => [
 
                 'cancel' => [
-                    'label' => 'Hủy thao tác',
+                    'label' => 'Huỷ bỏ',
                 ],
 
                 'drag_crop' => [
-                    'label' => 'Chế độ kéo để cắt hẳn (crop)',
+                    'label' => 'Chế độ kéo "cắt"',
                 ],
 
                 'drag_move' => [
-                    'label' => 'Chế độ kéo để di chuyển (move)',
+                    'label' => 'Chế độ kéo "di chuyển"',
                 ],
 
                 'flip_horizontal' => [
@@ -149,19 +149,19 @@ return [
                 ],
 
                 'move_down' => [
-                    'label' => 'Di chuyển ảnh xuống dưới',
+                    'label' => 'Di chuyển hình ảnh xuống',
                 ],
 
                 'move_left' => [
-                    'label' => 'Di chuyển ảnh sang trái',
+                    'label' => 'Di chuyển hình ảnh sang trái',
                 ],
 
                 'move_right' => [
-                    'label' => 'Di chuyển ảnh sang phải',
+                    'label' => 'Di chuyển hình ảnh sang phải',
                 ],
 
                 'move_up' => [
-                    'label' => 'Di chuyển ảnh lên trên',
+                    'label' => 'Di chuyển hình ảnh lên trên',
                 ],
 
                 'reset' => [
@@ -169,11 +169,11 @@ return [
                 ],
 
                 'rotate_left' => [
-                    'label' => 'Xoay ảnh sang trái',
+                    'label' => 'Xoay hình ảnh sang trái',
                 ],
 
                 'rotate_right' => [
-                    'label' => 'Xoay ảnh sang phải',
+                    'label' => 'Xoay hình ảnh sang phải',
                 ],
 
                 'set_aspect_ratio' => [
@@ -185,7 +185,7 @@ return [
                 ],
 
                 'zoom_100' => [
-                    'label' => 'Phóng to ảnh lên 100%',
+                    'label' => 'Phóng to hình ảnh lên 100%',
                 ],
 
                 'zoom_in' => [
@@ -240,8 +240,8 @@ return [
             'svg' => [
 
                 'messages' => [
-                    'confirmation' => 'Không khuyến nghị chỉnh sửa các tập tin SVG vì có thể làm mất chất lượng khi thay đổi kích thước.\n Bạn có chắc chắn muốn tiếp tục không?',
-                    'disabled' => 'Đã tắt chức năng chỉnh sửa tập tin SVG vì có thể làm mất chất lượng khi thay đổi kích thước.',
+                    'confirmation' => 'Việc chỉnh sửa các tập tin SVG không được khuyến nghị vì có thể dẫn đến mất chất lượng khi thay đổi tỷ lệ.\n Bạn có chắc chắn muốn tiếp tục không?',
+                    'disabled' => 'Việc chỉnh sửa các tập tin SVG bị vô hiệu hóa vì có thể dẫn đến mất chất lượng khi thay đổi tỷ lệ..',
                 ],
 
             ],
@@ -284,12 +284,12 @@ return [
 
     'markdown_editor' => [
 
-        'tools' => [
+        'toolbar_buttons' => [
             'attach_files' => 'Đính kèm tệp',
             'blockquote' => 'Trích dẫn',
             'bold' => 'In đậm',
             'bullet_list' => 'Danh sách đánh dấu',
-            'code_block' => 'Khối code',
+            'code_block' => 'Khối mã',
             'heading' => 'Tiêu đề',
             'italic' => 'In nghiêng',
             'link' => 'Liên kết',
@@ -297,30 +297,7 @@ return [
             'redo' => 'Làm lại',
             'strike' => 'Gạch ngang',
             'table' => 'Bảng',
-
             'undo' => 'Hoàn tác',
-        ],
-
-    ],
-
-    'modal_table_select' => [
-
-        'actions' => [
-
-            'select' => [
-
-                'label' => 'Chọn',
-
-                'actions' => [
-
-                    'select' => [
-                        'label' => 'Chọn',
-                    ],
-
-                ],
-
-            ],
-
         ],
 
     ],
@@ -388,215 +365,39 @@ return [
 
     'rich_editor' => [
 
-        'actions' => [
-
-            'attach_files' => [
-
-                'label' => 'Tải tệp lên',
-
-                'modal' => [
-
-                    'heading' => 'Tải tệp lên',
-
-                    'form' => [
-
-                        'file' => [
-
-                            'label' => [
-                                'new' => 'Tệp',
-                                'existing' => 'Thay thế tệp',
-                            ],
-
-                        ],
-
-                        'alt' => [
-
-                            'label' => [
-                                'new' => 'Văn bản thay thế (alt text)',
-                                'existing' => 'Thay đổi văn bản thay thế',
-                            ],
-
-                        ],
-
-                    ],
-
-                ],
-
-            ],
-
-            'custom_block' => [
-
-                'modal' => [
-
-                    'actions' => [
-
-                        'insert' => [
-                            'label' => 'Chèn',
-                        ],
-
-                        'save' => [
-                            'label' => 'Lưu',
-                        ],
-
-                    ],
-
-                ],
-
-            ],
+        'dialogs' => [
 
             'link' => [
 
-                'label' => 'Chỉnh sửa',
-
-                'modal' => [
-
-                    'heading' => 'Liên kết',
-
-                    'form' => [
-
-                        'url' => [
-                            'label' => 'URL',
-                        ],
-
-                        'should_open_in_new_tab' => [
-                            'label' => 'Mở trong tab mới',
-                        ],
-
-                    ],
-
+                'actions' => [
+                    'link' => 'Liên kết',
+                    'unlink' => 'Bỏ liên kết',
                 ],
 
-            ],
+                'label' => 'URL',
 
-            'text_color' => [
-                'label' => 'Màu chữ',
-                'modal' => [
-                    'form' => [
-                        'color' => [
-                            'label' => 'Màu chữ',
-                        ],
-                        'custom_color' => [
-                            'label' => 'Màu chữ tùy chỉnh',
-                        ],
-                    ],
-                    'heading' => 'Chọn màu chữ',
-                ],
-            ],
-
-            'grid' => [
-
-                'label' => 'Mẫu lưới',
-
-                'modal' => [
-
-                    'heading' => 'Mẫu lưới',
-
-                    'form' => [
-
-                        'preset' => [
-
-                            'label' => 'Cấu hình',
-
-                            'placeholder' => 'Không có',
-
-                            'options' => [
-                                'two' => '2 cột',
-                                'three' => '3 cột',
-                                'four' => '4 cột',
-                                'five' => '5 cột',
-                                'two_start_third' => '2 cột (1 - 2)',
-                                'two_end_third' => '2 cột (2 - 1)',
-                                'two_start_fourth' => '2 cột (1 - 3)',
-                                'two_end_fourth' => '2 cột (3 - 1)',
-                            ],
-                        ],
-
-                        'columns' => [
-                            'label' => 'Số cột',
-                        ],
-
-                        'from_breakpoint' => [
-
-                            'label' => 'Từ điểm ngắt',
-
-                            'options' => [
-                                'default' => 'Mặc định',
-                                'sm' => 'Nhỏ',
-                                'md' => 'Trung bình',
-                                'lg' => 'Lớn',
-                                'xl' => 'Rất lớn',
-                                '2xl' => 'Rất rất lớn',
-                            ],
-
-                        ],
-
-                        'is_asymmetric' => [
-                            'label' => '2 cột không đối xứng',
-                        ],
-
-                        'start_span' => [
-                            'label' => 'Số cột bắt đầu',
-                        ],
-
-                        'end_span' => [
-                            'label' => 'Số cột kết thúc',
-                        ],
-
-                    ],
-
-                ],
+                'placeholder' => 'Nhập URL',
 
             ],
 
         ],
 
-        'no_merge_tag_search_results_message' => 'Không tìm thấy thẻ nội dung động nào.',
-
-        'tools' => [
-            'align_center' => 'Canh giữa',
-            'align_end' => 'Canh đều bên phải',
-            'align_justify' => 'Canh đều hai bên',
-            'align_start' => 'Canh đều bên trái',
+        'toolbar_buttons' => [
             'attach_files' => 'Đính kèm tệp',
             'blockquote' => 'Trích dẫn',
             'bold' => 'In đậm',
             'bullet_list' => 'Danh sách đánh dấu',
-            'clear_formatting' => 'Xóa định dạng',
-            'code' => 'Code',
-            'code_block' => 'Khối code',
-            'custom_blocks' => 'Khối tùy chỉnh',
-            'details' => 'Khối chi tiết',
-            'h1' => 'Tựa đề',
+            'code_block' => 'Khối mã',
+            'h1' => 'Tiêu đề chính',
             'h2' => 'Tiêu đề',
             'h3' => 'Tiêu đề phụ',
-            'highlight' => 'Nổi bật',
-            'horizontal_rule' => 'Thước ngang',
             'italic' => 'In nghiêng',
-            'lead' => 'Đoạn dẫn',
             'link' => 'Liên kết',
-            'merge_tags' => 'Thẻ nội dung động',
             'ordered_list' => 'Danh sách đánh số',
             'redo' => 'Làm lại',
-            'small' => 'Chữ nhỏ',
             'strike' => 'Gạch ngang',
-            'subscript' => 'Chỉ số dưới',
-            'superscript' => 'Chỉ số trên',
-            'table' => 'Chèn bảng',
-            'table_delete' => 'Xóa bảng',
-            'table_add_column_before' => 'Thêm cột vào phía trước',
-            'table_add_column_after' => 'Thêm cột vào phía sau',
-            'table_delete_column' => 'Xóa cột',
-            'table_add_row_before' => 'Thêm dòng vào phía trên',
-            'table_add_row_after' => 'Thêm dòng vào phía dưới',
-            'table_delete_row' => 'Xóa dòng',
-            'table_merge_cells' => 'Gộp ô',
-            'table_split_cell' => 'Chia ô',
-            'table_toggle_header_row' => 'Bật/tắt dòng tiêu đề',
             'underline' => 'Gạch chân',
             'undo' => 'Hoàn tác',
-            'text_color' => 'Màu chữ',
-            'grid' => 'Mẫu lưới',
-            'grid_delete' => 'Xóa mẫu lưới',
         ],
 
     ],
@@ -640,7 +441,7 @@ return [
                     'actions' => [
 
                         'save' => [
-                            'label' => 'Lưu',
+                            'label' => 'Lưu lại',
                         ],
 
                     ],
@@ -662,9 +463,9 @@ return [
 
         'no_search_results_message' => 'Không có kết quả tìm kiếm phù hợp.',
 
-        'placeholder' => 'Chọn một tùy chọn',
+        'placeholder' => 'Chọn một tuỳ chọn',
 
-        'searching_message' => 'Đang tìm...',
+        'searching_message' => 'Đang tìm kiếm...',
 
         'search_prompt' => 'Bắt đầu gõ để tìm kiếm...',
 
@@ -695,6 +496,22 @@ return [
         'boolean' => [
             'true' => 'Có',
             'false' => 'Không',
+        ],
+
+    ],
+
+    'wizard' => [
+
+        'actions' => [
+
+            'previous_step' => [
+                'label' => 'Quay lại',
+            ],
+
+            'next_step' => [
+                'label' => 'Tiếp theo',
+            ],
+
         ],
 
     ],

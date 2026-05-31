@@ -4,14 +4,15 @@ namespace Filament\Panel\Concerns;
 
 use Closure;
 use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Support\HtmlString;
 
 trait HasBrandLogo
 {
-    protected string | Htmlable | Closure | null $brandLogo = null;
+    protected string | HtmlString | Closure | null $brandLogo = null;
 
     protected string | Closure | null $brandLogoHeight = null;
 
-    protected string | Htmlable | Closure | null $darkModeBrandLogo = null;
+    protected string | HtmlString | Closure | null $darkModeBrandLogo = null;
 
     public function brandLogo(string | Htmlable | Closure | null $logo): static
     {

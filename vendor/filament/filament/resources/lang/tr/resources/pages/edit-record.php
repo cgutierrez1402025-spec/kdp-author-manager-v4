@@ -6,8 +6,6 @@ return [
 
     'breadcrumb' => 'Düzenle',
 
-    'navigation_label' => 'Düzenle',
-
     'form' => [
 
         'actions' => [

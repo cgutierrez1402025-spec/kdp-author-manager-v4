@@ -2,16 +2,15 @@
 
 namespace App\Filament\Admin\Resources\Works\Schemas;
 
-use App\Models\Series;
 use Filament\Forms;
-use Filament\Schemas\Schema;
+use Filament\Forms\Form;
 
 class WorkForm
 {
-    public static function configure(Schema $schema): Schema
+    public static function configure(Form $form): Form
     {
-        return $schema
-            ->components([
+        return $form
+            ->schema([
                 Forms\Components\Section::make('Información Básica')
                     ->schema([
                         Forms\Components\Select::make('user_id')

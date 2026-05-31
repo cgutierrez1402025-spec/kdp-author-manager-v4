@@ -6,8 +6,6 @@ return [
 
     'breadcrumb' => 'Lihat',
 
-    'navigation_label' => 'Lihat',
-
     'content' => [
 
         'tab' => [

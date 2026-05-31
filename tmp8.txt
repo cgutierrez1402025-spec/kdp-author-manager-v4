@@ -1,0 +1,222 @@
+
+   Symfony\Component\ErrorHandler\Error\FatalError 
+
+  Cannot use Filament\Tables\Table as Table because the name is already in use
+
+  at app/Filament/Admin/Resources/AiTasks/AiTaskResource.php:7
+      3▕ namespace App\Filament\Admin\Resources\AiTasks;
+      4▕ 
+      5▕ use Filament\Resources\Resource;
+      6▕ use Filament\Tables\Table;use Filament\Forms\Form;
+  ➜   7▕ use Filament\Tables\Table;
+      8▕ use Filament\Forms\Components\TextInput;
+      9▕ use Filament\Forms\Components\Select;
+     10▕ use Filament\Forms\Components\Textarea;
+     11▕ use Filament\Tables\Columns\TextColumn;
+
+
+   Whoops\Exception\ErrorException 
+
+  Cannot use Filament\Tables\Table as Table because the name is already in use
+
+  at app/Filament/Admin/Resources/AiTasks/AiTaskResource.php:7
+      3▕ namespace App\Filament\Admin\Resources\AiTasks;
+      4▕ 
+      5▕ use Filament\Resources\Resource;
+      6▕ use Filament\Tables\Table;use Filament\Forms\Form;
+  ➜   7▕ use Filament\Tables\Table;
+      8▕ use Filament\Forms\Components\TextInput;
+      9▕ use Filament\Forms\Components\Select;
+     10▕ use Filament\Forms\Components\Textarea;
+     11▕ use Filament\Tables\Columns\TextColumn;
+
+      [2m+1 vendor frames [22m
+
+  2   [internal]:0
+      Whoops\Run::handleShutdown()
+
+
+   Symfony\Component\ErrorHandler\Error\FatalError 
+
+  Cannot use Filament\Forms\Form as Form because the name is already in use
+
+  at app/Filament/Admin/Resources/AiTools/AiToolResource.php:6
+      2▕ 
+      3▕ namespace App\Filament\Admin\Resources\AiTools;
+      4▕ 
+      5▕ use Filament\Resources\Resource;
+  ➜   6▕ use Filament\Tables\Table;use Filament\Forms\Form;use Filament\Forms\Form;
+      7▕ use Filament\Tables\Table;
+      8▕ use Filament\Forms\Components\TextInput;
+      9▕ use Filament\Forms\Components\Textarea;
+     10▕ use Filament\Tables\Columns\TextColumn;
+
+
+   Whoops\Exception\ErrorException 
+
+  Cannot use Filament\Forms\Form as Form because the name is already in use
+
+  at app/Filament/Admin/Resources/AiTools/AiToolResource.php:6
+      2▕ 
+      3▕ namespace App\Filament\Admin\Resources\AiTools;
+      4▕ 
+      5▕ use Filament\Resources\Resource;
+  ➜   6▕ use Filament\Tables\Table;use Filament\Forms\Form;use Filament\Forms\Form;
+      7▕ use Filament\Tables\Table;
+      8▕ use Filament\Forms\Components\TextInput;
+      9▕ use Filament\Forms\Components\Textarea;
+     10▕ use Filament\Tables\Columns\TextColumn;
+
+      [2m+1 vendor frames [22m
+
+  2   [internal]:0
+      Whoops\Run::handleShutdown()
+
+
+   Symfony\Component\ErrorHandler\Error\FatalError 
+
+  Cannot use Filament\Forms\Form as Form because the name is already in use
+
+  at app/Filament/Admin/Resources/BookEvents/BookEventResource.php:13
+      9▕ use App\Filament\Admin\Resources\BookEvents\Tables\BookEventsTable;
+     10▕ use App\Models\BookEvent;
+     11▕ use BackedEnum;
+     12▕ use Filament\Resources\Resource;
+  ➜  13▕ use Filament\Tables\Table;use Filament\Forms\Form;use Filament\Forms\Form;
+     14▕ use Filament\Tables\Table;
+     15▕ class BookEventResource extends Resource
+     16▕ {
+     17▕     protected static ?string $model = BookEvent::class;
+
+
+   Whoops\Exception\ErrorException 
+
+  Cannot use Filament\Forms\Form as Form because the name is already in use
+
+  at app/Filament/Admin/Resources/BookEvents/BookEventResource.php:13
+      9▕ use App\Filament\Admin\Resources\BookEvents\Tables\BookEventsTable;
+     10▕ use App\Models\BookEvent;
+     11▕ use BackedEnum;
+     12▕ use Filament\Resources\Resource;
+  ➜  13▕ use Filament\Tables\Table;use Filament\Forms\Form;use Filament\Forms\Form;
+     14▕ use Filament\Tables\Table;
+     15▕ class BookEventResource extends Resource
+     16▕ {
+     17▕     protected static ?string $model = BookEvent::class;
+
+      [2m+1 vendor frames [22m
+
+  2   [internal]:0
+      Whoops\Run::handleShutdown()
+
+
+   Symfony\Component\ErrorHandler\Error\FatalError 
+
+  Cannot use Filament\Forms\Form as Form because the name is already in use
+
+  at app/Filament/Admin/Resources/BookPromotions/BookPromotionResource.php:13
+      9▕ use App\Filament\Admin\Resources\BookPromotions\Tables\BookPromotionsTable;
+     10▕ use App\Models\BookPromotion;
+     11▕ use BackedEnum;
+     12▕ use Filament\Resources\Resource;
+  ➜  13▕ use Filament\Tables\Table;use Filament\Forms\Form;use Filament\Forms\Form;
+     14▕ use Filament\Tables\Table;
+     15▕ class BookPromotionResource extends Resource
+     16▕ {
+     17▕     protected static ?string $model = BookPromotion::class;
+
+
+   Whoops\Exception\ErrorException 
+
+  Cannot use Filament\Forms\Form as Form because the name is already in use
+
+  at app/Filament/Admin/Resources/BookPromotions/BookPromotionResource.php:13
+      9▕ use App\Filament\Admin\Resources\BookPromotions\Tables\BookPromotionsTable;
+     10▕ use App\Models\BookPromotion;
+     11▕ use BackedEnum;
+     12▕ use Filament\Resources\Resource;
+  ➜  13▕ use Filament\Tables\Table;use Filament\Forms\Form;use Filament\Forms\Form;
+     14▕ use Filament\Tables\Table;
+     15▕ class BookPromotionResource extends Resource
+     16▕ {
+     17▕     protected static ?string $model = BookPromotion::class;
+
+      [2m+1 vendor frames [22m
+
+  2   [internal]:0
+      Whoops\Run::handleShutdown()
+
+
+   Symfony\Component\ErrorHandler\Error\FatalError 
+
+  Type of App\Filament\Admin\Resources\BookPromotions\RelationManagers\CostsRelationManager::$relationship must be string (as in class Filament\Resources\RelationManagers\RelationManager)
+
+  at app/Filament/Admin/Resources/BookPromotions/RelationManagers/CostsRelationManager.php:18
+     14▕ use Filament\Tables\Columns\TextColumn;
+     15▕ use Filament\Tables\Table;
+     16▕ use Filament\Resources\RelationManagers\RelationManager;
+     17▕ 
+  ➜  18▕ class CostsRelationManager extends RelationManager
+     19▕ {
+     20▕     protected static ?string $relationship = 'costs';
+     21▕ 
+     22▕     protected static ?string $recordTitleAttribute = 'cost_type';
+
+
+   Whoops\Exception\ErrorException 
+
+  Type of App\Filament\Admin\Resources\BookPromotions\RelationManagers\CostsRelationManager::$relationship must be string (as in class Filament\Resources\RelationManagers\RelationManager)
+
+  at app/Filament/Admin/Resources/BookPromotions/RelationManagers/CostsRelationManager.php:18
+     14▕ use Filament\Tables\Columns\TextColumn;
+     15▕ use Filament\Tables\Table;
+     16▕ use Filament\Resources\RelationManagers\RelationManager;
+     17▕ 
+  ➜  18▕ class CostsRelationManager extends RelationManager
+     19▕ {
+     20▕     protected static ?string $relationship = 'costs';
+     21▕ 
+     22▕     protected static ?string $recordTitleAttribute = 'cost_type';
+
+      [2m+1 vendor frames [22m
+
+  2   [internal]:0
+      Whoops\Run::handleShutdown()
+
+
+   Symfony\Component\ErrorHandler\Error\FatalError 
+
+  Could not check compatibility between App\Filament\Admin\Resources\BookPromotions\RelationManagers\CostsRelationManager::form(Filament\Schemas\Schema $schema): Filament\Schemas\Schema and Filament\Resources\RelationManagers\RelationManager::form(Filament\Forms\Form $form): Filament\Forms\Form, because class Filament\Schemas\Schema is not available
+
+  at app/Filament/Admin/Resources/BookPromotions/RelationManagers/CostsRelationManager.php:28
+     24▕     public static ?string $title = 'Costos';
+     25▕ 
+     26▕     // ... resto del código igual
+     27▕ 
+  ➜  28▕     public function form(Schema $schema): Schema
+     29▕     {
+     30▕         return $schema
+     31▕             ->components([
+     32▕                 Select::make('cost_type')
+
+
+   Whoops\Exception\ErrorException 
+
+  Could not check compatibility between App\Filament\Admin\Resources\BookPromotions\RelationManagers\CostsRelationManager::form(Filament\Schemas\Schema $schema): Filament\Schemas\Schema and Filament\Resources\RelationManagers\RelationManager::form(Filament\Forms\Form $form): Filament\Forms\Form, because class Filament\Schemas\Schema is not available
+
+  at app/Filament/Admin/Resources/BookPromotions/RelationManagers/CostsRelationManager.php:28
+     24▕     public static ?string $title = 'Costos';
+     25▕ 
+     26▕     // ... resto del código igual
+     27▕ 
+  ➜  28▕     public function form(Schema $schema): Schema
+     29▕     {
+     30▕         return $schema
+     31▕             ->components([
+     32▕                 Select::make('cost_type')
+
+      [2m+1 vendor frames [22m
+
+  2   [internal]:0
+      Whoops\Run::handleShutdown()
+

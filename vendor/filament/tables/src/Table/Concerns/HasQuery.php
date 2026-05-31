@@ -3,9 +3,11 @@
 namespace Filament\Tables\Table\Concerns;
 
 use Closure;
+use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\HasOneOrMany;
 use Illuminate\Database\Eloquent\Relations\HasOneOrManyThrough;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -53,29 +55,28 @@ trait HasQuery
         return $this;
     }
 
-    public function applyQueryScopes(Builder $query, bool $isResolvingRecord = false): Builder
+    protected function applyQueryScopes(Builder $query): Builder
     {
         foreach ($this->queryScopes as $scope) {
-            $query = $this->evaluate($scope, [
-                'query' => $query,
-                'isResolvingRecord' => $isResolvingRecord,
-            ]) ?? $query;
+            $query = $this->evaluate($scope, ['query' => $query]) ?? $query;
         }
 
         return $query;
     }
 
-    public function getQuery(bool $isResolvingRecord = false): Builder | Relation | null
+    public function getQuery(): Builder | Relation
     {
         if ($query = $this->evaluate($this->query)) {
-            return $this->applyQueryScopes($query->clone(), $isResolvingRecord);
+            return $this->applyQueryScopes($query->clone());
         }
 
         if ($query = $this->getRelationshipQuery()) {
-            return $this->applyQueryScopes($query->clone(), $isResolvingRecord);
+            return $this->applyQueryScopes($query->clone());
         }
 
-        return null;
+        $livewireClass = $this->getLivewire()::class;
+
+        throw new Exception("Table [{$livewireClass}] must have a [query()].");
     }
 
     public function getRelationshipQuery(): ?Builder
@@ -88,7 +89,7 @@ trait HasQuery
 
         $query = $relationship->getQuery();
 
-        if ($relationship instanceof HasOneOrManyThrough) {
+        if ($relationship instanceof (class_exists(HasOneOrManyThrough::class) ? HasOneOrManyThrough::class : HasManyThrough::class)) {
             // https://github.com/laravel/framework/issues/4962
             $query->select($query->getModel()->getTable() . '.*');
 
@@ -127,13 +128,7 @@ trait HasQuery
             ];
         }
 
-        $baseQuery = $query instanceof Relation ? $query->getQuery()->getQuery() : $query->getQuery();
-        $baseQuery->columns = array_values(array_filter(
-            $baseQuery->columns ?? [],
-            fn ($column): bool => ! in_array($column, $columns, true),
-        ));
-
-        $query->addSelect($columns);
+        $query->select($columns);
 
         return $query;
     }

@@ -2,21 +2,9 @@
 
 return [
 
-    'column_manager' => [
+    'column_toggle' => [
 
         'heading' => 'Colunas',
-
-        'actions' => [
-
-            'apply' => [
-                'label' => 'Aplicar colunas',
-            ],
-
-            'reset' => [
-                'label' => 'Redefinir',
-            ],
-
-        ],
 
     ],
 
@@ -24,20 +12,6 @@ return [
 
         'actions' => [
             'label' => 'Ação|Ações',
-        ],
-
-        'select' => [
-
-            'loading_message' => 'Carregando...',
-
-            'no_search_results_message' => 'Nenhuma opção corresponde à sua busca.',
-
-            'placeholder' => 'Selecione uma opção',
-
-            'searching_message' => 'Buscando...',
-
-            'search_prompt' => 'Digite para buscar...',
-
         ],
 
         'text' => [
@@ -125,7 +99,7 @@ return [
             'label' => 'Abrir ações',
         ],
 
-        'column_manager' => [
+        'toggle_columns' => [
             'label' => 'Alternar colunas',
         ],
 
@@ -136,7 +110,6 @@ return [
         'heading' => 'Sem registros',
 
         'description' => 'Crie um :model para começar.',
-
     ],
 
     'filters' => [
@@ -171,13 +144,7 @@ return [
         ],
 
         'select' => [
-
             'placeholder' => 'Todos',
-
-            'relationship' => [
-                'empty_option_label' => 'Nenhum',
-            ],
-
         ],
 
         'trashed' => [
@@ -200,6 +167,7 @@ return [
 
             'group' => [
                 'label' => 'Agrupar por',
+                'placeholder' => 'Agrupar por',
             ],
 
             'direction' => [
@@ -230,7 +198,7 @@ return [
             ],
 
             'deselect_all' => [
-                'label' => 'Desmarcar todos',
+                'label' => 'Desselecionar todos',
             ],
 
         ],
@@ -247,7 +215,7 @@ return [
 
             'direction' => [
 
-                'label' => 'Direção da ordenação',
+                'label' => 'Direção de ordenação',
 
                 'options' => [
                     'asc' => 'Ascendente',
@@ -259,7 +227,5 @@ return [
         ],
 
     ],
-
-    'default_model_label' => 'registro',
 
 ];

@@ -2,26 +2,17 @@
 
 namespace Filament\Support;
 
-use BackedEnum;
-use Filament\Support\Contracts\LoadingIndicator;
-use Filament\Support\Contracts\ScalableIcon;
-use Filament\Support\Enums\IconSize;
 use Filament\Support\Facades\FilamentColor;
-use Filament\Support\Facades\FilamentIcon;
 use Filament\Support\Facades\FilamentView;
-use Filament\Support\View\Components\Contracts\HasColor;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Connection;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Expression;
-use Illuminate\Http\Request;
 use Illuminate\Support\HtmlString;
 use Illuminate\Support\Number;
 use Illuminate\Support\Str;
 use Illuminate\Translation\MessageSelector;
 use Illuminate\View\ComponentAttributeBag;
 use Illuminate\View\ComponentSlot;
-use Throwable;
 
 if (! function_exists('Filament\Support\format_money')) {
     /**
@@ -48,13 +39,9 @@ if (! function_exists('Filament\Support\format_number')) {
 }
 
 if (! function_exists('Filament\Support\get_model_label')) {
-    /**
-     * @param  class-string<Model>  $model
-     */
     function get_model_label(string $model): string
     {
-        return (string) str($model)
-            ->classBasename()
+        return (string) str(class_basename($model))
             ->kebab()
             ->replace('-', ' ');
     }
@@ -67,18 +54,46 @@ if (! function_exists('Filament\Support\locale_has_pluralization')) {
     }
 }
 
-if (! function_exists('Filament\Support\get_component_color_classes')) {
+if (! function_exists('Filament\Support\get_color_css_variables')) {
     /**
-     * @param  class-string<HasColor>  $component
-     * @return array<string>
+     * @param  string | array{50: string, 100: string, 200: string, 300: string, 400: string, 500: string, 600: string, 700: string, 800: string, 900: string, 950: string} | null  $color
+     * @param  array<int>  $shades
      */
-    function get_component_color_classes(string | HasColor $component, ?string $color): array
+    function get_color_css_variables(string | array | null $color, array $shades, ?string $alias = null): ?string
     {
-        if (blank($color)) {
-            return [];
+        if ($color === null) {
+            return null;
         }
 
-        return FilamentColor::getComponentClasses($component, $color);
+        if ($alias !== null) {
+            if (($overridingShades = FilamentColor::getOverridingShades($alias)) !== null) {
+                $shades = $overridingShades;
+            }
+
+            if ($addedShades = FilamentColor::getAddedShades($alias)) {
+                $shades = [...$shades, ...$addedShades];
+            }
+
+            if ($removedShades = FilamentColor::getRemovedShades($alias)) {
+                $shades = array_diff($shades, $removedShades);
+            }
+        }
+
+        $variables = [];
+
+        if (is_string($color)) {
+            foreach ($shades as $shade) {
+                $variables[] = "--c-{$shade}:var(--{$color}-{$shade})";
+            }
+        }
+
+        if (is_array($color)) {
+            foreach ($shades as $shade) {
+                $variables[] = "--c-{$shade}:{$color[$shade]}";
+            }
+        }
+
+        return implode(';', $variables);
     }
 }
 
@@ -117,109 +132,26 @@ if (! function_exists('Filament\Support\is_slot_empty')) {
 if (! function_exists('Filament\Support\is_app_url')) {
     function is_app_url(string $url): bool
     {
-        if (str($url)->startsWith('/') && ! str($url)->startsWith('//')) {
-            return true;
-        }
-
-        $scheme = parse_url($url, PHP_URL_SCHEME);
-
-        if ($scheme && (! in_array($scheme, ['http', 'https'], strict: true))) {
-            return false;
-        }
-
-        $urlHost = parse_url($url, PHP_URL_HOST);
-
-        return (! $urlHost) || $urlHost === request()->getHost();
+        return str($url)->startsWith(request()->root());
     }
 }
 
 if (! function_exists('Filament\Support\generate_href_html')) {
-    function generate_href_html(?string $url, bool $shouldOpenInNewTab = false, ?bool $shouldOpenInSpaMode = null, bool $hasNestedClickEventHandler = false): Htmlable
+    function generate_href_html(?string $url, bool $shouldOpenInNewTab = false, ?bool $shouldOpenInSpaMode = null): Htmlable
     {
         if (blank($url)) {
             return new HtmlString('');
         }
 
-        $html = 'href="' . e($url) . '"';
+        $html = "href=\"{$url}\"";
 
         if ($shouldOpenInNewTab) {
             $html .= ' target="_blank"';
         } elseif ($shouldOpenInSpaMode ?? (FilamentView::hasSpaMode($url))) {
-            if (FilamentView::hasSpaPrefetching()) {
-                $html .= ' wire:navigate.hover';
-            } elseif ($hasNestedClickEventHandler) {
-                $html .= ' x-on:click="if (! ($event.altKey || $event.ctrlKey || $event.metaKey || $event.shiftKey)) { $event.preventDefault(); Alpine.navigate($el.getAttribute(\'href\')) }"';
-            } else {
-                $html .= ' wire:navigate';
-            }
+            $html .= ' wire:navigate';
         }
 
         return new HtmlString($html);
-    }
-}
-
-if (! function_exists('Filament\Support\generate_icon_html')) {
-    /**
-     * @param  string | array<string> | null  $alias
-     */
-    function generate_icon_html(string | BackedEnum | Htmlable | null $icon, string | array | null $alias = null, ?ComponentAttributeBag $attributes = null, ?IconSize $size = null): ?Htmlable
-    {
-        if (filled($alias)) {
-            $icon = FilamentIcon::resolve($alias) ?: $icon;
-        }
-
-        if (blank($icon)) {
-            return null;
-        }
-
-        $size ??= IconSize::Medium;
-
-        $attributes = ($attributes ?? new ComponentAttributeBag)->class([
-            'fi-icon',
-            "fi-size-{$size->value}",
-        ]);
-
-        if ($icon instanceof Htmlable) {
-            return new HtmlString(<<<HTML
-                <span {$attributes->toHtml()}>
-                    {$icon->toHtml()}
-                </span>
-                HTML);
-        }
-
-        if (is_string($icon) && str_contains($icon, '/')) {
-            $icon = e($icon);
-
-            return new HtmlString(<<<HTML
-                <img src="{$icon}" {$attributes->toHtml()} />
-                HTML);
-        }
-
-        if ($icon instanceof ScalableIcon) {
-            $icon = $icon->getIconForSize($size);
-        } elseif ($icon instanceof BackedEnum) {
-            $icon = $icon->value;
-        }
-
-        return svg($icon, $attributes->get('class'), array_filter($attributes->except('class')->getAttributes(), static fn ($value): bool => $value !== false && $value !== null));
-    }
-}
-
-if (! function_exists('Filament\Support\generate_loading_indicator_html')) {
-    function generate_loading_indicator_html(?ComponentAttributeBag $attributes = null, ?IconSize $size = null): Htmlable
-    {
-        $size ??= IconSize::Medium;
-
-        $attributes = ($attributes ?? new ComponentAttributeBag)->class([
-            'fi-icon fi-loading-indicator',
-            "fi-size-{$size->value}",
-        ]);
-
-        static $loadingIndicator = null;
-
-        $loadingIndicator ??= app(LoadingIndicator::class);
-
-        return new HtmlString($loadingIndicator->toHtml($attributes));
     }
 }
 
@@ -230,10 +162,6 @@ if (! function_exists('Filament\Support\generate_search_column_expression')) {
     function generate_search_column_expression(string $column, ?bool $isSearchForcedCaseInsensitive, Connection $databaseConnection): string | Expression
     {
         $driverName = $databaseConnection->getDriverName();
-
-        if ($driverName === 'pgsql' && str_contains($column, '.')) {
-            $column = $databaseConnection->getTablePrefix() . $column;
-        }
 
         $column = match ($driverName) {
             'pgsql' => (
@@ -321,84 +249,5 @@ if (! function_exists('Filament\Support\generate_search_term_expression')) {
         }
 
         return Str::lower($search);
-    }
-}
-
-if (! function_exists('Filament\Support\original_request')) {
-    function original_request(): Request
-    {
-        return app('originalRequest');
-    }
-}
-
-if (! function_exists('Filament\Support\discover_app_classes')) {
-    /**
-     * @return array<class-string>
-     */
-    function discover_app_classes(?string $parentClass = null): array
-    {
-        $classLoader = require 'vendor/autoload.php';
-
-        return collect($classLoader->getClassMap())
-            ->filter(function (string $file, string $class) use ($parentClass): bool {
-                if (! str($file)->startsWith(base_path('vendor' . DIRECTORY_SEPARATOR . 'composer/../../'))) {
-                    return false;
-                }
-
-                if (blank($parentClass)) {
-                    return true;
-                }
-
-                try {
-                    return is_subclass_of($class, $parentClass);
-                } catch (Throwable) {
-                    return false;
-                }
-            })
-            ->keys()
-            ->all();
-    }
-}
-
-if (! function_exists('Filament\Support\get_color_css_variables')) {
-    /**
-     * @param  string | array{50: string, 100: string, 200: string, 300: string, 400: string, 500: string, 600: string, 700: string, 800: string, 900: string, 950: string} | null  $color
-     * @param  array<int>  $shades
-     */
-    function get_color_css_variables(string | array | null $color, array $shades, ?string $alias = null): ?string
-    {
-        if ($color === null) {
-            return null;
-        }
-
-        if ($alias !== null) {
-            if (($overridingShades = FilamentColor::getOverridingShades($alias)) !== null) {
-                $shades = $overridingShades;
-            }
-
-            if ($addedShades = FilamentColor::getAddedShades($alias)) {
-                $shades = [...$shades, ...$addedShades];
-            }
-
-            if ($removedShades = FilamentColor::getRemovedShades($alias)) {
-                $shades = array_diff($shades, $removedShades);
-            }
-        }
-
-        $variables = [];
-
-        if (is_string($color)) {
-            foreach ($shades as $shade) {
-                $variables[] = "--color-{$shade}:var(--{$color}-{$shade})";
-            }
-        }
-
-        if (is_array($color)) {
-            foreach ($shades as $shade) {
-                $variables[] = "--color-{$shade}:{$color[$shade]}";
-            }
-        }
-
-        return implode(';', $variables);
     }
 }

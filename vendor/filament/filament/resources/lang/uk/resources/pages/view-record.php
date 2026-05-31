@@ -6,8 +6,6 @@ return [
 
     'breadcrumb' => 'Перегляд',
 
-    'navigation_label' => 'Перегляд',
-
     'content' => [
 
         'tab' => [

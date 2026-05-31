@@ -7,11 +7,11 @@ return [
         'text' => [
 
             'actions' => [
-                'collapse_list' => 'Hiển thị giảm :count',
-                'expand_list' => 'Hiển thị thêm :count',
+                'collapse_list' => 'Hiển thị :count ít hơn',
+                'expand_list' => 'Hiển thị :count thêm',
             ],
 
-            'more_list_items' => 'và thêm :count',
+            'more_list_items' => 'và :count thêm',
 
         ],
 
@@ -29,7 +29,7 @@ return [
 
             ],
 
-            'placeholder' => 'Không có mục nào',
+            'placeholder' => 'Không có mục',
 
         ],
 

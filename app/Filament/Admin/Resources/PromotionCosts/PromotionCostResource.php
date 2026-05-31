@@ -8,17 +8,15 @@ use App\Filament\Admin\Resources\PromotionCosts\Pages\ListPromotionCosts;
 use App\Filament\Admin\Resources\PromotionCosts\Schemas\PromotionCostForm;
 use App\Filament\Admin\Resources\PromotionCosts\Tables\PromotionCostsTable;
 use App\Models\PromotionCost;
-use BackedEnum;
+use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Schemas\Schema;
-use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 
 class PromotionCostResource extends Resource
 {
     protected static ?string $model = PromotionCost::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCreditCard;
+    protected static ?string $navigationIcon = 'heroicon-o-document-text';
 
     protected static ?string $navigationLabel = 'Costos de Promoción';
 
@@ -26,9 +24,9 @@ class PromotionCostResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'cost_type';
 
-    public static function form(Schema $schema): Schema
+    public static function form(Form $form): Form
     {
-        return PromotionCostForm::configure($schema);
+        return PromotionCostForm::configure($form);
     }
 
     public static function table(Table $table): Table

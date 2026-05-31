@@ -16,10 +16,6 @@ class TablesRenderHook
 
     const TOOLBAR_BEFORE = 'tables::toolbar.before';
 
-    const TOOLBAR_COLUMN_MANAGER_TRIGGER_AFTER = 'tables::toolbar.toggle-column-trigger.after';
-
-    const TOOLBAR_COLUMN_MANAGER_TRIGGER_BEFORE = 'tables::toolbar.toggle-column-trigger.before';
-
     const TOOLBAR_END = 'tables::toolbar.end';
 
     const TOOLBAR_GROUPING_SELECTOR_AFTER = 'tables::toolbar.grouping-selector.after';
@@ -36,17 +32,7 @@ class TablesRenderHook
 
     const TOOLBAR_START = 'tables::toolbar.start';
 
-    const FILTER_INDICATORS = 'tables::filter.indicators';
+    const TOOLBAR_TOGGLE_COLUMN_TRIGGER_AFTER = 'tables::toolbar.toggle-column-trigger.after';
 
-    const HEADER_CELL = 'tables::header.cell';
-
-    /**
-     * @deprecated Use `TOOLBAR_COLUMN_MANAGER_TRIGGER_AFTER` instead.
-     */
-    const TOOLBAR_TOGGLE_COLUMN_TRIGGER_AFTER = self::TOOLBAR_COLUMN_MANAGER_TRIGGER_AFTER;
-
-    /**
-     * @deprecated Use `TOOLBAR_COLUMN_MANAGER_TRIGGER_BEFORE` instead.
-     */
-    const TOOLBAR_TOGGLE_COLUMN_TRIGGER_BEFORE = self::TOOLBAR_COLUMN_MANAGER_TRIGGER_BEFORE;
+    const TOOLBAR_TOGGLE_COLUMN_TRIGGER_BEFORE = 'tables::toolbar.toggle-column-trigger.before';
 }

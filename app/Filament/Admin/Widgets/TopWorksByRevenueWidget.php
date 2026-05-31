@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Cache;
 
 class TopWorksByRevenueWidget extends Widget
 {
-    protected string $view = 'filament.widgets.top-works-by-revenue';
+    protected static string $view = 'filament.widgets.top-works-by-revenue';
 
     protected static ?int $sort = 3;
 

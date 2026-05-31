@@ -38,6 +38,4 @@ return [
 
     ],
 
-    'navigation_label' => 'Redigera',
-
 ];

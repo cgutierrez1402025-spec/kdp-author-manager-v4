@@ -7,8 +7,6 @@ use Filament\Navigation\NavigationBuilder;
 use Filament\Navigation\NavigationGroup;
 use Filament\Navigation\NavigationItem;
 use Filament\Navigation\NavigationManager;
-use LogicException;
-use UnitEnum;
 
 trait HasNavigation
 {
@@ -38,34 +36,21 @@ trait HasNavigation
      */
     public function buildNavigation(): array
     {
-        $resolved = $this->resolveNavigationBuilder();
+        /** @var NavigationBuilder $builder */
+        $builder = app()->call($this->navigationBuilder);
 
-        return $resolved instanceof NavigationBuilder ? $resolved->getNavigation() : [];
+        return $builder->getNavigation();
     }
 
     /**
-     * @param  array<string | int, NavigationGroup | string> | class-string<UnitEnum>  $groups
+     * @param  array<string | int, NavigationGroup | string>  $groups
      */
-    public function navigationGroups(array | string $groups): static
+    public function navigationGroups(array $groups): static
     {
         if (isset($this->navigationManager)) {
             $this->navigationManager->navigationGroups($groups);
 
             return $this;
-        }
-
-        if (is_string($groups)) {
-            throw_unless(enum_exists($groups), new LogicException("Enum class [{$groups}] does not exist for navigation groups."));
-
-            $groups = array_reduce(
-                $groups::cases(),
-                function (array $carry, UnitEnum $case): array {
-                    $carry[$case->name] = NavigationGroup::fromEnum($case);
-
-                    return $carry;
-                },
-                initial: [],
-            );
         }
 
         $this->navigationGroups = [
@@ -97,27 +82,12 @@ trait HasNavigation
 
     public function hasNavigation(): bool
     {
-        return $this->resolveNavigationBuilder() !== false;
+        return $this->navigationBuilder !== false;
     }
 
     public function hasNavigationBuilder(): bool
     {
-        return $this->resolveNavigationBuilder() instanceof NavigationBuilder;
-    }
-
-    protected function resolveNavigationBuilder(): NavigationBuilder | bool
-    {
-        if (! $this->navigationBuilder instanceof Closure) {
-            return $this->navigationBuilder;
-        }
-
-        $result = app()->call($this->navigationBuilder);
-
-        if ($result instanceof NavigationBuilder) {
-            return $result;
-        }
-
-        return (bool) $result;
+        return $this->navigationBuilder instanceof Closure;
     }
 
     /**

@@ -36,7 +36,7 @@ class NotificationsServiceProvider extends PackageServiceProvider
 
         Livewire::component('notifications', Notifications::class);
 
-        on('dehydrate', function (Component $component): void {
+        on('dehydrate', function (Component $component) {
             if (! Livewire::isLivewireRequest()) {
                 return;
             }
@@ -45,13 +45,9 @@ class NotificationsServiceProvider extends PackageServiceProvider
                 return;
             }
 
-            $notifications = session()->pull('filament.notifications') ?? [];
-
-            if (count($notifications) <= 0) {
+            if (count(session()->get('filament.notifications') ?? []) <= 0) {
                 return;
             }
-
-            session()->put('filament.claimed_notifications', $notifications);
 
             $component->dispatch('notificationsSent');
         });

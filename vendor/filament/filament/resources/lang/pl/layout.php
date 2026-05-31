@@ -60,13 +60,4 @@ return [
         'alt' => 'Logo :name',
     ],
 
-    'tenant_menu' => [
-
-        'search_field' => [
-            'label' => 'Wyszukiwanie najemcy',
-            'placeholder' => 'Szukaj',
-        ],
-
-    ],
-
 ];

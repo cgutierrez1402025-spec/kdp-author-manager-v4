@@ -12,46 +12,28 @@ namespace SebastianBergmann\Comparator;
 use function abs;
 use function assert;
 use function floor;
-use function in_array;
 use function sprintf;
 use DateInterval;
-use DateTime;
-use DateTimeImmutable;
+use DateTimeInterface;
 use DateTimeZone;
 
-/**
- * @no-named-arguments Parameter names are not covered by the backward compatibility promise for sebastian/comparator
- *
- * @internal This class is not covered by the backward compatibility promise for sebastian/comparator
- */
 final class DateTimeComparator extends ObjectComparator
 {
     public function accepts(mixed $expected, mixed $actual): bool
     {
-        return ($expected instanceof DateTime || $expected instanceof DateTimeImmutable) &&
-               ($actual instanceof DateTime || $actual instanceof DateTimeImmutable);
+        return ($expected instanceof DateTimeInterface) &&
+               ($actual instanceof DateTimeInterface);
     }
 
     /**
-     * @param array<mixed> $processed
-     *
      * @throws ComparisonFailure
      */
     public function assertEquals(mixed $expected, mixed $actual, float $delta = 0.0, bool $canonicalize = false, bool $ignoreCase = false, array &$processed = []): void
     {
-        assert($expected instanceof DateTime || $expected instanceof DateTimeImmutable);
-        assert($actual instanceof DateTime || $actual instanceof DateTimeImmutable);
-
-        if (in_array([$actual, $expected], $processed, true) ||
-            in_array([$expected, $actual], $processed, true)) {
-            return;
-        }
-
-        $processed[] = [$actual, $expected];
+        assert($expected instanceof DateTimeInterface);
+        assert($actual instanceof DateTimeInterface);
 
         $absDelta = abs($delta);
-
-        /** @phpstan-ignore argument.type */
         $delta    = new DateInterval(sprintf('PT%dS', $absDelta));
         $delta->f = $absDelta - floor($absDelta);
 
@@ -70,10 +52,22 @@ final class DateTimeComparator extends ObjectComparator
             throw new ComparisonFailure(
                 $expected,
                 $actual,
-                $expected->format('Y-m-d\TH:i:s.uO'),
-                $actual->format('Y-m-d\TH:i:s.uO'),
+                $this->dateTimeToString($expected),
+                $this->dateTimeToString($actual),
                 'Failed asserting that two DateTime objects are equal.',
             );
         }
+    }
+
+    /**
+     * Returns an ISO 8601 formatted string representation of a datetime or
+     * 'Invalid DateTimeInterface object' if the provided DateTimeInterface was not properly
+     * initialized.
+     */
+    private function dateTimeToString(DateTimeInterface $datetime): string
+    {
+        $string = $datetime->format('Y-m-d\TH:i:s.uO');
+
+        return $string ?: 'Invalid DateTimeInterface object';
     }
 }

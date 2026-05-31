@@ -10,9 +10,7 @@ export default (Alpine) => {
 
         transitionEasing: null,
 
-        unsubscribeLivewireHook: null,
-
-        init() {
+        init: function () {
             this.computedStyle = window.getComputedStyle(this.$el)
 
             this.transitionDuration =
@@ -41,7 +39,7 @@ export default (Alpine) => {
             this.isShown = true
         },
 
-        configureTransitions() {
+        configureTransitions: function () {
             const display = this.computedStyle.display
 
             const show = () => {
@@ -75,11 +73,19 @@ export default (Alpine) => {
             Alpine.effect(() => toggle(this.isShown))
         },
 
-        configureAnimations() {
+        configureAnimations: function () {
             let animation
 
-            this.unsubscribeLivewireHook = Livewire.interceptMessage(
-                ({ onFinish, onSuccess }) => {
+            Livewire.hook(
+                'commit',
+                ({ component, commit, succeed, fail, respond }) => {
+                    if (
+                        !component.snapshot.data
+                            .isFilamentNotificationsComponent
+                    ) {
+                        return
+                    }
+
                     // Calling `el.getBoundingClientRect()` from outside `requestAnimationFrame()` can
                     // occasionally cause the page to scroll to the top.
                     requestAnimationFrame(() => {
@@ -87,7 +93,7 @@ export default (Alpine) => {
                             this.$el.getBoundingClientRect().top
                         const oldTop = getTop()
 
-                        onFinish(() => {
+                        respond(() => {
                             animation = () => {
                                 if (!this.isShown) {
                                     return
@@ -96,7 +102,9 @@ export default (Alpine) => {
                                 this.$el.animate(
                                     [
                                         {
-                                            transform: `translateY(${oldTop - getTop()}px)`,
+                                            transform: `translateY(${
+                                                oldTop - getTop()
+                                            }px)`,
                                         },
                                         { transform: 'translateY(0px)' },
                                     ],
@@ -112,24 +120,15 @@ export default (Alpine) => {
                                 .forEach((animation) => animation.finish())
                         })
 
-                        onSuccess(({ payload }) => {
-                            if (
-                                !payload?.snapshot?.data
-                                    ?.isFilamentNotificationsComponent
-                            ) {
-                                return
-                            }
-
-                            if (typeof animation === 'function') {
-                                animation()
-                            }
+                        succeed(({ snapshot, effect }) => {
+                            animation()
                         })
                     })
                 },
             )
         },
 
-        close() {
+        close: function () {
             this.isShown = false
 
             setTimeout(
@@ -145,7 +144,7 @@ export default (Alpine) => {
             )
         },
 
-        markAsRead() {
+        markAsRead: function () {
             window.dispatchEvent(
                 new CustomEvent('markedNotificationAsRead', {
                     detail: {
@@ -155,7 +154,7 @@ export default (Alpine) => {
             )
         },
 
-        markAsUnread() {
+        markAsUnread: function () {
             window.dispatchEvent(
                 new CustomEvent('markedNotificationAsUnread', {
                     detail: {
@@ -163,10 +162,6 @@ export default (Alpine) => {
                     },
                 }),
             )
-        },
-
-        destroy() {
-            this.unsubscribeLivewireHook?.()
         },
     }))
 }

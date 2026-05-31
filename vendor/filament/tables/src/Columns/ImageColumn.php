@@ -3,38 +3,33 @@
 namespace Filament\Tables\Columns;
 
 use Closure;
-use Filament\Support\Components\Contracts\HasEmbeddedView;
-use Filament\Support\Concerns\CanWrap;
-use Filament\Support\Enums\Alignment;
-use Filament\Support\Enums\TextSize;
 use Illuminate\Contracts\Filesystem\Filesystem;
-use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Filesystem\FilesystemAdapter;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Js;
 use Illuminate\View\ComponentAttributeBag;
 use League\Flysystem\UnableToCheckFileExistence;
 use Throwable;
 
-use function Filament\Support\generate_href_html;
-
-class ImageColumn extends Column implements HasEmbeddedView
+class ImageColumn extends Column
 {
-    use CanWrap;
+    use Concerns\CanWrap;
 
-    protected string | Closure | null $diskName = null;
+    /**
+     * @var view-string
+     */
+    protected string $view = 'filament-tables::columns.image-column';
 
-    protected int | string | Closure | null $imageHeight = null;
+    protected string | Closure | null $disk = null;
+
+    protected int | string | Closure | null $height = null;
 
     protected bool | Closure $isCircular = false;
 
     protected bool | Closure $isSquare = false;
 
-    protected string | Closure | null $visibility = null;
+    protected string | Closure $visibility = 'public';
 
-    protected int | string | Closure | null $imageWidth = null;
+    protected int | string | Closure | null $width = null;
 
     /**
      * @var array<array<mixed> | Closure>
@@ -53,30 +48,22 @@ class ImageColumn extends Column implements HasEmbeddedView
 
     protected bool | Closure $hasLimitedRemainingText = false;
 
-    protected TextSize | string | Closure | null $limitedRemainingTextSize = null;
+    protected bool | Closure $isLimitedRemainingTextSeparate = false;
+
+    protected string | Closure | null $limitedRemainingTextSize = null;
 
     protected bool | Closure $shouldCheckFileExistence = true;
 
     public function disk(string | Closure | null $disk): static
     {
-        $this->diskName = $disk;
+        $this->disk = $disk;
 
         return $this;
     }
 
-    public function imageHeight(int | string | Closure | null $height): static
-    {
-        $this->imageHeight = $height;
-
-        return $this;
-    }
-
-    /**
-     * @deprecated Use `imageHeight()` instead.
-     */
     public function height(int | string | Closure | null $height): static
     {
-        $this->imageHeight($height);
+        $this->height = $height;
 
         return $this;
     }
@@ -103,34 +90,24 @@ class ImageColumn extends Column implements HasEmbeddedView
         return $this;
     }
 
-    public function imageSize(int | string | Closure $size): static
-    {
-        $this->imageWidth($size);
-        $this->imageHeight($size);
-
-        return $this;
-    }
-
-    /**
-     * @deprecated Use `imageSize()` instead.
-     */
     public function size(int | string | Closure $size): static
     {
-        $this->imageSize($size);
+        $this->width($size);
+        $this->height($size);
 
         return $this;
     }
 
-    public function visibility(string | Closure | null $visibility): static
+    public function visibility(string | Closure $visibility): static
     {
         $this->visibility = $visibility;
 
         return $this;
     }
 
-    public function imageWidth(int | string | Closure | null $width): static
+    public function width(int | string | Closure | null $width): static
     {
-        $this->imageWidth = $width;
+        $this->width = $width;
 
         return $this;
     }
@@ -142,27 +119,12 @@ class ImageColumn extends Column implements HasEmbeddedView
 
     public function getDiskName(): string
     {
-        $name = $this->evaluate($this->diskName);
-
-        if (filled($name)) {
-            return $name;
-        }
-
-        $defaultName = config('filament.default_filesystem_disk');
-
-        if (
-            ($defaultName === 'public')
-            && ($this->getCustomVisibility() === 'private')
-        ) {
-            return 'local';
-        }
-
-        return $defaultName;
+        return $this->evaluate($this->disk) ?? config('filament.default_filesystem_disk');
     }
 
-    public function getImageHeight(): ?string
+    public function getHeight(): ?string
     {
-        $height = $this->evaluate($this->imageHeight);
+        $height = $this->evaluate($this->height);
 
         if ($height === null) {
             return null;
@@ -173,14 +135,6 @@ class ImageColumn extends Column implements HasEmbeddedView
         }
 
         return $height;
-    }
-
-    /**
-     * @deprecated Use `getImageHeight()` instead.
-     */
-    public function getHeight(): ?string
-    {
-        return $this->getImageHeight();
     }
 
     public function defaultImageUrl(string | Closure | null $url): static
@@ -213,7 +167,7 @@ class ImageColumn extends Column implements HasEmbeddedView
             try {
                 return $storage->temporaryUrl(
                     $state,
-                    now()->addMinutes(config('filament.temporary_file_url_expiry_minutes', 30))->endOfHour(),
+                    now()->addMinutes(5),
                 );
             } catch (Throwable $exception) {
                 // This driver does not support creating temporary URLs.
@@ -230,23 +184,12 @@ class ImageColumn extends Column implements HasEmbeddedView
 
     public function getVisibility(): string
     {
-        $visibility = $this->getCustomVisibility();
-
-        if (filled($visibility)) {
-            return $visibility;
-        }
-
-        return ($this->getDiskName() === 'public') ? 'public' : 'private';
-    }
-
-    public function getCustomVisibility(): ?string
-    {
         return $this->evaluate($this->visibility);
     }
 
-    public function getImageWidth(): ?string
+    public function getWidth(): ?string
     {
-        $width = $this->evaluate($this->imageWidth);
+        $width = $this->evaluate($this->width);
 
         if ($width === null) {
             return null;
@@ -282,9 +225,6 @@ class ImageColumn extends Column implements HasEmbeddedView
      */
     public function extraImgAttributes(array | Closure $attributes, bool $merge = false): static
     {
-        // Security: Attribute values are not escaped when rendered. Never
-        // pass unsanitized user input as attribute names or values.
-
         if ($merge) {
             $this->extraImgAttributes[] = $attributes;
         } else {
@@ -302,7 +242,7 @@ class ImageColumn extends Column implements HasEmbeddedView
         $temporaryAttributeBag = new ComponentAttributeBag;
 
         foreach ($this->extraImgAttributes as $extraImgAttributes) {
-            $temporaryAttributeBag = $temporaryAttributeBag->merge($this->evaluate($extraImgAttributes), escape: false);
+            $temporaryAttributeBag = $temporaryAttributeBag->merge($this->evaluate($extraImgAttributes));
         }
 
         return $temporaryAttributeBag->getAttributes();
@@ -361,10 +301,18 @@ class ImageColumn extends Column implements HasEmbeddedView
         return $this->evaluate($this->limit);
     }
 
-    public function limitedRemainingText(bool | Closure $condition = true, TextSize | string | Closure | null $size = null): static
+    public function limitedRemainingText(bool | Closure $condition = true, bool | Closure $isSeparate = false, string | Closure | null $size = null): static
     {
         $this->hasLimitedRemainingText = $condition;
+        $this->limitedRemainingTextSeparate($isSeparate);
         $this->limitedRemainingTextSize($size);
+
+        return $this;
+    }
+
+    public function limitedRemainingTextSeparate(bool | Closure $condition = true): static
+    {
+        $this->isLimitedRemainingTextSeparate = $condition;
 
         return $this;
     }
@@ -374,26 +322,21 @@ class ImageColumn extends Column implements HasEmbeddedView
         return (bool) $this->evaluate($this->hasLimitedRemainingText);
     }
 
-    public function limitedRemainingTextSize(TextSize | string | Closure | null $size): static
+    public function isLimitedRemainingTextSeparate(): bool
+    {
+        return (bool) $this->evaluate($this->isLimitedRemainingTextSeparate);
+    }
+
+    public function limitedRemainingTextSize(string | Closure | null $size): static
     {
         $this->limitedRemainingTextSize = $size;
 
         return $this;
     }
 
-    public function getLimitedRemainingTextSize(): TextSize | string | null
+    public function getLimitedRemainingTextSize(): ?string
     {
-        $size = $this->evaluate($this->limitedRemainingTextSize);
-
-        if (blank($size)) {
-            return null;
-        }
-
-        if (is_string($size)) {
-            $size = TextSize::tryFrom($size) ?? $size;
-        }
-
-        return $size;
+        return $this->evaluate($this->limitedRemainingTextSize);
     }
 
     public function checkFileExistence(bool | Closure $condition = true): static
@@ -406,139 +349,5 @@ class ImageColumn extends Column implements HasEmbeddedView
     public function shouldCheckFileExistence(): bool
     {
         return (bool) $this->evaluate($this->shouldCheckFileExistence);
-    }
-
-    public function toEmbeddedHtml(): string
-    {
-        $state = $this->getState();
-
-        if ($state instanceof Collection) {
-            $state = $state->all();
-        }
-
-        $alignment = $this->getAlignment();
-
-        $attributes = $this->getExtraAttributeBag()
-            ->class([
-                'fi-ta-image',
-                'fi-inline' => $this->isInline(),
-                ($alignment instanceof Alignment) ? "fi-align-{$alignment->value}" : (is_string($alignment) ? $alignment : ''),
-            ]);
-
-        $defaultImageUrl = $this->getDefaultImageUrl();
-
-        if (blank($state) && filled($defaultImageUrl)) {
-            $state = [null];
-        }
-
-        if (blank($state)) {
-            $attributes = $attributes
-                ->merge([
-                    'x-tooltip' => filled($tooltip = $this->getEmptyTooltip())
-                        ? '{
-                            content: ' . Js::from($tooltip) . ',
-                            theme: $store.theme,
-                            allowHTML: ' . Js::from($tooltip instanceof Htmlable) . ',
-                        }'
-                        : null,
-                ], escape: false);
-
-            $placeholder = $this->getPlaceholder();
-
-            ob_start(); ?>
-
-            <div <?= $attributes->toHtml() ?>>
-                <?php if (filled($placeholder)) { ?>
-                    <p class="fi-ta-placeholder">
-                        <?= e($placeholder) ?>
-                    </p>
-                <?php } ?>
-            </div>
-
-            <?php return ob_get_clean();
-        }
-
-        $state = Arr::wrap($state);
-        $stateCount = count($state);
-
-        $limit = $this->getLimit() ?? $stateCount;
-
-        $stateOverLimitCount = ($limit && ($stateCount > $limit))
-            ? ($stateCount - $limit)
-            : 0;
-
-        if ($stateOverLimitCount) {
-            $state = array_slice($state, 0, $limit);
-        }
-
-        $isCircular = $this->isCircular();
-        $isSquare = $this->isSquare();
-        $isStacked = $this->isStacked();
-        $hasLimitedRemainingText = $stateOverLimitCount && $this->hasLimitedRemainingText();
-        $limitedRemainingTextSize = $this->getLimitedRemainingTextSize();
-        $height = $this->getImageHeight() ?? ($isStacked ? '2rem' : '2.5rem');
-        $width = $this->getImageWidth() ?? (($isCircular || $isSquare) ? $height : null);
-
-        $attributes = $attributes
-            ->class([
-                'fi-circular' => $isCircular,
-                'fi-wrapped' => $this->canWrap(),
-                'fi-stacked' => $isStacked,
-                ($isStacked && is_int($ring = $this->getRing())) ? "fi-ta-image-ring fi-ta-image-ring-{$ring}" : '',
-                ($isStacked && ($overlap = ($this->getOverlap() ?? 2))) ? "fi-ta-image-overlap-{$overlap}" : '',
-            ]);
-
-        $shouldOpenUrlInNewTab = $this->shouldOpenUrlInNewTab();
-
-        $formatState = function (mixed $stateItem) use ($defaultImageUrl, $width, $height, $shouldOpenUrlInNewTab): string {
-            $item = '<img ' . $this->getExtraImgAttributeBag()
-                ->merge([
-                    'src' => e(filled($stateItem) ? ($this->getImageUrl($stateItem) ?? $defaultImageUrl) : $defaultImageUrl),
-                    'x-tooltip' => filled($tooltip = $this->getTooltip($stateItem))
-                        ? '{
-                                content: ' . Js::from($tooltip) . ',
-                                theme: $store.theme,
-                                allowHTML: ' . Js::from($tooltip instanceof Htmlable) . ',
-                            }'
-                        : null,
-                ], escape: false)
-                ->style([
-                    "height: {$height}" => $height,
-                    "width: {$width}" => $width,
-                ])
-                ->toHtml()
-                . ' />';
-
-            if (filled($url = $this->getUrl($stateItem))) {
-                $item = '<a ' . generate_href_html($url, $shouldOpenUrlInNewTab)->toHtml() . '>' . $item . '</a>';
-            }
-
-            return $item;
-        };
-
-        ob_start(); ?>
-
-        <div <?= $attributes->toHtml() ?>>
-            <?php foreach ($state as $stateItem) { ?>
-                <?= $formatState($stateItem) ?>
-            <?php } ?>
-
-            <?php if ($hasLimitedRemainingText) { ?>
-                <div <?= (new ComponentAttributeBag)
-                ->class([
-                    'fi-ta-image-limited-remaining-text',
-                    (($limitedRemainingTextSize instanceof TextSize) ? "fi-size-{$limitedRemainingTextSize->value}" : $limitedRemainingTextSize) => $limitedRemainingTextSize,
-                ])
-                ->style([
-                    "height: {$height}" => $height,
-                    "width: {$width}" => $width,
-                ])
-                ->toHtml() ?>>
-                    +<?= $stateOverLimitCount ?>
-                </div>
-            <?php } ?>
-        </div>
-
-        <?php return ob_get_clean();
     }
 }

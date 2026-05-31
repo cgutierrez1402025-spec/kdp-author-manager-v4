@@ -2,21 +2,10 @@
 
 return [
 
-    'column_manager' => [
+    'column_toggle' => [
 
         'heading' => 'คอลัมน์',
 
-        'actions' => [
-
-            'apply' => [
-                'label' => 'ใช้งาน',
-            ],
-
-            'reset' => [
-                'label' => 'รีเซ็ต',
-            ],
-
-        ],
     ],
 
     'columns' => [
@@ -106,7 +95,7 @@ return [
             'label' => 'การดำเนินการเป็นกลุ่ม',
         ],
 
-        'column_manager' => [
+        'toggle_columns' => [
             'label' => 'สลับคอลัมน์',
         ],
 
@@ -114,9 +103,9 @@ return [
 
     'empty' => [
 
-        'heading' => 'ไม่พบข้อมูล :model',
+        'heading' => 'ไม่มี:model',
 
-        'description' => 'เริ่มสร้าง :model เพื่อเริ่มต้นใช้งาน',
+        'description' => 'เพิ่ม:modelเพื่อเริ่มต้น',
 
     ],
 

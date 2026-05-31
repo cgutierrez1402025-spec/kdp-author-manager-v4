@@ -2,16 +2,16 @@
 
 namespace App\Filament\Admin\Resources\Prompts\Schemas;
 
-use Filament\Forms\Components\Rating;
 use Filament\Forms;
-use Filament\Schemas\Schema;
+use Filament\Forms\Components\Rating;
+use Filament\Forms\Form;
 
 class PromptForm
 {
-    public static function configure(Schema $schema): Schema
+    public static function configure(Form $form): Form
     {
-        return $schema
-            ->components([
+        return $form
+            ->schema([
                 Forms\Components\Section::make('Información del Prompt')
                     ->schema([
                         Forms\Components\Select::make('work_id')
@@ -73,7 +73,7 @@ class PromptForm
                         Forms\Components\Toggle::make('generated_final_content')
                             ->label('Contenido Final'),
 
-                        Forms\Components\Rating::make('rating')
+                        Rating::make('rating')
                             ->label('Rating')
                             ->minValue(1)
                             ->maxValue(5),

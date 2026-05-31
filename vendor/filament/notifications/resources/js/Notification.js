@@ -1,71 +1,62 @@
+import { v4 as uuid } from 'uuid-browser'
+
 class Notification {
     constructor() {
-        // `crypto.randomUUID()` requires a secure context (HTTPS); fall back to
-        // `crypto.getRandomValues()` which works in all contexts including HTTP.
-        this.id(
-            crypto.randomUUID?.() ??
-                '10000000-1000-4000-8000-100000000000'.replace(/[018]/g, (c) =>
-                    (
-                        +c ^
-                        (crypto.getRandomValues(new Uint8Array(1))[0] &
-                            (15 >> (+c / 4)))
-                    ).toString(16),
-                ),
-        )
+        this.id(uuid())
 
         return this
     }
 
     id(id) {
-        this._id = id
+        this.id = id
 
         return this
     }
 
     title(title) {
-        this._title = title
+        this.title = title
 
         return this
     }
 
     body(body) {
-        this._body = body
+        this.body = body
 
         return this
     }
 
     actions(actions) {
-        this._actions = actions
+        this.actions = actions
 
         return this
     }
 
     status(status) {
-        this._status = status
+        this.status = status
 
         return this
     }
 
     color(color) {
-        this._color = color
+        this.color = color
 
         return this
     }
 
     icon(icon) {
-        this._icon = icon
+        this.icon = icon
 
         return this
     }
 
     iconColor(color) {
-        this._iconColor = color
+        this.iconColor = color
 
         return this
     }
 
     duration(duration) {
-        this._duration = duration
+        this.duration = duration
 
         return this
     }
@@ -107,38 +98,22 @@ class Notification {
     }
 
     view(view) {
-        this._view = view
+        this.view = view
 
         return this
     }
 
     viewData(viewData) {
-        this._viewData = viewData
+        this.viewData = viewData
 
         return this
-    }
-
-    toJSON() {
-        return {
-            id: this._id,
-            title: this._title,
-            body: this._body,
-            actions: this._actions?.map((action) => action.toJSON()),
-            status: this._status,
-            color: this._color,
-            icon: this._icon,
-            iconColor: this._iconColor,
-            duration: this._duration,
-            view: this._view,
-            viewData: this._viewData,
-        }
     }
 
     send() {
         window.dispatchEvent(
             new CustomEvent('notificationSent', {
                 detail: {
-                    notification: this.toJSON(),
+                    notification: this,
                 },
             }),
         )
@@ -155,13 +130,13 @@ class Action {
     }
 
     name(name) {
-        this._name = name
+        this.name = name
 
         return this
     }
 
     color(color) {
-        this._color = color
+        this.color = color
 
         return this
     }
@@ -175,15 +150,15 @@ class Action {
 
     dispatchSelf(event, data) {
         this.dispatch(event, data)
-        this._dispatchDirection = 'self'
+        this.dispatchDirection = 'self'
 
         return this
     }
 
     dispatchTo(component, event, data) {
         this.dispatch(event, data)
-        this._dispatchDirection = 'to'
-        this._dispatchToComponent = component
+        this.dispatchDirection = 'to'
+        this.dispatchToComponent = component
 
         return this
     }
@@ -216,139 +191,111 @@ class Action {
     }
 
     dispatchDirection(dispatchDirection) {
-        this._dispatchDirection = dispatchDirection
+        this.dispatchDirection = dispatchDirection
 
         return this
     }
 
     dispatchToComponent(component) {
-        this._dispatchToComponent = component
+        this.dispatchToComponent = component
 
         return this
     }
 
     event(event) {
-        this._event = event
+        this.event = event
 
         return this
     }
 
     eventData(data) {
-        this._eventData = data
+        this.eventData = data
 
         return this
     }
 
     extraAttributes(attributes) {
-        this._extraAttributes = attributes
+        this.extraAttributes = attributes
 
         return this
     }
 
     icon(icon) {
-        this._icon = icon
+        this.icon = icon
 
         return this
     }
 
     iconPosition(position) {
-        this._iconPosition = position
+        this.iconPosition = position
 
         return this
     }
 
     outlined(condition = true) {
-        this._isOutlined = condition
+        this.isOutlined = condition
 
         return this
     }
 
     disabled(condition = true) {
-        this._isDisabled = condition
+        this.isDisabled = condition
 
         return this
     }
 
     label(label) {
-        this._label = label
+        this.label = label
 
         return this
     }
 
     close(condition = true) {
-        this._shouldClose = condition
+        this.shouldClose = condition
 
         return this
     }
 
     openUrlInNewTab(condition = true) {
-        this._shouldOpenUrlInNewTab = condition
+        this.shouldOpenUrlInNewTab = condition
 
         return this
     }
 
     size(size) {
-        this._size = size
+        this.size = size
 
         return this
     }
 
     url(url) {
-        this._url = url
+        this.url = url
 
         return this
     }
 
     view(view) {
-        this._view = view
+        this.view = view
 
         return this
     }
 
     button() {
-        this.view('filament::components.button.index')
+        this.view('filament-actions::button-action')
 
         return this
     }
 
     grouped() {
-        this.view('filament::components.dropdown.list.item')
-
-        return this
-    }
-
-    iconButton() {
-        this.view('filament::components.icon-button')
+        this.view('filament-actions::grouped-action')
 
         return this
     }
 
     link() {
-        this.view('filament::components.link')
+        this.view('filament-actions::link-action')
 
         return this
-    }
-
-    toJSON() {
-        return {
-            name: this._name,
-            color: this._color,
-            event: this._event,
-            eventData: this._eventData,
-            dispatchDirection: this._dispatchDirection,
-            dispatchToComponent: this._dispatchToComponent,
-            extraAttributes: this._extraAttributes,
-            icon: this._icon,
-            iconPosition: this._iconPosition,
-            isOutlined: this._isOutlined,
-            isDisabled: this._isDisabled,
-            label: this._label,
-            shouldClose: this._shouldClose,
-            shouldOpenUrlInNewTab: this._shouldOpenUrlInNewTab,
-            size: this._size,
-            url: this._url,
-            view: this._view,
-        }
     }
 }
 
@@ -360,50 +307,39 @@ class ActionGroup {
     }
 
     actions(actions) {
-        this._actions = actions.map((action) => action.grouped())
+        this.actions = actions.map((action) => action.grouped())
 
         return this
     }
 
     color(color) {
-        this._color = color
+        this.color = color
 
         return this
     }
 
     icon(icon) {
-        this._icon = icon
+        this.icon = icon
 
         return this
     }
 
     iconPosition(position) {
-        this._iconPosition = position
+        this.iconPosition = position
 
         return this
     }
 
     label(label) {
-        this._label = label
+        this.label = label
 
         return this
     }
 
     tooltip(tooltip) {
-        this._tooltip = tooltip
+        this.tooltip = tooltip
 
         return this
-    }
-
-    toJSON() {
-        return {
-            actions: this._actions?.map((action) => action.toJSON()),
-            color: this._color,
-            icon: this._icon,
-            iconPosition: this._iconPosition,
-            label: this._label,
-            tooltip: this._tooltip,
-        }
     }
 }
 

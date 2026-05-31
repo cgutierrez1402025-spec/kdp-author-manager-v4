@@ -7,7 +7,7 @@ use Filament\Widgets\Widget;
 
 class MyTasksWidget extends Widget
 {
-    protected string $view = 'filament.widgets.my-tasks';
+    protected static string $view = 'filament.widgets.my-tasks';
 
     protected int $tasksLimit = 10;
 

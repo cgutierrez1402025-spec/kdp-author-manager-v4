@@ -3,15 +3,14 @@
 namespace Filament\Tables\Filters\Concerns;
 
 use Closure;
-use Illuminate\Contracts\Support\Htmlable;
 
 trait HasLabel
 {
-    protected string | Htmlable | Closure | null $label = null;
+    protected string | Closure | null $label = null;
 
     protected bool $shouldTranslateLabel = false;
 
-    public function label(string | Htmlable | Closure | null $label): static
+    public function label(string | Closure | null $label): static
     {
         $this->label = $label;
 
@@ -25,7 +24,7 @@ trait HasLabel
         return $this;
     }
 
-    public function getLabel(): string | Htmlable
+    public function getLabel(): string
     {
         $label = $this->evaluate($this->label) ?? (string) str($this->getName())
             ->before('.')

@@ -2,7 +2,7 @@
 
 return [
 
-    'column_manager' => [
+    'column_toggle' => [
 
         'heading' => 'Ustunlar',
 
@@ -95,7 +95,7 @@ return [
             'label' => 'Ommaviy amallar',
         ],
 
-        'column_manager' => [
+        'toggle_columns' => [
             'label' => 'Ustunlarni almashtirish',
         ],
 

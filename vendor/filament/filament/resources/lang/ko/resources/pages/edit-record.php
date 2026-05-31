@@ -6,8 +6,6 @@ return [
 
     'breadcrumb' => '수정',
 
-    'navigation_label' => '수정',
-
     'form' => [
 
         'actions' => [

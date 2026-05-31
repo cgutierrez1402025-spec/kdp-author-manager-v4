@@ -3,14 +3,14 @@
 namespace App\Filament\Admin\Resources\PromotionCosts\Schemas;
 
 use Filament\Forms;
-use Filament\Schemas\Schema;
+use Filament\Forms\Form;
 
 class PromotionCostForm
 {
-    public static function configure(Schema $schema): Schema
+    public static function configure(Form $form): Form
     {
-        return $schema
-            ->components([
+        return $form
+            ->schema([
                 Forms\Components\Section::make('Costo de Promoción')
                     ->schema([
                         Forms\Components\Select::make('book_promotion_id')

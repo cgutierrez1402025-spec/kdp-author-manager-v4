@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Prunable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * @property array<string, mixed> $data
+ * @property array $data
  * @property string | null $validation_error
  * @property-read Import $import
  */
@@ -16,15 +16,9 @@ class FailedImportRow extends Model
 {
     use Prunable;
 
-    /**
-     * @return array<string, string>
-     */
-    protected function casts(): array
-    {
-        return [
-            'data' => 'array',
-        ];
-    }
+    protected $casts = [
+        'data' => 'array',
+    ];
 
     protected $guarded = [];
 

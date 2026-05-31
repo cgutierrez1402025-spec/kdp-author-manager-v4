@@ -8,17 +8,15 @@ use App\Filament\Admin\Resources\BookPromotions\Pages\ListBookPromotions;
 use App\Filament\Admin\Resources\BookPromotions\Schemas\BookPromotionForm;
 use App\Filament\Admin\Resources\BookPromotions\Tables\BookPromotionsTable;
 use App\Models\BookPromotion;
-use BackedEnum;
+use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Schemas\Schema;
-use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 
 class BookPromotionResource extends Resource
 {
     protected static ?string $model = BookPromotion::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedTag;
+    protected static ?string $navigationIcon = 'heroicon-o-document-text';
 
     protected static ?string $navigationLabel = 'Promociones';
 
@@ -26,9 +24,9 @@ class BookPromotionResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'promotion_name';
 
-    public static function form(Schema $schema): Schema
+    public static function form(Form $form): Form
     {
-        return BookPromotionForm::configure($schema);
+        return BookPromotionForm::configure($form);
     }
 
     public static function table(Table $table): Table

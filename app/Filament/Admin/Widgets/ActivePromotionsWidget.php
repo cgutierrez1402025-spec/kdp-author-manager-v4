@@ -7,7 +7,7 @@ use Filament\Widgets\Widget;
 
 class ActivePromotionsWidget extends Widget
 {
-    protected string $view = 'filament.widgets.active-promotions';
+    protected static string $view = 'filament.widgets.active-promotions';
 
     protected int $promotionsLimit = 10;
 

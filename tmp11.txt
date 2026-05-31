@@ -1,0 +1,37 @@
+
+   Symfony\Component\ErrorHandler\Error\FatalError 
+
+  Cannot redeclare static Filament\Widgets\Widget::$view as non static App\Filament\Admin\Resources\BookPromotions\Widgets\PromotionRoiDashboard::$view
+
+  at app/Filament/Admin/Resources/BookPromotions/Widgets/PromotionRoiDashboard.php:8
+      4▕ 
+      5▕ use App\Models\BookPromotion;
+      6▕ use Filament\Widgets\Widget;
+      7▕ 
+  ➜   8▕ class PromotionRoiDashboard extends Widget
+      9▕ {
+     10▕     protected string $view = 'filament.widgets.promotion-roi-dashboard';
+     11▕ 
+     12▕     public ?BookPromotion $record = null;
+
+
+   Whoops\Exception\ErrorException 
+
+  Cannot redeclare static Filament\Widgets\Widget::$view as non static App\Filament\Admin\Resources\BookPromotions\Widgets\PromotionRoiDashboard::$view
+
+  at app/Filament/Admin/Resources/BookPromotions/Widgets/PromotionRoiDashboard.php:8
+      4▕ 
+      5▕ use App\Models\BookPromotion;
+      6▕ use Filament\Widgets\Widget;
+      7▕ 
+  ➜   8▕ class PromotionRoiDashboard extends Widget
+      9▕ {
+     10▕     protected string $view = 'filament.widgets.promotion-roi-dashboard';
+     11▕ 
+     12▕     public ?BookPromotion $record = null;
+
+      [2m+1 vendor frames [22m
+
+  2   [internal]:0
+      Whoops\Run::handleShutdown()
+

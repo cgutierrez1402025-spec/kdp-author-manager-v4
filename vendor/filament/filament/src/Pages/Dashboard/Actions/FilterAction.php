@@ -2,13 +2,11 @@
 
 namespace Filament\Pages\Dashboard\Actions;
 
+use Exception;
 use Filament\Actions\Action;
 use Filament\Pages\Dashboard;
 use Filament\Support\Facades\FilamentIcon;
-use Filament\Support\Icons\Heroicon;
-use Filament\View\PanelsIconAlias;
 use Livewire\Component;
-use LogicException;
 
 class FilterAction extends Action
 {
@@ -27,19 +25,19 @@ class FilterAction extends Action
 
         $this->modalSubmitActionLabel(__('filament-panels::pages/dashboard.actions.filter.modal.actions.apply.label'));
 
-        $this->icon(FilamentIcon::resolve(PanelsIconAlias::PAGES_DASHBOARD_ACTIONS_FILTER) ?? Heroicon::Funnel);
+        $this->icon(FilamentIcon::resolve('panels::pages.dashboard.actions.filter') ?? 'heroicon-m-funnel');
 
-        $this->defaultColor('gray');
+        $this->color('gray');
 
         $this->fillForm(function (Component $livewire): ?array {
             if (! property_exists($livewire, 'filters')) {
-                throw new LogicException('The [' . $livewire::class . '] page must implement the [' . Dashboard\Concerns\HasFilters::class . '] trait.');
+                throw new Exception('The [' . $livewire::class . '] page must implement the [' . Dashboard\Concerns\HasFilters::class . '] trait.');
             }
 
             return $livewire->filters;
         });
 
-        $this->action(function (array $data, Component $livewire): void {
+        $this->action(function (array $data, Component $livewire) {
             if (! property_exists($livewire, 'filters')) {
                 return;
             }

@@ -18,7 +18,6 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Conditionable;
 use InvalidArgumentException;
 use RuntimeException;
-use SortDirection;
 
 /**
  * @template TValue
@@ -40,21 +39,13 @@ trait BuildsQueries
     {
         $this->enforceOrderBy();
 
-        $skip = $this->getOffset();
-        $remaining = $this->getLimit();
-
         $page = 1;
 
         do {
-            $offset = (($page - 1) * $count) + (int) $skip;
-
-            $limit = is_null($remaining) ? $count : min($count, $remaining);
-
-            if ($limit == 0) {
-                break;
-            }
-
-            $results = $this->offset($offset)->limit($limit)->get();
+            // We'll execute the query for the given page and get the results. If there are
+            // no results we can just break and return from here. When there are results
+            // we will call the callback with the current chunk of these results here.
+            $results = $this->forPage($page, $count)->get();
 
             $countResults = $results->count();
 
@@ -62,10 +53,9 @@ trait BuildsQueries
                 break;
             }
 
-            if (! is_null($remaining)) {
-                $remaining = max($remaining - $countResults, 0);
-            }
-
+            // On each chunk result set, we will pass them to the callback and then let the
+            // developer take care of everything within the callback, which allows us to
+            // keep the memory low for spinning through large result sets for working.
             if ($callback($results, $page) === false) {
                 return false;
             }
@@ -145,7 +135,7 @@ trait BuildsQueries
      */
     public function chunkByIdDesc($count, callable $callback, $column = null, $alias = null)
     {
-        return $this->orderedChunkById($count, $callback, $column, $alias, descending: SortDirection::Descending);
+        return $this->orderedChunkById($count, $callback, $column, $alias, descending: true);
     }
 
     /**
@@ -155,7 +145,7 @@ trait BuildsQueries
      * @param  callable(\Illuminate\Support\Collection<int, TValue>, int): mixed  $callback
      * @param  string|null  $column
      * @param  string|null  $alias
-     * @param  SortDirection|bool  $descending
+     * @param  bool  $descending
      * @return bool
      *
      * @throws \RuntimeException
@@ -163,42 +153,29 @@ trait BuildsQueries
     public function orderedChunkById($count, callable $callback, $column = null, $alias = null, $descending = false)
     {
         $column ??= $this->defaultKeyName();
+
         $alias ??= $column;
+
         $lastId = null;
-        $skip = $this->getOffset();
-        $remaining = $this->getLimit();
 
         $page = 1;
 
         do {
             $clone = clone $this;
 
-            if ($skip && $page > 1) {
-                $clone->offset(0);
-            }
-
-            $limit = is_null($remaining) ? $count : min($count, $remaining);
-
-            if ($limit == 0) {
-                break;
-            }
-
             // We'll execute the query for the given page and get the results. If there are
             // no results we can just break and return from here. When there are results
             // we will call the callback with the current chunk of these results here.
-            $results = match ($descending) {
-                SortDirection::Ascending, false => $clone->forPageAfterId($limit, $lastId, $column)->get(),
-                SortDirection::Descending, true => $clone->forPageBeforeId($limit, $lastId, $column)->get(),
-            };
+            if ($descending) {
+                $results = $clone->forPageBeforeId($count, $lastId, $column)->get();
+            } else {
+                $results = $clone->forPageAfterId($count, $lastId, $column)->get();
+            }
 
             $countResults = $results->count();
 
             if ($countResults == 0) {
                 break;
-            }
-
-            if (! is_null($remaining)) {
-                $remaining = max($remaining - $countResults, 0);
             }
 
             // On each chunk result set, we will pass them to the callback and then let the
@@ -302,7 +279,7 @@ trait BuildsQueries
      */
     public function lazyByIdDesc($chunkSize = 1000, $column = null, $alias = null)
     {
-        return $this->orderedLazyById($chunkSize, $column, $alias, SortDirection::Descending);
+        return $this->orderedLazyById($chunkSize, $column, $alias, true);
     }
 
     /**
@@ -311,11 +288,10 @@ trait BuildsQueries
      * @param  int  $chunkSize
      * @param  string|null  $column
      * @param  string|null  $alias
-     * @param  SortDirection|bool  $descending
+     * @param  bool  $descending
      * @return \Illuminate\Support\LazyCollection
      *
      * @throws \InvalidArgumentException
-     * @throws \RuntimeException
      */
     protected function orderedLazyById($chunkSize = 1000, $column = null, $alias = null, $descending = false)
     {
@@ -333,10 +309,11 @@ trait BuildsQueries
             while (true) {
                 $clone = clone $this;
 
-                $results = match ($descending) {
-                    SortDirection::Ascending, false => $clone->forPageAfterId($chunkSize, $lastId, $column)->get(),
-                    SortDirection::Descending, true => $clone->forPageBeforeId($chunkSize, $lastId, $column)->get(),
-                };
+                if ($descending) {
+                    $results = $clone->forPageBeforeId($chunkSize, $lastId, $column)->get();
+                } else {
+                    $results = $clone->forPageAfterId($chunkSize, $lastId, $column)->get();
+                }
 
                 foreach ($results as $result) {
                     yield $result;
@@ -363,7 +340,7 @@ trait BuildsQueries
      */
     public function first($columns = ['*'])
     {
-        return $this->limit(1)->get($columns)->first();
+        return $this->take(1)->get($columns)->first();
     }
 
     /**
@@ -395,7 +372,7 @@ trait BuildsQueries
      */
     public function sole($columns = ['*'])
     {
-        $result = $this->limit(2)->get($columns);
+        $result = $this->take(2)->get($columns);
 
         $count = $result->count();
 
@@ -549,9 +526,9 @@ trait BuildsQueries
      */
     protected function paginator($items, $total, $perPage, $currentPage, $options)
     {
-        return Container::getInstance()->makeWith(LengthAwarePaginator::class, [
-            'items' => $items, 'total' => $total, 'perPage' => $perPage, 'currentPage' => $currentPage, 'options' => $options,
-        ]);
+        return Container::getInstance()->makeWith(LengthAwarePaginator::class, compact(
+            'items', 'total', 'perPage', 'currentPage', 'options'
+        ));
     }
 
     /**
@@ -565,9 +542,9 @@ trait BuildsQueries
      */
     protected function simplePaginator($items, $perPage, $currentPage, $options)
     {
-        return Container::getInstance()->makeWith(Paginator::class, [
-            'items' => $items, 'perPage' => $perPage, 'currentPage' => $currentPage, 'options' => $options,
-        ]);
+        return Container::getInstance()->makeWith(Paginator::class, compact(
+            'items', 'perPage', 'currentPage', 'options'
+        ));
     }
 
     /**
@@ -581,13 +558,13 @@ trait BuildsQueries
      */
     protected function cursorPaginator($items, $perPage, $cursor, $options)
     {
-        return Container::getInstance()->makeWith(CursorPaginator::class, [
-            'items' => $items, 'perPage' => $perPage, 'cursor' => $cursor, 'options' => $options,
-        ]);
+        return Container::getInstance()->makeWith(CursorPaginator::class, compact(
+            'items', 'perPage', 'cursor', 'options'
+        ));
     }
 
     /**
-     * Pass the query to a given callback and then return it.
+     * Pass the query to a given callback.
      *
      * @param  callable($this): mixed  $callback
      * @return $this
@@ -597,18 +574,5 @@ trait BuildsQueries
         $callback($this);
 
         return $this;
-    }
-
-    /**
-     * Pass the query to a given callback and return the result.
-     *
-     * @template TReturn
-     *
-     * @param  (callable($this): TReturn)  $callback
-     * @return (TReturn is null|void ? $this : TReturn)
-     */
-    public function pipe($callback)
-    {
-        return $callback($this) ?? $this;
     }
 }

@@ -2,51 +2,93 @@
 
 namespace App\Filament\Admin\Resources\AiTools;
 
-use App\Filament\Admin\Resources\AiTools\Pages\CreateAiTool;
-use App\Filament\Admin\Resources\AiTools\Pages\EditAiTool;
-use App\Filament\Admin\Resources\AiTools\Pages\ListAiTools;
-use App\Filament\Admin\Resources\AiTools\Schemas\AiToolForm;
-use App\Filament\Admin\Resources\AiTools\Tables\AiToolsTable;
 use App\Models\AiTool;
-use BackedEnum;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Schemas\Schema;
-use Filament\Support\Icons\Heroicon;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
 class AiToolResource extends Resource
 {
     protected static ?string $model = AiTool::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCpuChip;
+    protected static ?string $navigationIcon = 'heroicon-o-cpu-chip';
 
     protected static ?string $navigationLabel = 'Herramientas IA';
 
+    protected static ?string $pluralLabel = 'Herramientas IA';
+
     protected static ?string $recordTitleAttribute = 'name';
 
-    public static function form(Schema $schema): Schema
+    protected static ?string $navigationGroup = 'AI Tools';
+
+    public static function form(Form $form): Form
     {
-        return AiToolForm::configure($schema);
+        return $form
+            ->schema([
+                TextInput::make('name')
+                    ->label('Nombre')
+                    ->required()
+                    ->maxLength(255),
+
+                TextInput::make('version')
+                    ->label('Versión')
+                    ->maxLength(50),
+
+                Textarea::make('description')
+                    ->label('Descripción')
+                    ->maxLength(65535)
+                    ->columnSpanFull(),
+
+                TextInput::make('api_endpoint')
+                    ->label('API Endpoint')
+                    ->url()
+                    ->maxLength(255),
+
+                TextInput::make('api_key')
+                    ->label('API Key')
+                    ->password()
+                    ->maxLength(255),
+            ]);
     }
 
     public static function table(Table $table): Table
     {
-        return AiToolsTable::configure($table);
-    }
+        return $table
+            ->columns([
+                TextColumn::make('id')
+                    ->label('ID')
+                    ->sortable()
+                    ->toggleable(),
 
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
-    }
+                TextColumn::make('name')
+                    ->label('Nombre')
+                    ->searchable()
+                    ->sortable(),
 
-    public static function getPages(): array
-    {
-        return [
-            'index' => ListAiTools::route('/'),
-            'create' => CreateAiTool::route('/create'),
-            'edit' => EditAiTool::route('/{record}/edit'),
-        ];
+                TextColumn::make('version')
+                    ->label('Versión')
+                    ->searchable(),
+
+                TextColumn::make('created_at')
+                    ->label('Creado')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(),
+            ])
+            ->filters([
+                //
+            ])
+            ->actions([
+                Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
+            ])
+            ->bulkActions([
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
+                ]),
+            ]);
     }
 }

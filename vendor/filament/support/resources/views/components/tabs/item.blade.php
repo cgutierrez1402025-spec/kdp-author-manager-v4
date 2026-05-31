@@ -5,8 +5,6 @@
 @props([
     'active' => false,
     'alpineActive' => null,
-    'alpineDeferredBadgeData' => null,
-    'alpineDeferredBadgeLoading' => null,
     'badge' => null,
     'badgeColor' => null,
     'badgeTooltip' => null,
@@ -28,7 +26,21 @@
     }
 
     $hasAlpineActiveClasses = filled($alpineActive);
-    $hasDeferredBadge = filled($alpineDeferredBadgeData);
+
+    $inactiveItemClasses = 'hover:bg-gray-50 focus-visible:bg-gray-50 dark:hover:bg-white/5 dark:focus-visible:bg-white/5';
+
+    // @deprecated `fi-tabs-item-active` has been replaced by `fi-active`.
+    $activeItemClasses = 'fi-active fi-tabs-item-active bg-gray-50 dark:bg-white/5';
+
+    $inactiveLabelClasses = 'text-gray-500 group-hover:text-gray-700 group-focus-visible:text-gray-700 dark:text-gray-400 dark:group-hover:text-gray-200 dark:group-focus-visible:text-gray-200';
+
+    $activeLabelClasses = 'text-primary-600 dark:text-primary-400';
+
+    $iconClasses = 'fi-tabs-item-icon h-5 w-5 shrink-0 transition duration-75';
+
+    $inactiveIconClasses = 'text-gray-400 dark:text-gray-500';
+
+    $activeIconClasses = 'text-primary-600 dark:text-primary-400';
 @endphp
 
 <{{ $tag }}
@@ -39,7 +51,8 @@
     @endif
     @if ($hasAlpineActiveClasses)
         x-bind:class="{
-            'fi-active': {{ $alpineActive }},
+            @js($inactiveItemClasses): {{-- format-ignore-start --}} ! ({{ $alpineActive }}) {{-- format-ignore-end --}},
+            @js($activeItemClasses): {{ $alpineActive }},
         }"
     @endif
     {{
@@ -49,97 +62,62 @@
                 'role' => 'tab',
             ])
             ->class([
-                'fi-tabs-item',
-                'fi-active' => (! $hasAlpineActiveClasses) && $active,
+                'fi-tabs-item group flex items-center justify-center gap-x-2 whitespace-nowrap rounded-lg px-3 py-2 text-sm font-medium outline-none transition duration-75',
+                $inactiveItemClasses => (! $hasAlpineActiveClasses) && (! $active),
+                $activeItemClasses => (! $hasAlpineActiveClasses) && $active,
             ])
     }}
 >
     @if ($icon && $iconPosition === IconPosition::Before)
-        {{ \Filament\Support\generate_icon_html($icon) }}
+        <x-filament::icon
+            :icon="$icon"
+            :x-bind:class="$hasAlpineActiveClasses ? '{ ' . \Illuminate\Support\Js::from($inactiveIconClasses) . ': ! (' . $alpineActive . '), ' . \Illuminate\Support\Js::from($activeIconClasses) . ': ' . $alpineActive . ' }' : null"
+            @class([
+                $iconClasses,
+                $inactiveIconClasses => (! $hasAlpineActiveClasses) && (! $active),
+                $activeIconClasses => (! $hasAlpineActiveClasses) && $active,
+            ])
+        />
     @endif
 
-    <span class="fi-tabs-item-label">
+    <span
+        @if ($hasAlpineActiveClasses)
+            x-bind:class="{
+                @js($inactiveLabelClasses): {{-- format-ignore-start --}} ! ({{ $alpineActive }}) {{-- format-ignore-end --}},
+                @js($activeLabelClasses): {{ $alpineActive }},
+            }"
+        @endif
+        @class([
+            'fi-tabs-item-label transition duration-75',
+            $inactiveLabelClasses => (! $hasAlpineActiveClasses) && (! $active),
+            $activeLabelClasses => (! $hasAlpineActiveClasses) && $active,
+        ])
+    >
         {{ $slot }}
     </span>
 
     @if ($icon && $iconPosition === IconPosition::After)
-        {{ \Filament\Support\generate_icon_html($icon) }}
+        <x-filament::icon
+            :icon="$icon"
+            :x-bind:class="$hasAlpineActiveClasses ? '{ ' . \Illuminate\Support\Js::from($inactiveIconClasses) . ': ! (' . $alpineActive . '), ' . \Illuminate\Support\Js::from($activeIconClasses) . ': ' . $alpineActive . ' }' : null"
+            @class([
+                $iconClasses,
+                $inactiveIconClasses => (! $hasAlpineActiveClasses) && (! $active),
+                $activeIconClasses => (! $hasAlpineActiveClasses) && $active,
+            ])
+        />
     @endif
 
     @if (filled($badge))
-        @if ($badge instanceof \Illuminate\View\ComponentSlot)
+        <x-filament::badge
+            :color="$badgeColor"
+            :icon="$badgeIcon"
+            :icon-position="$badgeIconPosition"
+            size="sm"
+            :tooltip="$badgeTooltip"
+            class="w-max"
+        >
             {{ $badge }}
-        @else
-            <x-filament::badge
-                :color="$badgeColor"
-                :icon="$badgeIcon"
-                :icon-position="$badgeIconPosition"
-                size="sm"
-                :tooltip="$badgeTooltip"
-            >
-                {{ $badge }}
-            </x-filament::badge>
-        @endif
-    @elseif ($hasDeferredBadge)
-        <span
-            x-show="{{ $alpineDeferredBadgeLoading }}"
-            x-cloak
-            class="fi-tabs-item-badge-placeholder"
-        >
-            {{ \Filament\Support\generate_loading_indicator_html(size: \Filament\Support\Enums\IconSize::Small) }}
-        </span>
-
-        <template
-            x-if="
-                ! {{ $alpineDeferredBadgeLoading }} &&
-                    {{ $alpineDeferredBadgeData }}?.badge != null
-            "
-        >
-            <span
-                x-bind:class="
-                    'fi-badge fi-size-sm ' +
-                        ({{ $alpineDeferredBadgeData }}?.badgeColorClasses ?? '')
-                "
-                x-bind:style="{{ $alpineDeferredBadgeData }}?.badgeColorStyles ?? ''"
-                x-init="
-                    let tooltip = {{ $alpineDeferredBadgeData }}?.badgeTooltip
-                    if (tooltip) {
-                        window.tippy?.($el, {
-                            content: tooltip,
-                            theme: $store.theme,
-                        })
-                    }
-                "
-            >
-                <template
-                    x-if="
-                        {{ $alpineDeferredBadgeData }}?.badgeIconHtml &&
-                            {{ $alpineDeferredBadgeData }}?.badgeIconPosition !== 'after'
-                    "
-                >
-                    <span
-                        x-html="{{ $alpineDeferredBadgeData }}.badgeIconHtml"
-                    ></span>
-                </template>
-
-                <span class="fi-badge-label-ctn">
-                    <span
-                        class="fi-badge-label"
-                        x-text="{{ $alpineDeferredBadgeData }}?.badge"
-                    ></span>
-                </span>
-
-                <template
-                    x-if="
-                        {{ $alpineDeferredBadgeData }}?.badgeIconHtml &&
-                            {{ $alpineDeferredBadgeData }}?.badgeIconPosition === 'after'
-                    "
-                >
-                    <span
-                        x-html="{{ $alpineDeferredBadgeData }}.badgeIconHtml"
-                    ></span>
-                </template>
-            </span>
-        </template>
+        </x-filament::badge>
     @endif
 </{{ $tag }}>

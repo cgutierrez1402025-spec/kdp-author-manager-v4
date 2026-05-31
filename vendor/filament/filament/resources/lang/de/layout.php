@@ -60,13 +60,4 @@ return [
         'alt' => 'Logo von :name',
     ],
 
-    'tenant_menu' => [
-
-        'search_field' => [
-            'label' => 'Mandant suchen',
-            'placeholder' => 'Suchen',
-        ],
-
-    ],
-
 ];

@@ -13,20 +13,17 @@ use PHPUnit\Event\Event;
 use PHPUnit\Event\Telemetry;
 
 /**
- * @immutable
+ * @psalm-immutable
  *
  * @no-named-arguments Parameter names are not covered by the backward compatibility promise for PHPUnit
  */
-final readonly class Sorted implements Event
+final class Sorted implements Event
 {
-    private Telemetry\Info $telemetryInfo;
-    private int $executionOrder;
-    private int $executionOrderDefects;
-    private bool $resolveDependencies;
+    private readonly Telemetry\Info $telemetryInfo;
+    private readonly int $executionOrder;
+    private readonly int $executionOrderDefects;
+    private readonly bool $resolveDependencies;
 
-    /**
-     * @internal This method is not covered by the backward compatibility promise for PHPUnit
-     */
     public function __construct(Telemetry\Info $telemetryInfo, int $executionOrder, int $executionOrderDefects, bool $resolveDependencies)
     {
         $this->telemetryInfo         = $telemetryInfo;
@@ -55,9 +52,6 @@ final readonly class Sorted implements Event
         return $this->resolveDependencies;
     }
 
-    /**
-     * @return non-empty-string
-     */
     public function asString(): string
     {
         return 'Test Suite Sorted';

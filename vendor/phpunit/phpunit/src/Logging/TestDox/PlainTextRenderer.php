@@ -16,17 +16,17 @@ use function sprintf;
  *
  * @internal This class is not covered by the backward compatibility promise for PHPUnit
  */
-final readonly class PlainTextRenderer
+final class PlainTextRenderer
 {
     /**
-     * @param array<class-string, TestResultCollection> $tests
+     * @psalm-param array<string, TestResultCollection> $tests
      */
     public function render(array $tests): string
     {
         $buffer = '';
 
-        foreach ($tests as $_tests) {
-            $buffer .= $_tests->asArray()[0]->test()->testDox()->prettifiedClassName() . "\n";
+        foreach ($tests as $prettifiedClassName => $_tests) {
+            $buffer .= $prettifiedClassName . "\n";
 
             foreach ($this->reduce($_tests) as $prettifiedMethodName => $outcome) {
                 $buffer .= sprintf(
@@ -43,7 +43,7 @@ final readonly class PlainTextRenderer
     }
 
     /**
-     * @return array<string, ' '|'x'>
+     * @psalm-return array<string, 'x'|' '>
      */
     private function reduce(TestResultCollection $tests): array
     {

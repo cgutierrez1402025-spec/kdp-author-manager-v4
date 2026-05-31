@@ -7,7 +7,7 @@ use Filament\Widgets\Widget;
 
 class VersionTreeWidget extends Widget
 {
-    protected string $view = 'filament.widgets.version-tree';
+    protected static string $view = 'filament.widgets.version-tree';
 
     public ?ManuscriptVersion $record = null;
 

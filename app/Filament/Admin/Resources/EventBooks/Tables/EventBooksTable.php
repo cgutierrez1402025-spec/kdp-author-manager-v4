@@ -13,7 +13,7 @@ class EventBooksTable
     public static function configure(Table $table): Table
     {
         return $table
-            ->modifyQueryQueryUsing(fn ($query) => $query->with(['bookEvent', 'work', 'edition']))
+            ->modifyQueryUsing(fn ($query) => $query->with(['bookEvent', 'work', 'edition']))
             ->columns([
                 TextColumn::make('bookEvent.title')
                     ->label('Evento')

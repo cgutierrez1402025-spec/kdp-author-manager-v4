@@ -21,7 +21,7 @@ use PhpParser\NodeVisitorAbstract;
 final class LineCountingVisitor extends NodeVisitorAbstract
 {
     /**
-     * @var non-negative-int
+     * @psalm-var non-negative-int
      */
     private readonly int $linesOfCode;
 
@@ -36,41 +36,38 @@ final class LineCountingVisitor extends NodeVisitorAbstract
     private array $linesWithStatements = [];
 
     /**
-     * @param non-negative-int $linesOfCode
+     * @psalm-param non-negative-int $linesOfCode
      */
     public function __construct(int $linesOfCode)
     {
         $this->linesOfCode = $linesOfCode;
     }
 
-    public function enterNode(Node $node): null
+    public function enterNode(Node $node): void
     {
         $this->comments = array_merge($this->comments, $node->getComments());
 
         if (!$node instanceof Expr) {
-            return null;
+            return;
         }
 
         $this->linesWithStatements[] = $node->getStartLine();
-
-        return null;
     }
 
     public function result(): LinesOfCode
     {
-        $commentLines = [];
+        $commentLinesOfCode = 0;
 
         foreach ($this->comments() as $comment) {
-            for ($line = $comment->getStartLine(); $line <= $comment->getEndLine(); $line++) {
-                $commentLines[$line] = true;
-            }
+            $commentLinesOfCode += ($comment->getEndLine() - $comment->getStartLine() + 1);
         }
 
-        $commentLinesOfCode    = count($commentLines);
         $nonCommentLinesOfCode = $this->linesOfCode - $commentLinesOfCode;
         $logicalLinesOfCode    = count(array_unique($this->linesWithStatements));
 
+        assert($commentLinesOfCode >= 0);
         assert($nonCommentLinesOfCode >= 0);
+        assert($logicalLinesOfCode >= 0);
 
         return new LinesOfCode(
             $this->linesOfCode,

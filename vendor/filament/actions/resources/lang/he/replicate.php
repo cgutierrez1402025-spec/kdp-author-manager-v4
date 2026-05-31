@@ -4,11 +4,11 @@ return [
 
     'single' => [
 
-        'label' => 'שכפול',
+        'label' => 'שכפל',
 
         'modal' => [
 
-            'heading' => 'שכפול :label',
+            'heading' => 'שכפל את :label',
 
             'actions' => [
 

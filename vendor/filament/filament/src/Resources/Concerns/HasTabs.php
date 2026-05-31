@@ -2,9 +2,7 @@
 
 namespace Filament\Resources\Concerns;
 
-use Filament\Schemas\Components\Component;
-use Filament\Schemas\Components\Tabs;
-use Filament\Schemas\Components\Tabs\Tab;
+use Filament\Resources\Components\Tab;
 use Illuminate\Database\Eloquent\Builder;
 
 trait HasTabs
@@ -38,9 +36,7 @@ trait HasTabs
      */
     public function getCachedTabs(): array
     {
-        return $this->cachedTabs ??= collect($this->getTabs())
-            ->map(fn (Tab $tab, string | int $key): Tab => $tab->hasCustomLabel() ? $tab : $tab->label($this->generateTabLabel($key)))
-            ->all();
+        return $this->cachedTabs ??= $this->getTabs();
     }
 
     public function getDefaultActiveTab(): string | int | null
@@ -51,10 +47,6 @@ trait HasTabs
     public function updatedActiveTab(): void
     {
         $this->resetPage();
-
-        $this->cachedDefaultTableColumnState = null;
-
-        $this->applyTableColumnManager();
     }
 
     public function generateTabLabel(string $key): string
@@ -64,9 +56,9 @@ trait HasTabs
             ->ucfirst();
     }
 
-    protected function modifyQueryWithActiveTab(Builder $query, bool $isResolvingRecord = false): Builder
+    protected function modifyQueryWithActiveTab(Builder $query): Builder
     {
-        if (blank($this->activeTab)) {
+        if (blank(filled($this->activeTab))) {
             return $query;
         }
 
@@ -76,24 +68,6 @@ trait HasTabs
             return $query;
         }
 
-        $tab = $tabs[$this->activeTab];
-
-        if ($isResolvingRecord && $tab->shouldExcludeQueryWhenResolvingRecord()) {
-            return $query;
-        }
-
-        return $tab->modifyQuery($query);
-    }
-
-    public function getTabsContentComponent(): Component
-    {
-        $tabs = $this->getCachedTabs();
-
-        return Tabs::make()
-            ->key('resourceTabs')
-            ->livewireProperty('activeTab')
-            ->contained(false)
-            ->tabs($tabs)
-            ->hidden(empty($tabs));
+        return $tabs[$this->activeTab]->modifyQuery($query);
     }
 }

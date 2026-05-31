@@ -19,7 +19,7 @@ return [
         ],
 
         'open_user_menu' => [
-            'label' => 'Menú del usuario',
+            'label' => 'Menú del Usuario',
         ],
 
         'sidebar' => [
@@ -58,15 +58,6 @@ return [
 
     'logo' => [
         'alt' => ':name logo',
-    ],
-
-    'tenant_menu' => [
-
-        'search_field' => [
-            'label' => 'Buscar inquilino',
-            'placeholder' => 'Buscar',
-        ],
-
     ],
 
 ];

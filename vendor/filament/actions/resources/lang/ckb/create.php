@@ -4,20 +4,20 @@ return [
 
     'single' => [
 
-        'label' => 'زیادکردنی :label',
+        'label' => 'دروستکردنی :label',
 
         'modal' => [
 
-            'heading' => ':زیادکردنی :label',
+            'heading' => ':دروستکردنی :label',
 
             'actions' => [
 
                 'create' => [
-                    'label' => 'زیادکردن',
+                    'label' => 'دروستکردن',
                 ],
 
                 'create_another' => [
-                    'label' => 'زیادکردن و تۆمارێکی تر',
+                    'label' => 'دروستکردن و تۆمارێکی تر',
                 ],
 
             ],
@@ -27,7 +27,7 @@ return [
         'notifications' => [
 
             'created' => [
-                'title' => 'زیادکرا',
+                'title' => 'دروستکرا',
             ],
 
         ],

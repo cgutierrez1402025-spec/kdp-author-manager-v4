@@ -3,19 +3,16 @@
 namespace Filament\Forms\Components;
 
 use Closure;
-use Filament\Schemas\Components\StateCasts\FileUploadStateCast;
-use Filament\Support\Components\Attributes\ExposedLivewireMethod;
+use Filament\Forms\Get;
+use Filament\Forms\Set;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Contracts\Support\Arrayable;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
-use Illuminate\Validation\Rule;
 use League\Flysystem\UnableToCheckFileExistence;
-use Livewire\Attributes\Renderless;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 use Throwable;
 
@@ -65,13 +62,9 @@ class BaseFileUpload extends Field implements Contracts\HasNestedRecursiveValida
 
     protected bool | Closure $shouldFetchFileInformation = true;
 
-    protected bool | Closure $shouldPreventFilePathTampering = false;
-
-    protected ?Closure $allowFilePathUsing = null;
-
     protected string | Closure | null $fileNamesStatePath = null;
 
-    protected string | Closure | null $visibility = null;
+    protected string | Closure $visibility = 'public';
 
     protected ?Closure $deleteUploadedFileUsing = null;
 
@@ -79,55 +72,112 @@ class BaseFileUpload extends Field implements Contracts\HasNestedRecursiveValida
 
     protected ?Closure $getUploadedFileUsing = null;
 
-    protected ?Closure $getOpenableFileUrlUsing = null;
-
-    protected ?Closure $getDownloadableFileUrlUsing = null;
-
     protected ?Closure $reorderUploadedFilesUsing = null;
 
     protected ?Closure $saveUploadedFileUsing = null;
-
-    /**
-     * @var string | array<string> | Closure | null
-     */
-    protected string | array | Closure | null $imageAspectRatio = null;
-
-    /**
-     * @var array<string>
-     */
-    protected const ARRAY_VALIDATION_RULES = [
-        'filled',
-        'prohibited',
-        'prohibited_if',
-        'prohibited_unless',
-        'required_if',
-        'required_if_accepted',
-        'required_if_declined',
-        'required_unless',
-        'required_with',
-        'required_with_all',
-        'required_without',
-        'required_without_all',
-    ];
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        // This disk-existence check only runs when state is hydrated from the record
-        // (initial form load), not when state is later updated from a Livewire request.
-        // It is therefore not a security boundary for submitted paths — see the note in
-        // `saveUploadedFiles()` and the file upload documentation.
-        $this->afterStateHydrated(static function (BaseFileUpload $component): void {
-            $component->hydrateFiles();
+        $this->afterStateHydrated(static function (BaseFileUpload $component, string | array | null $state): void {
+            if (blank($state)) {
+                $component->state([]);
+
+                return;
+            }
+
+            $shouldFetchFileInformation = $component->shouldFetchFileInformation();
+
+            $files = collect(Arr::wrap($state))
+                ->filter(static function (string $file) use ($component, $shouldFetchFileInformation): bool {
+                    if (blank($file)) {
+                        return false;
+                    }
+
+                    if (! $shouldFetchFileInformation) {
+                        return true;
+                    }
+
+                    try {
+                        return $component->getDisk()->exists($file);
+                    } catch (UnableToCheckFileExistence $exception) {
+                        return false;
+                    }
+                })
+                ->mapWithKeys(static fn (string $file): array => [((string) Str::uuid()) => $file])
+                ->all();
+
+            $component->state($files);
+        });
+
+        $this->afterStateUpdated(static function (BaseFileUpload $component, $state) {
+            if ($state instanceof TemporaryUploadedFile) {
+                return;
+            }
+
+            if (blank($state)) {
+                return;
+            }
+
+            if (is_array($state)) {
+                return;
+            }
+
+            $component->state([(string) Str::uuid() => $state]);
         });
 
         $this->beforeStateDehydrated(static function (BaseFileUpload $component): void {
             $component->saveUploadedFiles();
-        }, shouldUpdateValidatedStateAfter: true);
+        });
+
+        $this->dehydrateStateUsing(static function (BaseFileUpload $component, ?array $state): string | array | null | TemporaryUploadedFile {
+            $files = array_values($state ?? []);
+
+            if ($component->isMultiple()) {
+                return $files;
+            }
+
+            return $files[0] ?? null;
+        });
 
         $this->getUploadedFileUsing(static function (BaseFileUpload $component, string $file, string | array | null $storedFileNames): ?array {
-            return $component->getUploadedFile($file, $storedFileNames);
+            /** @var FilesystemAdapter $storage */
+            $storage = $component->getDisk();
+
+            $shouldFetchFileInformation = $component->shouldFetchFileInformation();
+
+            if ($shouldFetchFileInformation) {
+                try {
+                    if (! $storage->exists($file)) {
+                        return null;
+                    }
+                } catch (UnableToCheckFileExistence $exception) {
+                    return null;
+                }
+            }
+
+            $url = null;
+
+            if ($component->getVisibility() === 'private') {
+                try {
+                    $url = $storage->temporaryUrl(
+                        $file,
+                        now()->addMinutes(5),
+                    );
+                } catch (Throwable $exception) {
+                    // This driver does not support creating temporary URLs.
+                }
+            }
+
+            $url ??= $storage->url($file);
+
+            return [
+                'name' => ($component->isMultiple() ? ($storedFileNames[$file] ?? null) : $storedFileNames) ?? basename($file),
+                'size' => $shouldFetchFileInformation ? $storage->size($file) : 0,
+                'type' => $shouldFetchFileInformation ? $storage->mimeType($file) : null,
+                'url' => $url,
+            ];
         });
 
         $this->getUploadedFileNameForStorageUsing(static function (BaseFileUpload $component, TemporaryUploadedFile $file) {
@@ -135,116 +185,47 @@ class BaseFileUpload extends Field implements Contracts\HasNestedRecursiveValida
         });
 
         $this->saveUploadedFileUsing(static function (BaseFileUpload $component, TemporaryUploadedFile $file): ?string {
-            return $component->saveUploadedFile($file);
-        });
-    }
-
-    public function hydrateFiles(): void
-    {
-        $shouldFetchFileInformation = $this->shouldFetchFileInformation();
-
-        $this->rawState(
-            array_filter(Arr::wrap($this->getRawState()), function (string $file) use ($shouldFetchFileInformation): bool {
-                if (blank($file)) {
-                    return false;
-                }
-
-                if (! $shouldFetchFileInformation) {
-                    return true;
-                }
-
-                try {
-                    return $this->getDisk()->exists($file);
-                } catch (UnableToCheckFileExistence $exception) {
-                    return false;
-                }
-            }),
-        );
-    }
-
-    /**
-     * @param  string | array<string, string> | null  $storedFileNames
-     * @return array{name: string, size: int, type: ?string, url: ?string} | null
-     */
-    public function getUploadedFile(string $file, string | array | null $storedFileNames): ?array
-    {
-        /** @var FilesystemAdapter $storage */
-        $storage = $this->getDisk();
-
-        $shouldFetchFileInformation = $this->shouldFetchFileInformation();
-
-        if ($shouldFetchFileInformation) {
             try {
-                if (! $storage->exists($file)) {
+                if (! $file->exists()) {
                     return null;
                 }
             } catch (UnableToCheckFileExistence $exception) {
                 return null;
             }
-        }
 
-        $url = null;
+            if (
+                $component->shouldMoveFiles() &&
+                ($component->getDiskName() == (fn (): string => $this->disk)->call($file))
+            ) {
+                $newPath = trim($component->getDirectory() . '/' . $component->getUploadedFileNameForStorage($file), '/');
 
-        if ($this->getVisibility() === 'private') {
-            try {
-                $url = $storage->temporaryUrl(
-                    $file,
-                    now()->addMinutes(config('filament.temporary_file_url_expiry_minutes', 30))->endOfHour(),
-                );
-            } catch (Throwable $exception) {
-                // This driver does not support creating temporary URLs.
+                $component->getDisk()->move((fn (): string => $this->path)->call($file), $newPath);
+
+                return $newPath;
             }
-        }
 
-        $url ??= $storage->url($file);
+            $storeMethod = $component->getVisibility() === 'public' ? 'storePubliclyAs' : 'storeAs';
 
-        return [
-            'name' => ($this->isMultiple() ? ($storedFileNames[$file] ?? null) : $storedFileNames) ?? basename($file),
-            'size' => $shouldFetchFileInformation ? $storage->size($file) : 0,
-            'type' => $shouldFetchFileInformation ? $storage->mimeType($file) : null,
-            'url' => Str::sanitizeUrl($url),
-        ];
+            return $file->{$storeMethod}(
+                $component->getDirectory(),
+                $component->getUploadedFileNameForStorage($file),
+                $component->getDiskName(),
+            );
+        });
     }
 
-    public function saveUploadedFile(TemporaryUploadedFile $file): ?string
+    protected function callAfterStateUpdatedHook(Closure $hook): void
     {
-        try {
-            if (! $file->exists()) {
-                return null;
-            }
-        } catch (UnableToCheckFileExistence $exception) {
-            return null;
-        }
+        /** @var array<string | TemporaryUploadedFile> $state */
+        $state = $this->getState() ?? [];
 
-        if (
-            $this->shouldMoveFiles() &&
-            ($this->getDiskName() === (function (): string {
-                return $this->disk;
-            })->call($file))
-        ) {
-            $newPath = trim($this->getDirectory() . '/' . $this->getUploadedFileNameForStorage($file), '/');
+        /** @var array<string | TemporaryUploadedFile> $oldState */
+        $oldState = $this->getOldState() ?? [];
 
-            $this->getDisk()->move(
-                (function (): string {
-                    return $this->path;
-                })->call($file),
-                $newPath,
-            );
-
-            return $newPath;
-        }
-
-        $path = $file->storeAs(
-            $this->getDirectory(),
-            $this->getUploadedFileNameForStorage($file),
-            $this->getDiskName(),
-        );
-
-        if ($this->getVisibility() === 'public') {
-            rescue(fn () => $this->getDisk()->setVisibility($path, 'public'), report: false);
-        }
-
-        return $path;
+        $this->evaluate($hook, [
+            'state' => $this->isMultiple() ? $state : Arr::first($state),
+            'old' => $this->isMultiple() ? $oldState : Arr::first($oldState),
+        ]);
     }
 
     /**
@@ -368,12 +349,6 @@ class BaseFileUpload extends Field implements Contracts\HasNestedRecursiveValida
 
     public function preserveFilenames(bool | Closure $condition = true): static
     {
-        // Security: Preserving user-provided filenames on local or public
-        // disks can allow PHP file execution (e.g. uploading `.php`
-        // files). `acceptedFileTypes()` validates MIME type but not
-        // extension. Use S3 or keep the default random filenames.
-        // Only use this with trusted users.
-
         $this->shouldPreserveFilenames = $condition;
 
         return $this;
@@ -464,14 +439,6 @@ class BaseFileUpload extends Field implements Contracts\HasNestedRecursiveValida
         return $this;
     }
 
-    public function preventFilePathTampering(bool | Closure $condition = true, ?Closure $allowFilePathUsing = null): static
-    {
-        $this->shouldPreventFilePathTampering = $condition;
-        $this->allowFilePathUsing = $allowFilePathUsing;
-
-        return $this;
-    }
-
     /**
      * @deprecated Use `storeFiles()` instead.
      */
@@ -484,10 +451,6 @@ class BaseFileUpload extends Field implements Contracts\HasNestedRecursiveValida
 
     public function visibility(string | Closure | null $visibility): static
     {
-        // Security: Default visibility is `private` (except on the `public`
-        // disk). Always use `acceptedFileTypes()` and `maxSize()` for
-        // server-side validation regardless of visibility setting.
-
         $this->visibility = $visibility;
 
         return $this;
@@ -503,20 +466,6 @@ class BaseFileUpload extends Field implements Contracts\HasNestedRecursiveValida
     public function getUploadedFileUsing(?Closure $callback): static
     {
         $this->getUploadedFileUsing = $callback;
-
-        return $this;
-    }
-
-    public function getOpenableFileUrlUsing(?Closure $callback): static
-    {
-        $this->getOpenableFileUrlUsing = $callback;
-
-        return $this;
-    }
-
-    public function getDownloadableFileUrlUsing(?Closure $callback): static
-    {
-        $this->getDownloadableFileUrlUsing = $callback;
 
         return $this;
     }
@@ -591,22 +540,7 @@ class BaseFileUpload extends Field implements Contracts\HasNestedRecursiveValida
 
     public function getDiskName(): string
     {
-        $name = $this->evaluate($this->diskName);
-
-        if (filled($name)) {
-            return $name;
-        }
-
-        $defaultName = config('filament.default_filesystem_disk');
-
-        if (
-            ($defaultName === 'public')
-            && ($this->getCustomVisibility() === 'private')
-        ) {
-            return 'local';
-        }
-
-        return $defaultName;
+        return $this->evaluate($this->diskName) ?? config('filament.default_filesystem_disk');
     }
 
     public function getMaxFiles(): ?int
@@ -636,17 +570,6 @@ class BaseFileUpload extends Field implements Contracts\HasNestedRecursiveValida
 
     public function getVisibility(): string
     {
-        $visibility = $this->getCustomVisibility();
-
-        if (filled($visibility)) {
-            return $visibility;
-        }
-
-        return ($this->getDiskName() === 'public') ? 'public' : 'private';
-    }
-
-    public function getCustomVisibility(): ?string
-    {
         return $this->evaluate($this->visibility);
     }
 
@@ -670,18 +593,13 @@ class BaseFileUpload extends Field implements Contracts\HasNestedRecursiveValida
         return (bool) $this->evaluate($this->shouldStoreFiles);
     }
 
-    public function shouldPreventFilePathTampering(): bool
-    {
-        return (bool) $this->evaluate($this->shouldPreventFilePathTampering);
-    }
-
     public function getFileNamesStatePath(): ?string
     {
         if (! $this->fileNamesStatePath) {
             return null;
         }
 
-        return $this->resolveRelativeStatePath($this->fileNamesStatePath);
+        return $this->generateRelativeStatePath($this->fileNamesStatePath);
     }
 
     /**
@@ -702,56 +620,16 @@ class BaseFileUpload extends Field implements Contracts\HasNestedRecursiveValida
             $rules[] = "min:{$count}";
         }
 
-        $arrayRules = [];
-        $fileRules = [];
-
-        foreach (parent::getValidationRules() as $rule) {
-            if ($this->isArrayValidationRule($rule)) {
-                $arrayRules[] = $rule;
-            } else {
-                $fileRules[] = $rule;
-            }
-        }
-
-        $rules = [
-            ...$rules,
-            ...$arrayRules,
-        ];
-
-        if ($this->shouldPreventFilePathTampering()) {
-            $rules[] = function (string $attribute, mixed $value, Closure $fail): void {
-                $originalPaths = $this->getOriginalFilePaths();
-
-                foreach (Arr::wrap($value) as $file) {
-                    if ($file instanceof TemporaryUploadedFile) {
-                        continue;
-                    }
-
-                    if (! is_string($file)) {
-                        continue;
-                    }
-
-                    if ($this->isFilePathAuthorized($file, $originalPaths)) {
-                        continue;
-                    }
-
-                    $fail(__($this->getValidationMessages()['tampered'] ?? 'filament-forms::validation.tampered_file_path', ['attribute' => $this->getValidationAttribute()]));
-
-                    return;
-                }
-            };
-        }
-
-        $rules[] = function (string $attribute, array $value, Closure $fail) use ($fileRules): void {
+        $rules[] = function (string $attribute, array $value, Closure $fail): void {
             $files = array_filter($value, fn (TemporaryUploadedFile | string $file): bool => $file instanceof TemporaryUploadedFile);
 
-            $name = Str::afterLast($this->getName(), '.');
+            $name = $this->getName();
 
             $validationMessages = $this->getValidationMessages();
 
             $validator = Validator::make(
                 [$name => $files],
-                ["{$name}.*" => ['file', ...$fileRules]],
+                ["{$name}.*" => ['file', ...parent::getValidationRules()]],
                 $validationMessages ? ["{$name}.*" => $validationMessages] : [],
                 ["{$name}.*" => $this->getValidationAttribute()],
             );
@@ -766,19 +644,6 @@ class BaseFileUpload extends Field implements Contracts\HasNestedRecursiveValida
         return $rules;
     }
 
-    protected function isArrayValidationRule(mixed $rule): bool
-    {
-        if (! is_string($rule)) {
-            return false;
-        }
-
-        $ruleName = strtolower(explode(':', $rule)[0]);
-
-        return in_array($ruleName, static::ARRAY_VALIDATION_RULES, strict: true);
-    }
-
-    #[ExposedLivewireMethod]
-    #[Renderless]
     public function deleteUploadedFile(string $fileKey): static
     {
         $file = $this->removeUploadedFile($fileKey);
@@ -800,19 +665,9 @@ class BaseFileUpload extends Field implements Contracts\HasNestedRecursiveValida
         return $this;
     }
 
-    #[ExposedLivewireMethod]
-    #[Renderless]
     public function removeUploadedFile(string $fileKey): string | TemporaryUploadedFile | null
     {
-        if ($this->isDisabled()) {
-            return null;
-        }
-
-        if (! $this->isDeletable()) {
-            return null;
-        }
-
-        $files = $this->getRawState();
+        $files = $this->getState();
         $file = $files[$fileKey] ?? null;
 
         if (! $file) {
@@ -827,8 +682,7 @@ class BaseFileUpload extends Field implements Contracts\HasNestedRecursiveValida
 
         unset($files[$fileKey]);
 
-        $this->rawState($files);
-        $this->callAfterStateUpdated();
+        $this->state($files);
 
         return $file;
     }
@@ -841,78 +695,56 @@ class BaseFileUpload extends Field implements Contracts\HasNestedRecursiveValida
             return;
         }
 
-        $set = $this->makeSetUtility();
+        $this->evaluate(function (BaseFileUpload $component, Get $get, Set $set) use ($file, $statePath) {
+            if (! $component->isMultiple()) {
+                $set($statePath, null);
 
-        if (! $this->isMultiple()) {
-            $set($statePath, null);
+                return;
+            }
 
-            return;
-        }
+            $fileNames = $get($statePath) ?? [];
 
-        $get = $this->makeGetUtility();
+            if (array_key_exists($file, $fileNames)) {
+                unset($fileNames[$file]);
+            }
 
-        $fileNames = $get($statePath) ?? [];
-
-        if (array_key_exists($file, $fileNames)) {
-            unset($fileNames[$file]);
-        }
-
-        $set($statePath, $fileNames);
+            $set($statePath, $fileNames);
+        });
     }
 
     /**
      * @param  array<array-key>  $fileKeys
      */
-    #[ExposedLivewireMethod]
-    #[Renderless]
     public function reorderUploadedFiles(array $fileKeys): void
     {
-        if ($this->isDisabled()) {
-            return;
-        }
-
-        if (! $this->isReorderable()) {
+        if (! $this->isReorderable) {
             return;
         }
 
         $fileKeys = array_flip($fileKeys);
 
-        $rawState = collect($this->getRawState())
+        $state = collect($this->getState())
             ->sortBy(static fn ($file, $fileKey) => $fileKeys[$fileKey] ?? null) // $fileKey may not be present in $fileKeys if it was added to the state during the reorder call
             ->all();
 
-        $this->rawState($rawState);
-        $this->callAfterStateUpdated();
+        $this->state($state);
     }
 
     /**
-     * @return array<array{name: string, size: int, type: string, url: string, openableUrl?: string, downloadableUrl?: string} | null> | null
+     * @return array<array{name: string, size: int, type: string, url: string} | null> | null
      */
-    #[ExposedLivewireMethod]
-    #[Renderless]
     public function getUploadedFiles(): ?array
     {
         $urls = [];
 
-        $shouldCheckAuthorization = $this->shouldPreventFilePathTampering();
-        $originalPaths = $shouldCheckAuthorization ? $this->getOriginalFilePaths() : [];
-        $callback = $this->getUploadedFileUsing;
-        $storedFileNames = $this->getStoredFileNames();
-        $openableFileUrlCallback = $this->isOpenable() ? $this->getOpenableFileUrlUsing : null;
-        $downloadableFileUrlCallback = $this->isDownloadable() ? $this->getDownloadableFileUrlUsing : null;
-
-        foreach ($this->getRawState() ?? [] as $fileKey => $file) {
+        foreach ($this->getState() ?? [] as $fileKey => $file) {
             if ($file instanceof TemporaryUploadedFile) {
                 $urls[$fileKey] = null;
 
                 continue;
             }
 
-            if ($shouldCheckAuthorization && is_string($file) && ! $this->isFilePathAuthorized($file, $originalPaths)) {
-                $urls[$fileKey] = null;
-
-                continue;
-            }
+            $callback = $this->getUploadedFileUsing;
 
             if (! $callback) {
                 return [$fileKey => null];
@@ -920,38 +752,8 @@ class BaseFileUpload extends Field implements Contracts\HasNestedRecursiveValida
 
             $urls[$fileKey] = $this->evaluate($callback, [
                 'file' => $file,
-                'storedFileNames' => $storedFileNames,
+                'storedFileNames' => $this->getStoredFileNames(),
             ]) ?: null;
-
-            if ($urls[$fileKey] === null) {
-                continue;
-            }
-
-            if (array_key_exists('url', $urls[$fileKey])) {
-                $urls[$fileKey]['url'] = Str::sanitizeUrl($urls[$fileKey]['url']);
-            }
-
-            if ($openableFileUrlCallback) {
-                $openableUrl = Str::sanitizeUrl($this->evaluate($openableFileUrlCallback, [
-                    'file' => $file,
-                    'storedFileNames' => $storedFileNames,
-                ]));
-
-                if ($openableUrl !== null) {
-                    $urls[$fileKey]['openableUrl'] = $openableUrl;
-                }
-            }
-
-            if ($downloadableFileUrlCallback) {
-                $downloadableUrl = Str::sanitizeUrl($this->evaluate($downloadableFileUrlCallback, [
-                    'file' => $file,
-                    'storedFileNames' => $storedFileNames,
-                ]));
-
-                if ($downloadableUrl !== null) {
-                    $urls[$fileKey]['downloadableUrl'] = $downloadableUrl;
-                }
-            }
         }
 
         return $urls;
@@ -959,8 +761,8 @@ class BaseFileUpload extends Field implements Contracts\HasNestedRecursiveValida
 
     public function saveUploadedFiles(): void
     {
-        if (blank($this->getRawState())) {
-            $this->rawState([]);
+        if (blank($this->getState())) {
+            $this->state([]);
 
             return;
         }
@@ -969,13 +771,7 @@ class BaseFileUpload extends Field implements Contracts\HasNestedRecursiveValida
             return;
         }
 
-        $rawState = array_filter(array_map(function (TemporaryUploadedFile | string $file) {
-            // String values represent paths to files that already exist on the disk, and
-            // are passed through unchanged. Like any Livewire form field value, this
-            // string is client-controllable, so applications that serve files from
-            // per-user or otherwise restricted locations must authorize the submitted
-            // path at the application level. See the "Authorizing existing file paths"
-            // section of the file upload documentation.
+        $state = array_filter(array_map(function (TemporaryUploadedFile | string $file) {
             if (! $file instanceof TemporaryUploadedFile) {
                 return $file;
             }
@@ -1001,53 +797,15 @@ class BaseFileUpload extends Field implements Contracts\HasNestedRecursiveValida
             $file->delete();
 
             return $storedFile;
-        }, Arr::wrap($this->getRawState())));
+        }, Arr::wrap($this->getState())));
 
         if ($this->isReorderable && ($callback = $this->reorderUploadedFilesUsing)) {
-            $rawState = $this->evaluate($callback, [
-                'state' => $rawState,
+            $state = $this->evaluate($callback, [
+                'state' => $state,
             ]);
         }
 
-        $this->rawState($rawState);
-        $this->callAfterStateUpdated();
-    }
-
-    /**
-     * @param  array<string> | null  $originalPaths
-     */
-    public function isFilePathAuthorized(string $file, ?array $originalPaths = null): bool
-    {
-        if (in_array($file, $originalPaths ?? $this->getOriginalFilePaths(), strict: true)) {
-            return true;
-        }
-
-        if ($this->allowFilePathUsing) {
-            return (bool) $this->evaluate($this->allowFilePathUsing, [
-                'file' => $file,
-            ]);
-        }
-
-        return false;
-    }
-
-    /**
-     * @return array<string>
-     */
-    public function getOriginalFilePaths(): array
-    {
-        $record = $this->getRecord();
-
-        if (! $record instanceof Model) {
-            return [];
-        }
-
-        $attribute = $this->getName();
-
-        return array_values(array_filter(
-            Arr::wrap($record->getOriginal($attribute, $record->getAttribute($attribute))),
-            static fn (mixed $path): bool => is_string($path) && filled($path),
-        ));
+        $this->state($state);
     }
 
     public function storeFileName(string $file, string $fileName): void
@@ -1058,20 +816,18 @@ class BaseFileUpload extends Field implements Contracts\HasNestedRecursiveValida
             return;
         }
 
-        $set = $this->makeSetUtility();
+        $this->evaluate(function (BaseFileUpload $component, Get $get, Set $set) use ($file, $fileName, $statePath) {
+            if (! $component->isMultiple()) {
+                $set($statePath, $fileName);
 
-        if (! $this->isMultiple()) {
-            $set($statePath, $fileName);
+                return;
+            }
 
-            return;
-        }
+            $fileNames = $get($statePath) ?? [];
+            $fileNames[$file] = $fileName;
 
-        $get = $this->makeGetUtility();
-
-        $fileNames = $get($statePath) ?? [];
-        $fileNames[$file] = $fileName;
-
-        $set($statePath, $fileNames);
+            $set($statePath, $fileNames);
+        });
     }
 
     /**
@@ -1079,18 +835,18 @@ class BaseFileUpload extends Field implements Contracts\HasNestedRecursiveValida
      */
     public function getStoredFileNames(): string | array | null
     {
-        $rawState = null;
+        $state = null;
         $statePath = $this->fileNamesStatePath;
 
         if (filled($statePath)) {
-            $rawState = $this->makeGetUtility()($statePath);
+            $state = $this->evaluate(fn (Get $get) => $get($statePath));
         }
 
-        if (blank($rawState) && $this->isMultiple()) {
+        if (blank($state) && $this->isMultiple()) {
             return [];
         }
 
-        return $rawState;
+        return $state;
     }
 
     public function isMultiple(): bool
@@ -1100,10 +856,6 @@ class BaseFileUpload extends Field implements Contracts\HasNestedRecursiveValida
 
     public function getUploadedFileNameForStorageUsing(?Closure $callback): static
     {
-        // Security: Custom storage filenames carry the same risk as
-        // `preserveFilenames()` — user-controlled names on local
-        // or public disks can enable PHP execution.
-
         $this->getUploadedFileNameForStorageUsing = $callback;
 
         return $this;
@@ -1119,9 +871,9 @@ class BaseFileUpload extends Field implements Contracts\HasNestedRecursiveValida
     /**
      * @return array<string, string>
      */
-    public function getStateToDehydrate(mixed $state): array
+    public function getStateToDehydrate(): array
     {
-        $state = parent::getStateToDehydrate($state);
+        $state = parent::getStateToDehydrate();
 
         if ($fileNamesStatePath = $this->getFileNamesStatePath()) {
             $state = [
@@ -1143,112 +895,5 @@ class BaseFileUpload extends Field implements Contracts\HasNestedRecursiveValida
         if ($fileNamesStatePath = $this->getFileNamesStatePath()) {
             $rules[$fileNamesStatePath] = ['nullable'];
         }
-    }
-
-    /**
-     * @param  string | array<string> | Closure | null  $ratio
-     */
-    public function imageAspectRatio(string | array | Closure | null $ratio): static
-    {
-        $this->imageAspectRatio = $ratio;
-
-        $this->rule(static function (BaseFileUpload $component): Closure {
-            /** @var array<string> $ratios */
-            $ratios = Arr::wrap($component->getImageAspectRatio());
-
-            return static function (string $attribute, mixed $value, Closure $fail) use ($component, $ratios): void {
-                if (blank($value)) {
-                    return;
-                }
-
-                foreach ($ratios as $ratio) {
-                    $ratio = $component->calculateAspectRatio($ratio);
-
-                    if ($ratio === null) {
-                        continue;
-                    }
-
-                    if (Validator::make(
-                        ['file' => $value],
-                        ['file' => Rule::dimensions()->ratio($ratio)],
-                    )->passes()) {
-                        return;
-                    }
-                }
-
-                $fail('validation.dimensions')->translate();
-            };
-        }, static function (BaseFileUpload $component): bool {
-            return filled($component->getImageAspectRatio());
-        });
-
-        return $this;
-    }
-
-    /**
-     * @return string | array<string> | null
-     */
-    public function getImageAspectRatio(): string | array | null
-    {
-        $ratio = $this->evaluate($this->imageAspectRatio);
-
-        if (is_array($ratio)) {
-            return array_filter(array_map(
-                fn (string $ratio): ?string => $this->normalizeAspectRatio($ratio),
-                $ratio,
-            ));
-        }
-
-        return $this->normalizeAspectRatio($ratio);
-    }
-
-    protected function calculateAspectRatio(?string $ratio): ?float
-    {
-        if ($ratio === null) {
-            return null;
-        }
-
-        $parts = explode(':', $ratio);
-
-        if (count($parts) !== 2) {
-            return null;
-        }
-
-        [$numerator, $denominator] = $parts;
-
-        if (! is_numeric($numerator) || ! is_numeric($denominator) || ((float) $denominator === 0.0)) {
-            return null;
-        }
-
-        return (float) $numerator / (float) $denominator;
-    }
-
-    protected function normalizeAspectRatio(?string $ratio): ?string
-    {
-        if (blank($ratio)) {
-            return null;
-        }
-
-        if (str_contains($ratio, ':')) {
-            return $ratio;
-        }
-
-        if (str_contains($ratio, '/')) {
-            return str_replace('/', ':', $ratio);
-        }
-
-        if (is_numeric($ratio)) {
-            return "{$ratio}:1";
-        }
-
-        return null;
-    }
-
-    public function getDefaultStateCasts(): array
-    {
-        return [
-            ...parent::getDefaultStateCasts(),
-            app(FileUploadStateCast::class, ['isMultiple' => $this->isMultiple()]),
-        ];
     }
 }

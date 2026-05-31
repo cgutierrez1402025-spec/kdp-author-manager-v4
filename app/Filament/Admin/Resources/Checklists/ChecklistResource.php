@@ -5,20 +5,19 @@ namespace App\Filament\Admin\Resources\Checklists;
 use App\Filament\Admin\Resources\Checklists\Pages\CreateChecklist;
 use App\Filament\Admin\Resources\Checklists\Pages\EditChecklist;
 use App\Filament\Admin\Resources\Checklists\Pages\ListChecklists;
+use App\Filament\Admin\Resources\Checklists\RelationManagers\ItemsRelationManager;
 use App\Filament\Admin\Resources\Checklists\Schemas\ChecklistForm;
 use App\Filament\Admin\Resources\Checklists\Tables\ChecklistsTable;
 use App\Models\Checklist;
-use BackedEnum;
+use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Schemas\Schema;
-use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 
 class ChecklistResource extends Resource
 {
     protected static ?string $model = Checklist::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedClipboardDocumentList;
+    protected static ?string $navigationIcon = 'heroicon-o-document-text';
 
     protected static ?string $navigationLabel = 'Listas de Verificación';
 
@@ -26,9 +25,9 @@ class ChecklistResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'name';
 
-    public static function form(Schema $schema): Schema
+    public static function form(Form $form): Form
     {
-        return ChecklistForm::configure($schema);
+        return ChecklistForm::configure($form);
     }
 
     public static function table(Table $table): Table
@@ -39,7 +38,7 @@ class ChecklistResource extends Resource
     public static function getRelations(): array
     {
         return [
-            RelationManagers\ItemsRelationManager::class,
+            ItemsRelationManager::class,  // ✅ Corregido: import completo
         ];
     }
 

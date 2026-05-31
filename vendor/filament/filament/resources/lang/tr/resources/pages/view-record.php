@@ -6,8 +6,6 @@ return [
 
     'breadcrumb' => 'Görüntüle',
 
-    'navigation_label' => 'Görüntüle',
-
     'content' => [
 
         'tab' => [

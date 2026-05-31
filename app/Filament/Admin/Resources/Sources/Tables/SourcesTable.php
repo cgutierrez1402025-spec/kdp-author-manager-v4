@@ -14,7 +14,7 @@ class SourcesTable
     public static function configure(Table $table): Table
     {
         return $table
-            ->modifyQueryQueryUsing(fn ($query) => $query->with('work'))
+            ->modifyQueryUsing(fn ($query) => $query->with('work'))
             ->columns([
                 TextColumn::make('work.title_public')
                     ->label('Obra')

@@ -14,18 +14,6 @@ return [
 
                 'label' => 'Kolom',
 
-                'actions' => [
-
-                    'select_all' => [
-                        'label' => 'Pilih semua',
-                    ],
-
-                    'deselect_all' => [
-                        'label' => 'Batal pilih semua',
-                    ],
-
-                ],
-
                 'form' => [
 
                     'is_enabled' => [
@@ -75,11 +63,6 @@ return [
         'max_rows' => [
             'title' => 'Ekspor terlalu besar',
             'body' => 'Anda tidak dapat mengekspor lebih dari :count sekaligus.',
-        ],
-
-        'no_columns' => [
-            'title' => 'Tidak ada kolom yang dipilih',
-            'body' => 'Pilih setidaknya satu kolom untuk diekspor.',
         ],
 
         'started' => [

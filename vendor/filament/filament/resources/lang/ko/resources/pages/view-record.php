@@ -6,8 +6,6 @@ return [
 
     'breadcrumb' => '보기',
 
-    'navigation_label' => '보기',
-
     'content' => [
 
         'tab' => [

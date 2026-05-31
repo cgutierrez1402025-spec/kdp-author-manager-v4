@@ -2,105 +2,19 @@
 
 return [
 
-    'column_manager' => [
-
-        'heading' => 'কলাম',
-
-        'actions' => [
-
-            'apply' => [
-                'label' => 'কলামগুলো প্রয়োগ করুন',
-            ],
-
-            'reset' => [
-                'label' => 'আগের অবস্থায় ফিরান',
-            ],
-
-        ],
-
-    ],
-
     'columns' => [
 
-        'actions' => [
-            'label' => 'অ্যাকশন|অ্যাকশনসমূহ',
-        ],
-
-        'select' => [
-
-            'loading_message' => 'লোড হচ্ছে...',
-
-            'no_options_message' => 'কোন অপশন নেই।',
-
-            'no_search_results_message' => 'আপনার অনুসন্ধানের সাথে মেলে এমন কিছু পাওয়া যায়নি।',
-
-            'placeholder' => 'একটি অপশন নির্বাচন করুন',
-
-            'searching_message' => 'অনুসন্ধান চলছে...',
-
-            'search_prompt' => 'অনুসন্ধান শুরু করতে টাইপ করুন...',
-
-        ],
-
         'text' => [
-
-            'actions' => [
-                'collapse_list' => ':countটি কম দেখান',
-                'expand_list' => ':countটি বেশি দেখান',
-            ],
-
-            'more_list_items' => 'এবং আরো :countটি',
-
+            'more_list_items' => 'এবং আরো :count',
         ],
 
     ],
 
     'fields' => [
 
-        'bulk_select_page' => [
-            'label' => 'একসাথে একাধিক কাজ করার জন্য সব আইটেম নির্বাচন/অনির্বাচন করুন।',
-        ],
-
-        'bulk_select_record' => [
-            'label' => 'একসাথে একাধিক কাজের জন্য :key আইটেম নির্বাচন/অনির্বাচন করুন।',
-        ],
-
-        'bulk_select_group' => [
-            'label' => 'একসাথে একাধিক কাজের জন্য :title গ্রুপ নির্বাচন/অনির্বাচন করুন।',
-        ],
-
         'search' => [
-            'label' => 'অনুসন্ধান',
+            'label' => 'খুঁজুন',
             'placeholder' => 'খুঁজুন',
-            'indicator' => 'অনুসন্ধান',
-        ],
-
-    ],
-
-    'summary' => [
-
-        'heading' => 'সারসংক্ষেপ',
-
-        'subheadings' => [
-            'all' => 'সব :label',
-            'group' => ':group এর সারসংক্ষেপ',
-            'page' => 'এই পৃষ্ঠা',
-        ],
-
-        'summarizers' => [
-
-            'average' => [
-                'label' => 'গড়',
-            ],
-
-            'count' => [
-                'label' => 'গণনা',
-            ],
-
-            'sum' => [
-                'label' => 'সমষ্টি',
-            ],
-
         ],
 
     ],
@@ -116,123 +30,80 @@ return [
         ],
 
         'filter' => [
-            'label' => 'ফিল্টার',
-        ],
-
-        'group' => [
-            'label' => 'গ্রুপ',
+            'label' => 'অনুসন্ধান করুন',
         ],
 
         'open_bulk_actions' => [
-            'label' => 'একসাথে একাধিক কাজ',
+            'label' => 'কার্যক্রম গুলো দেখুন',
         ],
 
-        'column_manager' => [
-            'label' => 'কলাম ব্যবস্থাপক',
+        'toggle_columns' => [
+            'label' => 'কলাম টগল করুন',
         ],
 
     ],
 
     'empty' => [
-
-        'heading' => ':model পাওয়া যায়নি',
-
-        'description' => 'শুরু করতে একটি :model তৈরি করুন।',
-
+        'heading' => 'রেকর্ড পাওয়া যায়নি',
     ],
 
     'filters' => [
 
         'actions' => [
 
-            'apply' => [
-                'label' => 'ফিল্টার প্রয়োগ করুন',
-            ],
-
             'remove' => [
-                'label' => 'ফিল্টার সরান',
+                'label' => 'অনুসন্ধান সরান',
             ],
 
             'remove_all' => [
-                'label' => 'সব ফিল্টার সরান',
-                'tooltip' => 'সব ফিল্টার সরান',
+                'label' => 'সব অনুসন্ধান সরান',
+                'tooltip' => 'সব অনুসন্ধান সরান',
             ],
 
             'reset' => [
-                'label' => 'আগের অবস্থায় ফিরান',
+                'label' => 'অনুসন্ধান সরান',
             ],
 
         ],
 
-        'heading' => 'ফিল্টার',
-
-        'indicator' => 'সক্রিয় ফিল্টার',
+        'indicator' => 'সক্রিয় অনুসন্ধান',
 
         'multi_select' => [
             'placeholder' => 'সব',
         ],
 
         'select' => [
-
             'placeholder' => 'সব',
-
-            'relationship' => [
-                'empty_option_label' => 'কিছুই নয়',
-            ],
-
         ],
 
         'trashed' => [
 
-            'label' => 'মুছে ফেলা রেকর্ড',
+            'label' => 'রেকর্ড মুছে ফেলুন',
 
             'only_trashed' => 'শুধু মুছে ফেলা রেকর্ডগুলো',
 
-            'with_trashed' => 'মুছে ফেলা রেকর্ডগুলো সহ',
+            'with_trashed' => 'মুছে ফেলা রেকর্ডগুলোর সাথে',
 
-            'without_trashed' => 'মুছে ফেলা রেকর্ডগুলো ছাড়া',
-
-        ],
-
-    ],
-
-    'grouping' => [
-
-        'fields' => [
-
-            'group' => [
-                'label' => 'গ্রুপ করার ভিত্তি',
-            ],
-
-            'direction' => [
-
-                'label' => 'গ্রুপের দিক',
-
-                'options' => [
-                    'asc' => 'উর্ধ্বক্রমে',
-                    'desc' => 'নিম্নক্রমে',
-                ],
-
-            ],
+            'without_trashed' => 'মুছে ফেলা রেকর্ডগুলো ছাড়া',
 
         ],
 
     ],
 
-    'reorder_indicator' => 'ররেকর্ডগুলো টেনে এনে ক্রম অনুযায়ী সাজান।',
+    'reorder_indicator' => 'ক্রমানুসারে রেকর্ড টেনে আনুন।',
 
     'selection_indicator' => [
 
-        'selected_count' => '১টি রেকর্ড নির্বাচিত|:countটি রেকর্ড নির্বাচিত',
+        'selected_count' => '১ টি রেকর্ড নির্বাচিত। | :count টি রেকর্ড নির্বাচিত।',
 
         'actions' => [
 
             'select_all' => [
-                'label' => 'সব নির্বাচন করুন (:count)',
+                'label' => 'সব নির্বাচিত করুন',
             ],
 
             'deselect_all' => [
-                'label' => 'সব নির্বাচন বাতিল করুন',
+                'label' => 'সব অনির্বাচিত করুন',
             ],
 
         ],
@@ -244,16 +115,16 @@ return [
         'fields' => [
 
             'column' => [
-                'label' => 'অনুযায়ী সাজান',
+                'label' => 'ক্রমানুসার',
             ],
 
             'direction' => [
 
-                'label' => 'সাজানোর দিক',
+                'label' => 'ক্রমানুসারের দিক',
 
                 'options' => [
-                    'asc' => 'উর্ধ্বক্রমে',
-                    'desc' => 'নিম্নক্রমে',
+                    'asc' => 'ঊর্ধ্বগামী',
+                    'desc' => 'অধোগামী',
                 ],
 
             ],
@@ -261,7 +132,5 @@ return [
         ],
 
     ],
-
-    'default_model_label' => 'রেকর্ড',
 
 ];

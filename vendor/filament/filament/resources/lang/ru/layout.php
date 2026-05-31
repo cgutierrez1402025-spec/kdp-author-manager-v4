@@ -59,14 +59,4 @@ return [
     'logo' => [
         'alt' => 'Логотип :name',
     ],
-
-    'tenant_menu' => [
-
-        'search_field' => [
-            'label' => 'Поиск',
-            'placeholder' => 'Поиск',
-        ],
-
-    ],
-
 ];

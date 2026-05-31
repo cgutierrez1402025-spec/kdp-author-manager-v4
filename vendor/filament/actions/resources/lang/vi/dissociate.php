@@ -4,16 +4,16 @@ return [
 
     'single' => [
 
-        'label' => 'Hủy liên kết',
+        'label' => 'Huỷ liên kết',
 
         'modal' => [
 
-            'heading' => 'Hủy liên kết :label',
+            'heading' => 'Huỷ liên kết :label',
 
             'actions' => [
 
                 'dissociate' => [
-                    'label' => 'Hủy liên kết',
+                    'label' => 'Huỷ liên kết',
                 ],
 
             ],
@@ -23,7 +23,7 @@ return [
         'notifications' => [
 
             'dissociated' => [
-                'title' => 'Đã hủy liên kết',
+                'title' => 'Đã huỷ liên kết',
             ],
 
         ],
@@ -32,16 +32,16 @@ return [
 
     'multiple' => [
 
-        'label' => 'Hủy liên kết các mục đã chọn',
+        'label' => 'Huỷ liên kết các mục đã chọn',
 
         'modal' => [
 
-            'heading' => 'Hủy liên kết :label',
+            'heading' => 'Huỷ liên kết :label',
 
             'actions' => [
 
                 'dissociate' => [
-                    'label' => 'Hủy liên kết',
+                    'label' => 'Huỷ liên kết',
                 ],
 
             ],
@@ -51,7 +51,7 @@ return [
         'notifications' => [
 
             'dissociated' => [
-                'title' => 'Đã hủy liên kết',
+                'title' => 'Đã huỷ liên kết',
             ],
 
         ],

@@ -14,7 +14,7 @@ class SourceUsagesTable
     public static function configure(Table $table): Table
     {
         return $table
-            ->modifyQueryQueryUsing(fn ($query) => $query->with(['source', 'work', 'manuscriptVersion', 'chapter']))
+            ->modifyQueryUsing(fn ($query) => $query->with(['source', 'work', 'manuscriptVersion', 'chapter']))
             ->columns([
                 TextColumn::make('source.title')
                     ->label('Fuente')

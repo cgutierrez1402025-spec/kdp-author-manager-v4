@@ -4,11 +4,11 @@ return [
 
     'single' => [
 
-        'label' => 'سڕینەوەی بەزۆر',
+        'label' => 'سڕینەوەی بەهێز',
 
         'modal' => [
 
-            'heading' => 'سڕینەوەی بەزۆری :label',
+            'heading' => 'سڕینەوەی بەهێزی :label',
 
             'actions' => [
 
@@ -23,7 +23,7 @@ return [
         'notifications' => [
 
             'deleted' => [
-                'title' => 'سڕایەوە',
+                'title' => 'سڕدرایەوە',
             ],
 
         ],
@@ -32,11 +32,11 @@ return [
 
     'multiple' => [
 
-        'label' => 'سڕینەوەی بەزۆری هەڵبژێردراوەکان',
+        'label' => 'سڕینەوەی بەهێزی دیاریکراوەکان',
 
         'modal' => [
 
-            'heading' => 'سڕینەوەی بەزۆری هەڵبژێردراوەکانی :label',
+            'heading' => 'سڕینەوەی بەهێزی دیاریکراوەکانی :label',
 
             'actions' => [
 
@@ -51,7 +51,7 @@ return [
         'notifications' => [
 
             'deleted' => [
-                'title' => 'سڕایەوە',
+                'title' => 'سڕدرایەوە',
             ],
 
         ],

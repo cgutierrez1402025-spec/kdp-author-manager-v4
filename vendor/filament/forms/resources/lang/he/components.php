@@ -11,23 +11,7 @@ return [
             ],
 
             'add' => [
-
-                'label' => 'הוסף :label',
-
-                'modal' => [
-
-                    'label' => 'הוספת :label',
-
-                    'actions' => [
-
-                        'add' => [
-                            'label' => 'הוסף',
-                        ],
-
-                    ],
-
-                ],
-
+                'label' => 'הוסף ל :label',
             ],
 
             'add_between' => [
@@ -145,7 +129,7 @@ return [
                 ],
 
                 'save' => [
-                    'label' => 'שמירה',
+                    'label' => 'שמור',
                 ],
 
                 'zoom_100' => [
@@ -236,7 +220,7 @@ return [
 
     'markdown_editor' => [
 
-        'tools' => [
+        'toolbar_buttons' => [
             'attach_files' => 'הוסף קבצים',
             'blockquote' => 'בלוק ציטוט',
             'bold' => 'מודגש',
@@ -259,7 +243,7 @@ return [
         'actions' => [
 
             'add' => [
-                'label' => 'הוסף :label',
+                'label' => 'הוסף ל :label',
             ],
 
             'delete' => [
@@ -304,134 +288,37 @@ return [
 
     'rich_editor' => [
 
-        'actions' => [
-
-            'attach_files' => [
-
-                'label' => 'העלאת קובץ',
-
-                'modal' => [
-
-                    'heading' => 'העלאת קובץ',
-
-                    'form' => [
-
-                        'file' => [
-
-                            'label' => [
-                                'new' => 'קובץ',
-                                'existing' => 'החלף קובץ',
-                            ],
-
-                        ],
-
-                        'alt' => [
-
-                            'label' => [
-                                'new' => 'טקסט חלופי',
-                                'existing' => 'שנה טקסט חלופי',
-                            ],
-
-                        ],
-
-                    ],
-
-                ],
-
-            ],
-
-            'custom_block' => [
-
-                'modal' => [
-
-                    'actions' => [
-
-                        'insert' => [
-                            'label' => 'הכנס',
-                        ],
-
-                        'save' => [
-                            'label' => 'שמירה',
-                        ],
-
-                    ],
-
-                ],
-
-            ],
+        'dialogs' => [
 
             'link' => [
 
-                'label' => 'עריכה',
-
-                'modal' => [
-
-                    'heading' => 'קישור',
-
-                    'form' => [
-
-                        'url' => [
-                            'label' => 'כתובת URL',
-                        ],
-
-                        'should_open_in_new_tab' => [
-                            'label' => 'פתח קישור בכרטיסיה חדשה',
-                        ],
-
-                    ],
-
+                'actions' => [
+                    'link' => 'קישור',
+                    'unlink' => 'בטל קישור',
                 ],
 
+                'label' => 'כתובת',
+
+                'placeholder' => 'הכנס כתובת',
+
             ],
+
         ],
 
-        'mentions' => [
-            'no_options_message' => 'אין אפשרויות זמינות.',
-            'no_search_results_message' => 'לא נמצאו תוצאות.',
-            'search_prompt' => 'התחל להקליד על מנת לחפש...',
-            'searching_message' => 'מחפש...',
-        ],
-
-        'tools' => [
-            'align_center' => 'יישר למרכז',
-            'align_end' => 'יישר לשמאל',
-            'align_justify' => 'יישר לשני הצדדים',
-            'align_start' => 'יישר לימין',
+        'toolbar_buttons' => [
             'attach_files' => 'הוסף קבצים',
             'blockquote' => 'בלוק ציטוט',
             'bold' => 'מודגש',
             'bullet_list' => 'רשימת נקודות',
-            'clear_formatting' => 'ניקוי עיצוב',
-            'code' => 'קוד',
             'code_block' => 'בלוק קוד',
-            'custom_blocks' => 'בלוקים מותאמים אישית',
-            'details' => 'פרטים',
             'h1' => 'כותרת 1',
             'h2' => 'כותרת 2',
             'h3' => 'כותרת 3',
-            'highlight' => 'הדגשה',
-            'horizontal_rule' => 'קו אופקי',
             'italic' => 'נטוי',
-            'lead' => 'טקסט גדול',
             'link' => 'קישור',
-            'merge_tags' => 'מזג תוויות',
             'ordered_list' => 'רשימה ממוספרת',
-            'redo' => 'בצע שוב',
-            'small' => 'טקסט קטן',
-            'strike' => 'קו חוצה',
-            'subscript' => 'כתב תחתי',
-            'superscript' => 'כתב עילי',
-            'table' => 'טבלה',
-            'table_delete' => 'מחק טבלה',
-            'table_add_column_before' => 'הוסף עמודה לפני',
-            'table_add_column_after' => 'הוסף עמודה אחרי',
-            'table_delete_column' => 'מחק עמודה',
-            'table_add_row_before' => 'הוסף שורה לפני',
-            'table_add_row_after' => 'הוסף שורה אחרי',
-            'table_delete_row' => 'מחק שורה',
-            'table_merge_cells' => 'מזג תאים',
-            'table_split_cell' => 'פצל תאים',
-            'table_toggle_header_row' => 'הפעל/הסתר שורת כותרת',
+            'redo' => 'חזור על',
+            'strike' => 'כתיב מחדל',
             'underline' => 'קו תחתון',
             'undo' => 'בטל',
         ],
@@ -444,8 +331,6 @@ return [
 
             'create_option' => [
 
-                'label' => 'יצירה',
-
                 'modal' => [
 
                     'heading' => 'יצירה',
@@ -453,11 +338,10 @@ return [
                     'actions' => [
 
                         'create' => [
-                            'label' => 'יצירה',
+                            'label' => 'צור',
                         ],
-
                         'create_another' => [
-                            'label' => 'צור וצור עוד אחד',
+                            'label' => 'צור וצור עוד אחת',
                         ],
 
                     ],
@@ -468,8 +352,6 @@ return [
 
             'edit_option' => [
 
-                'label' => 'עריכה',
-
                 'modal' => [
 
                     'heading' => 'עריכה',
@@ -477,7 +359,7 @@ return [
                     'actions' => [
 
                         'save' => [
-                            'label' => 'שמירה',
+                            'label' => 'שמור',
                         ],
 
                     ],
@@ -497,8 +379,6 @@ return [
 
         'max_items_message' => 'ניתן לבחור רק :count',
 
-        'no_options_message' => 'אין אפשרויות זמינות.',
-
         'no_search_results_message' => 'לא נמצאו תוצאות.',
 
         'placeholder' => 'בחר',
@@ -513,11 +393,18 @@ return [
         'placeholder' => 'תגית חדשה',
     ],
 
-    'toggle_buttons' => [
+    'wizard' => [
 
-        'boolean' => [
-            'true' => 'כן',
-            'false' => 'לא',
+        'actions' => [
+
+            'previous_step' => [
+                'label' => 'הקודם',
+            ],
+
+            'next_step' => [
+                'label' => 'הבא',
+            ],
+
         ],
 
     ],

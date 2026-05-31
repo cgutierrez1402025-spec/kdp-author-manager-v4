@@ -5,7 +5,6 @@ namespace Illuminate\Container\Attributes;
 use Attribute;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\Container\ContextualAttribute;
-use UnitEnum;
 
 #[Attribute(Attribute::TARGET_PARAMETER)]
 class Cache implements ContextualAttribute
@@ -13,7 +12,7 @@ class Cache implements ContextualAttribute
     /**
      * Create a new class instance.
      */
-    public function __construct(public UnitEnum|string|null $store = null)
+    public function __construct(public ?string $store = null)
     {
     }
 

@@ -2,7 +2,7 @@
 
 return [
 
-    'column_manager' => [
+    'column_toggle' => [
 
         'heading' => 'Kolonnas',
 
@@ -88,7 +88,7 @@ return [
             'label' => 'Lielapjoma darbības',
         ],
 
-        'column_manager' => [
+        'toggle_columns' => [
             'label' => 'Izvēlēties kolonnas',
         ],
 

@@ -6,12 +6,14 @@ use App\Models\Tag;
 use App\Models\Work;
 use App\Services\AiService;
 use Filament\Actions\Action;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Widgets\Widget;
 
 class AiToolsWidget extends Widget
 {
-    protected string $view = 'filament.widgets.ai-tools';
+    protected static string $view = 'filament.widgets.ai-tools';
 
     public ?Work $record = null;
 
@@ -29,10 +31,10 @@ class AiToolsWidget extends Widget
                 ->label('Sugerir Etiquetas')
                 ->icon('heroicon-o-tag')
                 ->form([
-                    \Filament\Forms\Components\TextInput::make('title')
+                    TextInput::make('title')
                         ->label('Título')
                         ->default($this->record?->title_public),
-                    \Filament\Forms\Components\Textarea::make('description')
+                    Textarea::make('description')
                         ->label('Descripción')
                         ->default($this->record?->description_marketing),
                 ])

@@ -7,5 +7,4 @@ return [
         'only_one_must_be_selected' => 'Tylko jedno pole :attribute musi być zaznaczone.',
     ],
 
-    'tampered_file_path' => 'Pole :attribute zawiera ścieżkę do pliku, która nie jest dozwolona.',
 ];

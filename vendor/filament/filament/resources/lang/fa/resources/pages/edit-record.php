@@ -6,8 +6,6 @@ return [
 
     'breadcrumb' => 'ویرایش',
 
-    'navigation_label' => 'ویرایش',
-
     'form' => [
 
         'actions' => [

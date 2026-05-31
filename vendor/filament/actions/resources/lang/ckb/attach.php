@@ -4,11 +4,11 @@ return [
 
     'single' => [
 
-        'label' => 'پەیوەستکردن',
+        'label' => 'لکاندن',
 
         'modal' => [
 
-            'heading' => 'پەیوەستکردنی :label',
+            'heading' => 'لکاندنی :label',
 
             'fields' => [
 
@@ -35,7 +35,7 @@ return [
         'notifications' => [
 
             'attached' => [
-                'title' => 'پەیوەستکرا',
+                'title' => 'لکێنرا',
             ],
 
         ],

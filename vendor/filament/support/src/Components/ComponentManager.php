@@ -65,7 +65,7 @@ class ComponentManager implements ScopedComponentManager
                 array_key_last($this->importantConfigurations[$component]) :
                 array_key_last($this->configurations[$component]);
 
-            return function () use ($component, $configurationKey, $isImportant): void {
+            return function () use ($component, $configurationKey, $isImportant) {
                 if ($isImportant) {
                     unset($this->importantConfigurations[$component][$configurationKey]);
 
@@ -89,26 +89,25 @@ class ComponentManager implements ScopedComponentManager
 
     public function configure(Component $component, Closure $setUp): void
     {
-        $classesToConfigure = [...array_reverse(class_parents($component)), $component::class];
-        $setUpMethodClass = (new ReflectionMethod($component, 'setUp'))->getDeclaringClass()->getName();
-
-        foreach ($classesToConfigure as $classToConfigure) {
-            if ($classToConfigure === $setUpMethodClass) {
-                $setUp();
+        foreach ($this->configurations as $classToConfigure => $configurationCallbacks) {
+            if (! $component instanceof $classToConfigure) {
+                continue;
             }
 
-            if (array_key_exists($classToConfigure, $this->configurations)) {
-                foreach ($this->configurations[$classToConfigure] as $configure) {
-                    $configure($component);
-                }
+            foreach ($configurationCallbacks as $configure) {
+                $configure($component);
             }
         }
 
-        foreach ($classesToConfigure as $classToConfigure) {
-            if (array_key_exists($classToConfigure, $this->importantConfigurations)) {
-                foreach ($this->importantConfigurations[$classToConfigure] as $configure) {
-                    $configure($component);
-                }
+        $setUp();
+
+        foreach ($this->importantConfigurations as $classToConfigure => $configurationCallbacks) {
+            if (! $component instanceof $classToConfigure) {
+                continue;
+            }
+
+            foreach ($configurationCallbacks as $configure) {
+                $configure($component);
             }
         }
     }

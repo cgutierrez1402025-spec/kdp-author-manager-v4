@@ -7,7 +7,7 @@ use Filament\Widgets\Widget;
 
 class UpcomingEventsWidget extends Widget
 {
-    protected string $view = 'filament.widgets.upcoming-events';
+    protected static string $view = 'filament.widgets.upcoming-events';
 
     protected int $eventsLimit = 5;
 

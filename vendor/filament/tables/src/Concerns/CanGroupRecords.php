@@ -9,6 +9,8 @@ trait CanGroupRecords
 {
     public ?string $tableGrouping = null;
 
+    public ?string $tableGroupingDirection = null;
+
     public function getTableGrouping(): ?Group
     {
         if ($this->isTableReordering()) {
@@ -17,7 +19,7 @@ trait CanGroupRecords
 
         if (
             filled($this->tableGrouping) &&
-            ($group = $this->getTable()->getGroup((string) str($this->tableGrouping)->before(':')))
+            ($group = $this->getTable()->getGroup($this->tableGrouping))
         ) {
             return $group;
         }
@@ -36,15 +38,7 @@ trait CanGroupRecords
 
     public function getTableGroupingDirection(): ?string
     {
-        if (blank($this->tableGrouping)) {
-            return null;
-        }
-
-        if (! str($this->tableGrouping)->contains(':')) {
-            return 'asc';
-        }
-
-        return match ((string) str($this->tableGrouping)->after(':')) {
+        return match ($this->tableGroupingDirection) {
             'asc' => 'asc',
             'desc' => 'desc',
             default => null,

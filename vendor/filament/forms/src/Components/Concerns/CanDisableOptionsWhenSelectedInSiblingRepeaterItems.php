@@ -3,8 +3,8 @@
 namespace Filament\Forms\Components\Concerns;
 
 use BackedEnum;
+use Filament\Forms\Components\Component;
 use Filament\Forms\Components\Contracts\CanDisableOptions;
-use Filament\Schemas\Components\Component;
 use Illuminate\Support\Arr;
 
 trait CanDisableOptionsWhenSelectedInSiblingRepeaterItems
@@ -21,7 +21,7 @@ trait CanDisableOptionsWhenSelectedInSiblingRepeaterItems
                 return false;
             }
 
-            return collect($repeater->getRawState())
+            return collect($repeater->getState())
                 ->pluck(
                     (string) str($component->getStatePath())
                         ->after("{$repeater->getStatePath()}.")

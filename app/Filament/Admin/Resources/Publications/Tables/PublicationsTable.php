@@ -14,7 +14,7 @@ class PublicationsTable
     public static function configure(Table $table): Table
     {
         return $table
-            ->modifyQueryQueryUsing(fn ($query) => $query->with(['work', 'platform', 'marketplace', 'workLanguage', 'manuscriptVersion']))
+            ->modifyQueryUsing(fn ($query) => $query->with(['work', 'platform', 'marketplace', 'workLanguage', 'manuscriptVersion']))
             ->columns([
                 TextColumn::make('work.title_public')
                     ->label('Obra')

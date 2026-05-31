@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Cache;
 
 class RecentActivityWidget extends Widget
 {
-    protected string $view = 'filament.widgets.recent-activity';
+    protected static string $view = 'filament.widgets.recent-activity';
 
     protected static ?int $sort = 5;
 

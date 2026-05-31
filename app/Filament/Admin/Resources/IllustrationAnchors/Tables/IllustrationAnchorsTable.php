@@ -2,7 +2,6 @@
 
 namespace App\Filament\Admin\Resources\IllustrationAnchors\Tables;
 
-use App\Filament\Admin\Resources\IllustrationAnchors\IllustrationAnchorResource;
 use App\Services\IllustrationAnchoringService;
 use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
@@ -10,8 +9,8 @@ use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Notifications\Notification;
 use Filament\Support\Icons\Heroicon;
-use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
@@ -20,7 +19,7 @@ class IllustrationAnchorsTable
     public static function configure(Table $table): Table
     {
         return $table
-            ->modifyQueryQueryUsing(fn ($query) => $query->with(['illustration', 'manuscriptVersion']))
+            ->modifyQueryUsing(fn ($query) => $query->with(['illustration', 'manuscriptVersion']))
             ->columns([
                 TextColumn::make('illustration.title')
                     ->label('Ilustración')

@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Cache;
 
 class ExpiringKdpSelectWidget extends Widget
 {
-    protected string $view = 'filament.widgets.expiring-kdp-select';
+    protected static string $view = 'filament.widgets.expiring-kdp-select';
 
     protected static ?int $sort = 4;
 

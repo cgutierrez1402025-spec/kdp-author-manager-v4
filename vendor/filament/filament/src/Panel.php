@@ -3,7 +3,7 @@
 namespace Filament;
 
 use Closure;
-use Filament\Actions\Action;
+use Filament\Actions\MountableAction;
 use Filament\Support\Components\Component;
 use Filament\Support\Facades\FilamentColor;
 use Filament\Support\Facades\FilamentIcon;
@@ -24,7 +24,6 @@ class Panel extends Component
     use Panel\Concerns\HasComponents;
     use Panel\Concerns\HasDarkMode;
     use Panel\Concerns\HasDatabaseTransactions;
-    use Panel\Concerns\HasErrorNotifications;
     use Panel\Concerns\HasFavicon;
     use Panel\Concerns\HasFont;
     use Panel\Concerns\HasGlobalSearch;
@@ -39,7 +38,6 @@ class Panel extends Component
     use Panel\Concerns\HasRoutes;
     use Panel\Concerns\HasSidebar;
     use Panel\Concerns\HasSpaMode;
-    use Panel\Concerns\HasSubNavigation;
     use Panel\Concerns\HasTenancy;
     use Panel\Concerns\HasTheme;
     use Panel\Concerns\HasTopbar;
@@ -83,27 +81,20 @@ class Panel extends Component
 
     public function boot(): void
     {
-        if ($this->hasTenancy()) {
-            foreach ($this->getResources() as $resource) {
-                $resource::observeTenancyModelCreation($this);
-                $resource::registerTenancyModelGlobalScope($this);
-            }
-        }
-
         $this->registerAssets();
 
         FilamentColor::register($this->getColors());
 
         FilamentIcon::register($this->getIcons());
 
-        FilamentView::spa($this->hasSpaMode(), $this->hasSpaPrefetching());
+        FilamentView::spa($this->hasSpaMode());
         FilamentView::spaUrlExceptions($this->getSpaUrlExceptions());
 
         $this->registerRenderHooks();
 
         if ($this->hasDatabaseTransactions()) {
-            Action::configureUsing(
-                fn (Action $action) => $action->databaseTransaction(),
+            MountableAction::configureUsing(
+                fn (MountableAction $action) => $action->databaseTransaction(),
             );
         }
 

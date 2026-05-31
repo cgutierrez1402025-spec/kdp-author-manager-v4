@@ -4,11 +4,10 @@ namespace App\Filament\Admin\Widgets;
 
 use App\Models\RoyaltyEntry;
 use Filament\Widgets\Widget;
-use Illuminate\Support\Collection;
 
 class MonthlyRoyaltiesChart extends Widget
 {
-    protected string $view = 'filament.widgets.monthly-royalties-chart';
+    protected static string $view = 'filament.widgets.monthly-royalties-chart';
 
     public function getChartDataProperty(): array
     {
@@ -32,7 +31,7 @@ class MonthlyRoyaltiesChart extends Widget
 
         foreach ($months as $m) {
             $key = "{$m['year']}-{$m['month']}";
-            $labels[] = $m['month'] . '/' . substr($m['year'], 2, 2);
+            $labels[] = $m['month'].'/'.substr($m['year'], 2, 2);
             $data[] = $entries->get($key)?->total ?? 0;
         }
 

@@ -11,7 +11,7 @@ return [
         'actions' => [
 
             'cancel' => [
-                'label' => 'Hủy thao tác',
+                'label' => 'Quay lại',
             ],
 
             'save' => [
