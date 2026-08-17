@@ -2,10 +2,14 @@
 
 namespace Tests\Feature;
 
+use App\Filament\Admin\Resources\ManuscriptVersions\Pages\EditManuscriptVersion;
+use App\Filament\Admin\Resources\ManuscriptVersions\RelationManagers\ChaptersRelationManager;
+use App\Models\ManuscriptVersion;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\Work;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Livewire\Livewire;
 use Tests\TestCase;
 
 class AdminResourcesSmokeTest extends TestCase
@@ -115,5 +119,16 @@ class AdminResourcesSmokeTest extends TestCase
         $this->actingAs(User::factory()->create())
             ->get('/admin')
             ->assertForbidden();
+    }
+
+    public function test_chapters_relation_manager_can_be_rendered(): void
+    {
+        $this->seed();
+        $this->actingAs(User::where('email', 'admin@kdpmanager.local')->firstOrFail());
+
+        Livewire::test(ChaptersRelationManager::class, [
+            'ownerRecord' => ManuscriptVersion::query()->firstOrFail(),
+            'pageClass' => EditManuscriptVersion::class,
+        ])->assertOk();
     }
 }
