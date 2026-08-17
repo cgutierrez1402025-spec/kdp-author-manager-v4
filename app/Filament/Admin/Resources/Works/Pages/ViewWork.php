@@ -13,6 +13,16 @@ class ViewWork extends ViewRecord
 {
     protected static string $resource = WorkResource::class;
 
+    public function hasCombinedRelationManagerTabsWithContent(): bool
+    {
+        return true;
+    }
+
+    public function getContentTabLabel(): ?string
+    {
+        return 'Resumen';
+    }
+
     protected function getHeaderActions(): array
     {
         return [

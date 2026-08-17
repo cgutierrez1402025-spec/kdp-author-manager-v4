@@ -4,6 +4,9 @@ namespace App\Filament\Admin\Resources\Works\Schemas;
 
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
+use Filament\Forms\Set;
+use Illuminate\Support\Str;
 
 class WorkForm
 {
@@ -27,17 +30,26 @@ class WorkForm
                         Forms\Components\TextInput::make('title')
                             ->label('Título')
                             ->required()
+                            ->live(onBlur: true)
+                            ->afterStateUpdated(function (?string $state, Get $get, Set $set): void {
+                                if (blank($get('slug'))) {
+                                    $set('slug', Str::slug($state ?? ''));
+                                }
+                            })
                             ->minLength(3)
                             ->maxLength(255),
 
                         Forms\Components\TextInput::make('slug')
                             ->label('Slug')
+                            ->helperText('Se genera automáticamente y puede ajustarse antes de guardar.')
+                            ->unique(ignoreRecord: true)
                             ->minLength(3)
                             ->maxLength(255),
 
                         Forms\Components\Textarea::make('description')
                             ->label('Descripción')
-                            ->rows(4),
+                            ->rows(4)
+                            ->columnSpanFull(),
 
                         Forms\Components\TextInput::make('series_number')
                             ->label('Número en Serie')
@@ -114,10 +126,13 @@ class WorkForm
                     ->columns(2),
 
                 Forms\Components\Section::make('Descripción y Notas')
+                    ->description('Contenido comercial visible y notas internas del equipo.')
+                    ->collapsible()
                     ->schema([
                         Forms\Components\Textarea::make('description_marketing')
                             ->label('Descripción de Marketing')
-                            ->rows(4),
+                            ->helperText('Texto orientado a la ficha comercial y campañas.')
+                            ->rows(5),
 
                         Forms\Components\Textarea::make('description_internal')
                             ->label('Descripción Interna')
@@ -129,6 +144,7 @@ class WorkForm
                     ]),
 
                 Forms\Components\Section::make('Fechas y Público')
+                    ->collapsible()
                     ->schema([
                         Forms\Components\DatePicker::make('start_date')
                             ->label('Fecha de Inicio'),

@@ -13,6 +13,8 @@ class RecentActivityWidget extends Widget
 
     protected static ?int $sort = 5;
 
+    protected int|string|array $columnSpan = 'full';
+
     public function getActivities(): array
     {
         $user = auth()->user();

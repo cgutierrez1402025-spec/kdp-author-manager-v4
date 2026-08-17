@@ -14,8 +14,10 @@ class TaskForm
                 Forms\Components\Section::make('Detalles de Tarea')
                     ->schema([
                         Forms\Components\Select::make('work_id')
-                            ->relationship('work', 'title_public', modifyQueryUsing: fn ($query) => auth()->user()?->hasRole('admin') ? $query : $query->where('user_id', auth()->id())
+                            ->relationship('work', 'title_public', modifyQueryUsing: fn ($query) => auth()->user()?->canViewAllAuthorData() ? $query : $query->where('user_id', auth()->id())
                             )
+                            ->searchable()
+                            ->preload()
                             ->label('Obra')
                             ->required(),
 
@@ -31,7 +33,8 @@ class TaskForm
 
                         Forms\Components\Textarea::make('description')
                             ->label('Descripción')
-                            ->rows(3),
+                            ->rows(3)
+                            ->columnSpanFull(),
 
                         Forms\Components\Select::make('task_type')
                             ->label('Tipo')

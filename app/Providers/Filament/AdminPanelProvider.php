@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Admin\Pages\Dashboard;
 use App\Filament\Admin\Resources\AiTasks\AiTaskResource;
 use App\Filament\Admin\Resources\BookEvents\BookEventResource;
 use App\Filament\Admin\Resources\BookPromotions\BookPromotionResource;
@@ -33,10 +34,10 @@ use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Navigation\NavigationGroup;
-use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
+use Filament\Support\Enums\MaxWidth;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -55,6 +56,9 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->login()
             ->brandName('KDP Author Manager')
+            ->viteTheme('resources/css/filament/admin/theme.css')
+            ->sidebarCollapsibleOnDesktop()
+            ->maxContentWidth(MaxWidth::Full)
             ->colors([
                 'primary' => Color::Amber,
             ])
@@ -91,7 +95,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->discoverPages(in: app_path('Filament/Admin/Pages'), for: 'App\\Filament\\Admin\\Pages')
             ->pages([
-                Pages\Dashboard::class,
+                Dashboard::class,
             ])
             ->widgets([
                 ActivePromotionsWidget::class,

@@ -4,6 +4,12 @@ namespace Tests\Feature;
 
 use App\Filament\Admin\Resources\ManuscriptVersions\Pages\EditManuscriptVersion;
 use App\Filament\Admin\Resources\ManuscriptVersions\RelationManagers\ChaptersRelationManager;
+use App\Filament\Admin\Resources\ManuscriptVersions\Widgets\VersionTreeWidget;
+use App\Filament\Admin\Resources\Works\Pages\ViewWork;
+use App\Filament\Admin\Resources\Works\RelationManagers\ManuscriptVersionsRelationManager;
+use App\Filament\Admin\Resources\Works\RelationManagers\PublicationsRelationManager;
+use App\Filament\Admin\Resources\Works\RelationManagers\SourcesRelationManager;
+use App\Filament\Admin\Resources\Works\RelationManagers\TasksRelationManager;
 use App\Models\ManuscriptVersion;
 use App\Models\Role;
 use App\Models\User;
@@ -129,6 +135,35 @@ class AdminResourcesSmokeTest extends TestCase
         Livewire::test(ChaptersRelationManager::class, [
             'ownerRecord' => ManuscriptVersion::query()->firstOrFail(),
             'pageClass' => EditManuscriptVersion::class,
+        ])->assertOk();
+    }
+
+    public function test_work_workspace_relation_tabs_can_be_rendered(): void
+    {
+        $this->seed();
+        $this->actingAs(User::where('email', 'admin@kdpmanager.local')->firstOrFail());
+        $work = Work::query()->firstOrFail();
+
+        foreach ([
+            ManuscriptVersionsRelationManager::class,
+            PublicationsRelationManager::class,
+            TasksRelationManager::class,
+            SourcesRelationManager::class,
+        ] as $relationManager) {
+            Livewire::test($relationManager, [
+                'ownerRecord' => $work,
+                'pageClass' => ViewWork::class,
+            ])->assertOk();
+        }
+    }
+
+    public function test_version_tree_widget_can_be_rendered(): void
+    {
+        $this->seed();
+        $this->actingAs(User::where('email', 'admin@kdpmanager.local')->firstOrFail());
+
+        Livewire::test(VersionTreeWidget::class, [
+            'record' => ManuscriptVersion::query()->firstOrFail(),
         ])->assertOk();
     }
 }

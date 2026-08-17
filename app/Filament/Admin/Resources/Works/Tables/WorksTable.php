@@ -29,19 +29,30 @@ class WorksTable
 
                 TextColumn::make('series.title')
                     ->label('Serie')
+                    ->toggleable()
                     ->sortable(),
 
                 TextColumn::make('series_number')
                     ->label('Número en Serie')
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->sortable(),
 
                 TextColumn::make('genre')
                     ->label('Género')
+                    ->toggleable()
                     ->badge(),
 
                 TextColumn::make('status')
                     ->label('Estado')
                     ->badge()
+                    ->formatStateUsing(fn (?string $state): string => match ($state) {
+                        'idea' => 'Idea',
+                        'redaccion' => 'Redacción',
+                        'revision' => 'Revisión',
+                        'preparacion' => 'Preparación',
+                        'publicada' => 'Publicada',
+                        default => ucfirst((string) $state),
+                    })
                     ->color(fn (?string $state): string => match ($state) {
                         'idea' => 'gray',
                         'redaccion' => 'warning',
@@ -53,13 +64,18 @@ class WorksTable
 
                 TextColumn::make('original_language')
                     ->label('Idioma')
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->badge(),
 
                 TextColumn::make('created_at')
                     ->label('Creado')
                     ->dateTime()
+                    ->since()
+                    ->toggleable()
                     ->sortable(),
             ])
+            ->filtersFormColumns(3)
+            ->persistFiltersInSession()
             ->filters([
                 SelectFilter::make('status')
                     ->label('Estado')
@@ -111,6 +127,10 @@ class WorksTable
                     DeleteBulkAction::make(),
                 ]),
             ])
+            ->striped()
+            ->emptyStateHeading('Todavía no hay obras')
+            ->emptyStateDescription('Crea tu primera obra para organizar manuscritos, publicaciones y marketing.')
+            ->emptyStateIcon('heroicon-o-book-open')
             ->defaultSort('created_at', 'desc');
     }
 }

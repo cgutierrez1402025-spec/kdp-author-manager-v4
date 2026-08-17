@@ -8,6 +8,7 @@
 - [`ERROR_CORRECTION_REPORT.md`](ERROR_CORRECTION_REPORT.md): correcciones ejecutadas durante la estabilización.
 - [`REPOSITORY_CLEANUP_PLAN.md`](REPOSITORY_CLEANUP_PLAN.md): auditoría y fases de mantenimiento del repositorio.
 - [`PHASED_MODERNIZATION.md`](PHASED_MODERNIZATION.md): ejecución y criterios de entrega de la nueva versión.
+- [`UI_MODERNIZATION.md`](UI_MODERNIZATION.md): sistema visual y mejoras de experiencia implementadas.
 
 ## Fuente de verdad
 

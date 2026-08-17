@@ -21,11 +21,13 @@ class ManuscriptVersionResource extends Resource
 
     protected static ?string $model = ManuscriptVersion::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-document-text';
+    protected static ?string $navigationIcon = 'heroicon-o-document-duplicate';
 
     protected static ?string $navigationLabel = 'Versiones de Manuscrito';
 
     protected static ?string $navigationGroup = 'Catálogo editorial';
+
+    protected static ?int $navigationSort = 2;
 
     protected static ?string $modelLabel = 'Versión';
 

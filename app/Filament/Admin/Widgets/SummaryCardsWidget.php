@@ -15,6 +15,8 @@ class SummaryCardsWidget extends Widget
 
     protected static ?int $sort = 1;
 
+    protected int|string|array $columnSpan = 'full';
+
     public function getStats(): array
     {
         $user = auth()->user();
@@ -23,6 +25,7 @@ class SummaryCardsWidget extends Widget
         return Cache::remember($cacheKey, 3600, function () use ($user) {
             $currentMonth = now()->month;
             $currentYear = now()->year;
+            $previousMonth = now()->subMonth();
 
             $works = Work::query()
                 ->when(! $user->canViewAllAuthorData(), fn ($query) => $query->where('user_id', $user->getKey()));
@@ -33,13 +36,21 @@ class SummaryCardsWidget extends Widget
             $promotions = BookPromotion::query()
                 ->when(! $user->canViewAllAuthorData(), fn ($query) => $query->whereHas('publication.work', fn ($workQuery) => $workQuery->where('user_id', $user->getKey())));
 
+            $monthlyRevenue = (clone $royalties)->where('month', $currentMonth)
+                ->where('year', $currentYear)
+                ->sum('total_royalty');
+            $previousRevenue = (clone $royalties)->where('month', $previousMonth->month)
+                ->where('year', $previousMonth->year)
+                ->sum('total_royalty');
+
             return [
                 'total_works' => $works->count(),
-                'monthly_revenue' => $royalties->where('month', $currentMonth)
-                    ->where('year', $currentYear)
-                    ->sum('total_royalty'),
+                'monthly_revenue' => $monthlyRevenue,
                 'active_publications' => $publications->where('status', 'published')->count(),
                 'active_promotions' => $promotions->active()->count(),
+                'revenue_change' => $previousRevenue > 0
+                    ? (($monthlyRevenue - $previousRevenue) / $previousRevenue) * 100
+                    : null,
             ];
         });
     }

@@ -11,11 +11,15 @@ class MyTasksWidget extends Widget
 
     protected int $tasksLimit = 10;
 
+    protected int|string|array $columnSpan = ['md' => 1, 'xl' => 6];
+
     public function getTasksProperty(): array
     {
         return Task::with('work')
-            ->where('assigned_to', auth()->id())
-            ->orWhere('created_by', auth()->id())
+            ->where(fn ($query) => $query
+                ->where('assigned_to', auth()->id())
+                ->orWhere('created_by', auth()->id()))
+            ->where('status', '!=', 'completed')
             ->orderBy('due_date')
             ->orderBy('priority')
             ->limit($this->tasksLimit)

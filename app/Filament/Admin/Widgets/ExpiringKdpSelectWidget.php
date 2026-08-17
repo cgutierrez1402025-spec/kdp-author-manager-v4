@@ -12,6 +12,8 @@ class ExpiringKdpSelectWidget extends Widget
 
     protected static ?int $sort = 4;
 
+    protected int|string|array $columnSpan = ['md' => 2, 'xl' => 5];
+
     public function getExpiringPeriods(): array
     {
         $user = auth()->user();

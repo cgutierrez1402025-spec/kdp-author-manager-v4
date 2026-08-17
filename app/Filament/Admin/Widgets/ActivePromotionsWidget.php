@@ -11,6 +11,8 @@ class ActivePromotionsWidget extends Widget
 
     protected int $promotionsLimit = 10;
 
+    protected int|string|array $columnSpan = ['md' => 2, 'xl' => 7];
+
     public function getPromotionsProperty(): array
     {
         $service = app(PromotionAnalyticsService::class);

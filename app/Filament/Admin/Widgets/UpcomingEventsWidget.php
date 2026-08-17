@@ -11,6 +11,8 @@ class UpcomingEventsWidget extends Widget
 
     protected int $eventsLimit = 5;
 
+    protected int|string|array $columnSpan = ['md' => 1, 'xl' => 6];
+
     public function getEventsProperty(): array
     {
         $user = auth()->user();

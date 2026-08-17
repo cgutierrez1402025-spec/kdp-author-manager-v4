@@ -13,10 +13,10 @@ class VersionTreeWidget extends Widget
 
     protected function getViewData(): array
     {
-        $versions = $this->buildVersionTree($this->record);
+        $tree = $this->buildVersionTree($this->record);
 
         return [
-            'versions' => $versions,
+            'versions' => $tree === [] ? [] : [$tree],
         ];
     }
 

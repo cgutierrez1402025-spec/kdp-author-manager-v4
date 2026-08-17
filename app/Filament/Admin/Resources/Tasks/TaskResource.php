@@ -23,13 +23,32 @@ class TaskResource extends Resource
 
     protected static ?string $model = Task::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-document-text';
+    protected static ?string $navigationIcon = 'heroicon-o-check-circle';
 
     protected static ?string $navigationLabel = 'Tareas';
 
     protected static ?string $navigationGroup = 'Catálogo editorial';
 
+    protected static ?int $navigationSort = 3;
+
     protected static ?string $recordTitleAttribute = 'title';
+
+    public static function getNavigationBadge(): ?string
+    {
+        $count = static::getEloquentQuery()->overdue()->count();
+
+        return $count > 0 ? (string) $count : null;
+    }
+
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return 'danger';
+    }
+
+    public static function getNavigationBadgeTooltip(): ?string
+    {
+        return 'Tareas vencidas';
+    }
 
     public static function form(Form $form): Form
     {

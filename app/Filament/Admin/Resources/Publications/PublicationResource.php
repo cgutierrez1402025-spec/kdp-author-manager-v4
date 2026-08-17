@@ -19,13 +19,20 @@ class PublicationResource extends Resource
 
     protected static ?string $model = Publication::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-document-text';
+    protected static ?string $navigationIcon = 'heroicon-o-globe-alt';
 
     protected static ?string $recordTitleAttribute = 'format';
 
     protected static ?string $navigationGroup = 'Publicaciones';
 
     protected static ?string $navigationLabel = 'Ediciones publicadas';
+
+    protected static ?int $navigationSort = 1;
+
+    public static function getNavigationBadge(): ?string
+    {
+        return (string) static::getEloquentQuery()->where('status', 'published')->count();
+    }
 
     public static function form(Form $form): Form
     {

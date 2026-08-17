@@ -31,16 +31,21 @@ class ManuscriptVersionsTable
                     ->sortable(),
 
                 TextColumn::make('workLanguage.language_code')
-                    ->label('Idioma'),
+                    ->label('Idioma')
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('parent_version_number')
                     ->label('Padre')
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->formatStateUsing(fn ($record) => $record->parentVersion->version_number ?? '-')
                     ->sortable(),
 
                 TextColumn::make('status')
                     ->label('Estado')
                     ->badge()
+                    ->formatStateUsing(fn (?string $state): string => match ($state) {
+                        'draft' => 'Borrador', 'review' => 'Revisión', 'final' => 'Final', 'published' => 'Publicada', default => ucfirst((string) $state),
+                    })
                     ->color(fn (?string $state): string => match ($state) {
                         'draft' => 'gray',
                         'review' => 'warning',
@@ -50,7 +55,8 @@ class ManuscriptVersionsTable
                     }),
 
                 ToggleColumn::make('is_candidate')
-                    ->label('Candidata'),
+                    ->label('Candidata')
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 ToggleColumn::make('is_final')
                     ->label('Final'),
@@ -69,8 +75,10 @@ class ManuscriptVersionsTable
                 TextColumn::make('created_at')
                     ->label('Creado')
                     ->dateTime()
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->sortable(),
             ])
+            ->persistFiltersInSession()
             ->filters([
                 SelectFilter::make('status')
                     ->label('Estado')
@@ -102,6 +110,10 @@ class ManuscriptVersionsTable
                     DeleteBulkAction::make(),
                 ]),
             ])
+            ->striped()
+            ->emptyStateHeading('No hay versiones de manuscrito')
+            ->emptyStateDescription('Crea una versión para comenzar el historial editorial.')
+            ->emptyStateIcon('heroicon-o-document-duplicate')
             ->defaultSort('created_at', 'desc');
     }
 }

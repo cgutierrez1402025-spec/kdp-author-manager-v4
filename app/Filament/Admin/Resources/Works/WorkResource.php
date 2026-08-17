@@ -31,6 +31,18 @@ class WorkResource extends Resource
 
     protected static ?string $navigationGroup = 'Catálogo editorial';
 
+    protected static ?int $navigationSort = 1;
+
+    public static function getNavigationBadge(): ?string
+    {
+        return (string) static::getEloquentQuery()->count();
+    }
+
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return 'primary';
+    }
+
     public static function form(Form $form): Form
     {
         return WorkForm::configure($form);
@@ -54,6 +66,29 @@ class WorkResource extends Resource
                     TextEntry::make('genre')->label('Género'),
                 ])
                 ->columns(3),
+            Section::make('Ciclo editorial')
+                ->description('Situación actual de la obra dentro del proceso de publicación.')
+                ->schema([
+                    TextEntry::make('status')
+                        ->hiddenLabel()
+                        ->formatStateUsing(fn (string $state): string => match ($state) {
+                            'idea' => '1 de 5 · Idea',
+                            'redaccion' => '2 de 5 · Redacción',
+                            'revision' => '3 de 5 · Revisión',
+                            'preparacion' => '4 de 5 · Preparación',
+                            'publicada' => '5 de 5 · Publicada',
+                            default => ucfirst($state),
+                        })
+                        ->badge()
+                        ->color(fn (string $state): string => match ($state) {
+                            'idea' => 'gray',
+                            'redaccion' => 'warning',
+                            'revision' => 'info',
+                            'preparacion' => 'primary',
+                            'publicada' => 'success',
+                            default => 'gray',
+                        }),
+                ]),
             Section::make('Progreso')
                 ->schema([
                     TextEntry::make('publications_count')
@@ -91,7 +126,10 @@ class WorkResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            RelationManagers\ManuscriptVersionsRelationManager::class,
+            RelationManagers\PublicationsRelationManager::class,
+            RelationManagers\TasksRelationManager::class,
+            RelationManagers\SourcesRelationManager::class,
         ];
     }
 

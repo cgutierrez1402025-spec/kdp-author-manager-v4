@@ -36,7 +36,7 @@ class DashboardDemoDataTest extends TestCase
             ->assertSee('Obra de demostración 01')
             ->assertSee('20 días');
         Livewire::test(RevenueChartWidget::class)
-            ->assertSee('Ingresos Últimos 6 Meses')
+            ->assertSee('Regalías acumuladas durante los últimos seis meses')
             ->assertSee('118.60 €');
     }
 }

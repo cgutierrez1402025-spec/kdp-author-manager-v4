@@ -34,11 +34,13 @@ class PublicationsTable
 
                 TextColumn::make('platform.name')
                     ->label('Plataforma')
-                    ->searchable(),
+                    ->searchable()
+                    ->toggleable(),
 
                 TextColumn::make('marketplace.name')
                     ->label('Marketplace')
-                    ->searchable(),
+                    ->searchable()
+                    ->toggleable(),
 
                 TextColumn::make('price')
                     ->label('Precio')
@@ -47,6 +49,9 @@ class PublicationsTable
                 TextColumn::make('status')
                     ->label('Estado')
                     ->badge()
+                    ->formatStateUsing(fn (?string $state): string => match ($state) {
+                        'draft' => 'Borrador', 'processing' => 'Procesando', 'published' => 'Publicada', 'error' => 'Error', default => ucfirst((string) $state),
+                    })
                     ->color(fn (?string $state): string => match ($state) {
                         'draft' => 'gray',
                         'processing' => 'warning',
@@ -63,8 +68,10 @@ class PublicationsTable
                 TextColumn::make('created_at')
                     ->label('Creado')
                     ->dateTime()
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->sortable(),
             ])
+            ->persistFiltersInSession()
             ->filters([
                 SelectFilter::make('format')
                     ->label('Formato')
@@ -92,6 +99,10 @@ class PublicationsTable
                     DeleteBulkAction::make(),
                 ]),
             ])
+            ->striped()
+            ->emptyStateHeading('No hay publicaciones')
+            ->emptyStateDescription('Crea una edición cuando el manuscrito esté listo para su distribución.')
+            ->emptyStateIcon('heroicon-o-globe-alt')
             ->defaultSort('created_at', 'desc');
     }
 }

@@ -29,11 +29,15 @@ class TasksTable
                 TextColumn::make('assignedTo.name')
                     ->label('Asignado a')
                     ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->placeholder('Sin asignar'),
 
                 TextColumn::make('priority')
                     ->label('Prioridad')
                     ->badge()
+                    ->formatStateUsing(fn (?string $state): string => match ($state) {
+                        'low' => 'Baja', 'medium' => 'Media', 'high' => 'Alta', 'urgent' => 'Urgente', default => ucfirst((string) $state),
+                    })
                     ->color(fn (?string $state): string => match ($state) {
                         'low' => 'gray',
                         'medium' => 'warning',
@@ -45,6 +49,9 @@ class TasksTable
                 TextColumn::make('status')
                     ->label('Estado')
                     ->badge()
+                    ->formatStateUsing(fn (?string $state): string => match ($state) {
+                        'pending' => 'Pendiente', 'in_progress' => 'En progreso', 'completed' => 'Completada', 'cancelled' => 'Cancelada', default => ucfirst((string) $state),
+                    })
                     ->color(fn (?string $state): string => match ($state) {
                         'pending' => 'gray',
                         'in_progress' => 'warning',
@@ -62,8 +69,10 @@ class TasksTable
                 TextColumn::make('created_at')
                     ->label('Creado')
                     ->dateTime()
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->sortable(),
             ])
+            ->persistFiltersInSession()
             ->filters([
                 SelectFilter::make('status')
                     ->label('Estado')
@@ -84,6 +93,10 @@ class TasksTable
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])
+            ->striped()
+            ->emptyStateHeading('No hay tareas')
+            ->emptyStateDescription('Crea una tarea para convertir el próximo paso en una acción concreta.')
+            ->emptyStateIcon('heroicon-o-check-circle');
     }
 }

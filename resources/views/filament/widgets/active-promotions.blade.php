@@ -1,13 +1,14 @@
 @php($promotions = $this->getPromotionsProperty())
+<x-filament::section icon="heroicon-o-megaphone" heading="Promociones activas" description="Coste, retorno y fechas de las campañas en curso">
 <div class="space-y-3">
     @if(empty($promotions))
-        <p class="text-gray-500">No hay promociones activas.</p>
+        <div class="editorial-empty"><p class="editorial-muted">No hay promociones activas.</p></div>
     @else
         @foreach($promotions as $promotion)
-            <div class="p-3 bg-white rounded-lg border border-gray-200">
+            <div class="rounded-xl border border-gray-200 p-3 dark:border-white/10">
                 <div class="flex items-start justify-between">
                     <div>
-                        <h4 class="font-medium text-gray-900">
+                        <h4 class="font-medium text-gray-900 dark:text-white">
                             {{ $promotion['promotion_name'] ?? 'Untitled' }}
                         </h4>
                         <p class="text-sm text-gray-500">{{ $promotion['work_title'] ?? 'N/A' }}</p>
@@ -31,3 +32,4 @@
         @endforeach
     @endif
 </div>
+</x-filament::section>
