@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Illustration;
 use App\Models\IllustrationAnchor;
 use App\Models\ManuscriptVersion;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\DomCrawler\Crawler;
 
@@ -41,19 +42,23 @@ class IllustrationAnchoringService
                 ];
             }
 
-            $newVersion = $manuscript->createChildVersion([
-                'html_content' => $modifiedHtml,
-                'change_summary' => "Added illustration: {$illustration->title}",
-            ]);
+            $newVersion = DB::transaction(function () use ($manuscript, $modifiedHtml, $illustration, $anchor) {
+                $newVersion = $manuscript->createChildVersion([
+                    'html_content' => $modifiedHtml,
+                    'change_summary' => "Added illustration: {$illustration->title}",
+                ]);
 
-            $anchor->update([
-                'applied' => true,
-                'applied_html_content' => $modifiedHtml,
-                'applied_version_id' => $newVersion->id,
-                'applied_at' => now(),
-            ]);
+                $anchor->update([
+                    'applied' => true,
+                    'applied_html_content' => $modifiedHtml,
+                    'applied_version_id' => $newVersion->id,
+                    'applied_at' => now(),
+                ]);
 
-            $illustration->increment('usage_count');
+                $illustration->increment('usage_count');
+
+                return $newVersion;
+            });
 
             return [
                 'success' => true,

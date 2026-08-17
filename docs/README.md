@@ -7,6 +7,7 @@
 - [`ERROR_REVIEW_PLAN.md`](ERROR_REVIEW_PLAN.md): estrategia de revisión y regresión.
 - [`ERROR_CORRECTION_REPORT.md`](ERROR_CORRECTION_REPORT.md): correcciones ejecutadas durante la estabilización.
 - [`REPOSITORY_CLEANUP_PLAN.md`](REPOSITORY_CLEANUP_PLAN.md): auditoría y fases de mantenimiento del repositorio.
+- [`PHASED_MODERNIZATION.md`](PHASED_MODERNIZATION.md): ejecución y criterios de entrega de la nueva versión.
 
 ## Fuente de verdad
 

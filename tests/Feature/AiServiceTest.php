@@ -23,7 +23,12 @@ class AiServiceTest extends TestCase
         config(['services.openai.key' => 'test-key']);
         Http::fake([
             'api.openai.com/*' => Http::response([
-                'choices' => [['message' => ['content' => 'Generated text']]],
+                'id' => 'resp_test',
+                'output' => [[
+                    'type' => 'message',
+                    'content' => [['type' => 'output_text', 'text' => 'Generated text']],
+                ]],
+                'usage' => ['input_tokens' => 2, 'output_tokens' => 3],
             ]),
         ]);
 
@@ -31,6 +36,9 @@ class AiServiceTest extends TestCase
 
         $this->assertTrue($result['success']);
         $this->assertSame('Generated text', $result['result']);
-        Http::assertSent(fn ($request) => $request->hasHeader('Authorization', 'Bearer test-key'));
+        $this->assertSame('resp_test', $result['response_id']);
+        Http::assertSent(fn ($request) => $request->url() === 'https://api.openai.com/v1/responses'
+            && $request['input'] === 'Test prompt'
+            && $request->hasHeader('Authorization', 'Bearer test-key'));
     }
 }

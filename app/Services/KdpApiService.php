@@ -15,6 +15,8 @@ class KdpApiService
 
     protected ?string $partnerTag;
 
+    protected bool $demoMode;
+
     protected string $endpoint = 'https://webservices.amazon.com/paapi5';
 
     public function __construct()
@@ -22,20 +24,25 @@ class KdpApiService
         $this->accessKey = config('services.amazon_paapi.access_key');
         $this->secretKey = config('services.amazon_paapi.secret_key');
         $this->partnerTag = config('services.amazon_paapi.partner_tag');
+        $this->demoMode = (bool) config('services.amazon_paapi.demo_mode', false);
     }
 
     public function lookupByAsin(string $asin): array
     {
-        if (! $this->accessKey || ! $this->secretKey) {
+        if ($this->demoMode) {
             return $this->mockLookupByAsin($asin);
+        }
+
+        if (! $this->hasCredentials()) {
+            return $this->configurationError();
         }
 
         try {
             return $this->realLookupByAsin($asin);
-        } catch (\Exception $e) {
-            Log::warning('KDP API real lookup failed, using mock', ['asin' => $asin, 'error' => $e->getMessage()]);
+        } catch (\Throwable $e) {
+            Log::error('Amazon API lookup failed', ['asin' => $asin, 'error' => $e->getMessage()]);
 
-            return $this->mockLookupByAsin($asin);
+            return ['success' => false, 'error' => $e->getMessage()];
         }
     }
 
@@ -106,16 +113,20 @@ class KdpApiService
             ];
         }
 
-        if (! $this->accessKey || ! $this->secretKey) {
+        if ($this->demoMode) {
             return $this->mockUpdateMetadata($publication);
+        }
+
+        if (! $this->hasCredentials()) {
+            return $this->configurationError();
         }
 
         try {
             return $this->realUpdateMetadata($publication);
-        } catch (\Exception $e) {
-            Log::warning('KDP API update failed, using mock', ['publication_id' => $publicationId, 'error' => $e->getMessage()]);
+        } catch (\Throwable $e) {
+            Log::error('Amazon API update failed', ['publication_id' => $publicationId, 'error' => $e->getMessage()]);
 
-            return $this->mockUpdateMetadata($publication);
+            return ['success' => false, 'error' => $e->getMessage()];
         }
     }
 
@@ -179,16 +190,20 @@ class KdpApiService
 
     public function getSalesReport(string $startDate, string $endDate): array
     {
-        if (! $this->accessKey || ! $this->secretKey) {
+        if ($this->demoMode) {
             return $this->mockSalesReport($startDate, $endDate);
+        }
+
+        if (! $this->hasCredentials()) {
+            return $this->configurationError();
         }
 
         try {
             return $this->realSalesReport($startDate, $endDate);
-        } catch (\Exception $e) {
-            Log::warning('KDP API sales report failed, using mock', ['error' => $e->getMessage()]);
+        } catch (\Throwable $e) {
+            Log::error('Amazon API sales report failed', ['error' => $e->getMessage()]);
 
-            return $this->mockSalesReport($startDate, $endDate);
+            return ['success' => false, 'error' => $e->getMessage()];
         }
     }
 
@@ -243,6 +258,19 @@ class KdpApiService
         $signature = base64_encode(hash_hmac('sha256', $date, $this->secretKey ?? ''));
 
         return "AWS4-HMAC-SHA256 Credential={$this->accessKey}, SignedHeaders=host;x-amz-date, Signature={$signature}";
+    }
+
+    protected function hasCredentials(): bool
+    {
+        return filled($this->accessKey) && filled($this->secretKey) && filled($this->partnerTag);
+    }
+
+    protected function configurationError(): array
+    {
+        return [
+            'success' => false,
+            'error' => 'Amazon API credentials are incomplete. Configure credentials or enable KDP_DEMO_MODE explicitly.',
+        ];
     }
 
     public function syncPublication(Publication $publication): array

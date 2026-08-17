@@ -2,7 +2,7 @@
 
 Aplicación web para gestionar el ciclo editorial de obras publicadas mediante Amazon KDP: manuscritos, publicaciones, metadatos, regalías, promociones, eventos, fuentes, ilustraciones y tareas asistidas por IA.
 
-El panel de administración está construido con Laravel 11, Filament 3, Livewire 3, SQLite/MySQL y Vite.
+El panel de administración está construido con Laravel 12, Filament 3, Livewire 3, SQLite/MySQL y Vite.
 
 ## Requisitos
 
@@ -55,7 +55,7 @@ php artisan optimize:clear
 
 ```bash
 composer validate --strict
-php artisan test --compact
+composer quality
 npm run build
 ```
 
@@ -71,7 +71,7 @@ php artisan migrate:fresh --seed
 
 La plantilla `.env.example` usa SQLite, español y la zona horaria de Madrid. Para MySQL, configure `DB_CONNECTION`, `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME` y `DB_PASSWORD`.
 
-Las integraciones externas y proveedores de IA se configuran en `.env` siguiendo las claves declaradas en `config/services.php`. No se deben versionar secretos ni copias de archivos `.env`.
+Las integraciones externas y proveedores de IA se configuran en `.env` siguiendo las claves declaradas en `config/services.php`. `KDP_DEMO_MODE` debe activarse expresamente para usar datos simulados; con el modo desactivado, la aplicación comunica credenciales incompletas o errores del proveedor. No se deben versionar secretos ni copias de archivos `.env`.
 
 ## Documentación
 

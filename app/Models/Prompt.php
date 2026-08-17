@@ -111,7 +111,7 @@ class Prompt extends Model
     protected function getDefaultModel(string $provider): string
     {
         return match ($provider) {
-            'openai' => 'gpt-4',
+            'openai' => config('services.openai.model', 'gpt-5.6-luna'),
             'anthropic' => 'claude-3-sonnet-20240229',
             'google' => 'gemini-pro',
             'cohere' => 'command-r',
@@ -121,14 +121,13 @@ class Prompt extends Model
 
     protected function callOpenAI(string $prompt, string $model): string
     {
-        $response = Http::withToken(config('services.openai.key'))
-            ->post('https://api.openai.com/v1/chat/completions', [
-                'model' => $model,
-                'messages' => [['role' => 'user', 'content' => $prompt]],
-                'max_tokens' => 2048,
-            ]);
+        $response = app(AiService::class)->generateContent($prompt, $model);
 
-        return $response->json('choices.0.message.content', '');
+        if (! $response['success']) {
+            throw new \RuntimeException($response['error']);
+        }
+
+        return $response['result'];
     }
 
     protected function callAnthropic(string $prompt, string $model): string
