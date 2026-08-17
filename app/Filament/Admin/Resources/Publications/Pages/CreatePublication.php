@@ -3,12 +3,22 @@
 namespace App\Filament\Admin\Resources\Publications\Pages;
 
 use App\Filament\Admin\Resources\Publications\PublicationResource;
+use App\Filament\Admin\Resources\Works\WorkResource;
 use App\Services\EditorialIntegrityService;
 use Filament\Resources\Pages\CreateRecord;
 
 class CreatePublication extends CreateRecord
 {
     protected static string $resource = PublicationResource::class;
+
+    protected function afterFill(): void
+    {
+        $workId = request()->integer('work_id');
+
+        if ($workId > 0 && WorkResource::getEloquentQuery()->whereKey($workId)->exists()) {
+            $this->form->fill([...$this->form->getRawState(), 'work_id' => $workId]);
+        }
+    }
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {

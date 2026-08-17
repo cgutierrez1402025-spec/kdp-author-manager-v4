@@ -32,6 +32,7 @@ use App\Filament\Admin\Widgets\UpcomingEventsWidget;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Navigation\NavigationGroup;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
@@ -56,6 +57,16 @@ class AdminPanelProvider extends PanelProvider
             ->brandName('KDP Author Manager')
             ->colors([
                 'primary' => Color::Amber,
+            ])
+            ->navigationGroups([
+                NavigationGroup::make()->label('Catálogo editorial'),
+                NavigationGroup::make()->label('Publicaciones'),
+                NavigationGroup::make()->label('Marketing'),
+                NavigationGroup::make()->label('Eventos')->collapsed(),
+                NavigationGroup::make()->label('Documentación')->collapsed(),
+                NavigationGroup::make()->label('Ilustraciones')->collapsed(),
+                NavigationGroup::make()->label('Inteligencia artificial')->collapsed(),
+                NavigationGroup::make()->label('Logs')->collapsed(),
             ])
             ->resources([
                 AiTaskResource::class,

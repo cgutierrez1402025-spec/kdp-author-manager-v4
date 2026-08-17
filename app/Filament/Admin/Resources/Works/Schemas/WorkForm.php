@@ -13,14 +13,11 @@ class WorkForm
             ->schema([
                 Forms\Components\Section::make('Información Básica')
                     ->schema([
-                        Forms\Components\Hidden::make('user_id')
-                            ->default(fn () => auth()->id()),
-
                         Forms\Components\Select::make('series_id')
                             ->relationship(
                                 'series',
                                 'title',
-                                modifyQueryUsing: fn ($query) => auth()->user()?->hasRole('admin')
+                                modifyQueryUsing: fn ($query) => auth()->user()?->canViewAllAuthorData()
                                     ? $query
                                     : $query->where('user_id', auth()->id()),
                             )

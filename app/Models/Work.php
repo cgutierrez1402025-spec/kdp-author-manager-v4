@@ -54,4 +54,29 @@ class Work extends Model
     {
         return $this->hasMany(WorkLanguage::class);
     }
+
+    public function manuscriptVersions(): HasMany
+    {
+        return $this->hasMany(ManuscriptVersion::class);
+    }
+
+    public function checklists(): HasMany
+    {
+        return $this->hasMany(Checklist::class);
+    }
+
+    public function tasks(): HasMany
+    {
+        return $this->hasMany(Task::class);
+    }
+
+    public function sources(): HasMany
+    {
+        return $this->hasMany(Source::class);
+    }
+
+    public function prompts(): HasMany
+    {
+        return $this->hasMany(Prompt::class);
+    }
 }

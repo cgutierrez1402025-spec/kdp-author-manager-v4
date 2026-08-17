@@ -14,7 +14,7 @@ class AiTaskForm
                 Forms\Components\Section::make('Tarea de IA')
                     ->schema([
                         Forms\Components\Select::make('work_id')
-                            ->relationship('work', 'title_public', modifyQueryUsing: fn ($query) => auth()->user()?->hasRole('admin') ? $query : $query->where('user_id', auth()->id())
+                            ->relationship('work', 'title_public', modifyQueryUsing: fn ($query) => auth()->user()?->canViewAllAuthorData() ? $query : $query->where('user_id', auth()->id())
                             )
                             ->label('Obra')
                             ->required(),

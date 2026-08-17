@@ -17,7 +17,7 @@ class ManuscriptVersionForm
                             ->relationship(
                                 'work',
                                 'title_public',
-                                modifyQueryUsing: fn ($query) => auth()->user()?->hasRole('admin')
+                                modifyQueryUsing: fn ($query) => auth()->user()?->canViewAllAuthorData()
                                     ? $query
                                     : $query->where('user_id', auth()->id()),
                             )

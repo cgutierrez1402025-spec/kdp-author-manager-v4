@@ -106,6 +106,7 @@ class AdminResourcesSmokeTest extends TestCase
             ->assertSee('Visible Author Work')
             ->assertDontSee('Private Other Work');
 
+        $this->get("/admin/works/{$otherWork->id}")->assertNotFound();
         $this->get("/admin/works/{$otherWork->id}/edit")->assertNotFound();
     }
 
