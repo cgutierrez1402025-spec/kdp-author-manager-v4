@@ -11,7 +11,7 @@ class TopWorksByRevenueWidget extends Widget
 
     protected static ?int $sort = 5;
 
-    protected int|string|array $columnSpan = ['md' => 2, 'xl' => 5];
+    protected int|string|array $columnSpan = 1;
 
     public function getWorks(): array
     {

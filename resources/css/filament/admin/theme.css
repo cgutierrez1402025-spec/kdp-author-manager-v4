@@ -75,7 +75,21 @@ html {
 }
 
 .fi-wi {
+    grid-template-columns: minmax(0, 1fr) !important;
+    width: 100%;
+    max-width: 100%;
     @apply min-w-0;
+}
+
+.fi-wi-widget {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow: hidden;
+}
+
+.fi-wi-widget :where(h2, h3, h4, p, span, a) {
+    overflow-wrap: anywhere;
 }
 
 .fi-section,
@@ -131,5 +145,11 @@ html {
 
     .fi-header-actions .fi-btn {
         @apply w-full justify-center;
+    }
+}
+
+@media (min-width: 1024px) {
+    .fi-dashboard-page .fi-wi {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
     }
 }

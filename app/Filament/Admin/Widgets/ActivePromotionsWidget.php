@@ -13,7 +13,7 @@ class ActivePromotionsWidget extends Widget
 
     protected int $promotionsLimit = 4;
 
-    protected int|string|array $columnSpan = ['md' => 2, 'xl' => 7];
+    protected int|string|array $columnSpan = 'full';
 
     public function getPromotionsProperty(): array
     {

@@ -23,12 +23,9 @@ class Dashboard extends BaseDashboard
         return 'Prioridades, rendimiento y próximos pasos de tu catálogo.';
     }
 
-    public function getColumns(): int|array
+    public function getColumns(): int
     {
-        return [
-            'md' => 2,
-            'xl' => 12,
-        ];
+        return 1;
     }
 
     protected function getHeaderActions(): array

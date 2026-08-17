@@ -12,7 +12,7 @@ class RevenueChartWidget extends Widget
 
     protected static ?int $sort = 4;
 
-    protected int|string|array $columnSpan = ['md' => 2, 'xl' => 7];
+    protected int|string|array $columnSpan = 1;
 
     public function getChartData(): array
     {

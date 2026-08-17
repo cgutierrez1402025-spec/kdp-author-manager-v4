@@ -12,7 +12,7 @@ class ExpiringKdpSelectWidget extends Widget
 
     protected static ?int $sort = 7;
 
-    protected int|string|array $columnSpan = ['md' => 2, 'xl' => 5];
+    protected int|string|array $columnSpan = 'full';
 
     public function getExpiringPeriods(): array
     {

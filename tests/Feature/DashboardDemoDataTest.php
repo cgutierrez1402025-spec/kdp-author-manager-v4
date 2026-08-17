@@ -2,10 +2,12 @@
 
 namespace Tests\Feature;
 
+use App\Filament\Admin\Pages\Dashboard;
 use App\Filament\Admin\Widgets\ActivePromotionsWidget;
 use App\Filament\Admin\Widgets\ExpiringKdpSelectWidget;
 use App\Filament\Admin\Widgets\MyTasksWidget;
 use App\Filament\Admin\Widgets\RevenueChartWidget;
+use App\Filament\Admin\Widgets\SummaryCardsWidget;
 use App\Filament\Admin\Widgets\TopWorksByRevenueWidget;
 use App\Filament\Admin\Widgets\UpcomingEventsWidget;
 use App\Models\User;
@@ -38,5 +40,20 @@ class DashboardDemoDataTest extends TestCase
         Livewire::test(RevenueChartWidget::class)
             ->assertSee('Regalías acumuladas durante los últimos seis meses')
             ->assertSee('118.60 €');
+    }
+
+    public function test_dashboard_uses_a_bounded_grid_without_implicit_columns(): void
+    {
+        $this->assertSame(1, app(Dashboard::class)->getColumns());
+        $this->assertSame('full', app(SummaryCardsWidget::class)->getColumnSpan());
+
+        foreach ([
+            MyTasksWidget::class,
+            UpcomingEventsWidget::class,
+            RevenueChartWidget::class,
+            TopWorksByRevenueWidget::class,
+        ] as $widget) {
+            $this->assertSame(1, app($widget)->getColumnSpan());
+        }
     }
 }

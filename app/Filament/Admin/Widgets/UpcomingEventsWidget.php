@@ -13,7 +13,7 @@ class UpcomingEventsWidget extends Widget
 
     protected int $eventsLimit = 5;
 
-    protected int|string|array $columnSpan = ['md' => 1, 'xl' => 6];
+    protected int|string|array $columnSpan = 1;
 
     public function getEventsProperty(): array
     {
