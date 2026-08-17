@@ -9,7 +9,7 @@ class TopWorksByRevenueWidget extends Widget
 {
     protected static string $view = 'filament.widgets.top-works-by-revenue';
 
-    protected static ?int $sort = 3;
+    protected static ?int $sort = 5;
 
     protected int|string|array $columnSpan = ['md' => 2, 'xl' => 5];
 
@@ -21,7 +21,7 @@ class TopWorksByRevenueWidget extends Widget
             ->selectRaw('works.id, works.title_public, SUM(royalty_entries.total_royalty) AS total_revenue')
             ->groupBy('works.id', 'works.title_public')
             ->orderByDesc('total_revenue')
-            ->limit(10);
+            ->limit(5);
 
         if (! auth()->user()?->canViewAllAuthorData()) {
             $query->where('works.user_id', auth()->id());

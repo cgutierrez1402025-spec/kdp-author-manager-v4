@@ -9,7 +9,9 @@ class ActivePromotionsWidget extends Widget
 {
     protected static string $view = 'filament.widgets.active-promotions';
 
-    protected int $promotionsLimit = 10;
+    protected static ?int $sort = 6;
+
+    protected int $promotionsLimit = 4;
 
     protected int|string|array $columnSpan = ['md' => 2, 'xl' => 7];
 

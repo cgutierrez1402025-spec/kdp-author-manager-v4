@@ -10,7 +10,7 @@ class RevenueChartWidget extends Widget
 {
     protected static string $view = 'filament.widgets.revenue-chart';
 
-    protected static ?int $sort = 2;
+    protected static ?int $sort = 4;
 
     protected int|string|array $columnSpan = ['md' => 2, 'xl' => 7];
 

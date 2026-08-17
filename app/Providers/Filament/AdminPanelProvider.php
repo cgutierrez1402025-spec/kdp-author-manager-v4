@@ -58,7 +58,8 @@ class AdminPanelProvider extends PanelProvider
             ->brandName('KDP Author Manager')
             ->viteTheme('resources/css/filament/admin/theme.css')
             ->sidebarCollapsibleOnDesktop()
-            ->maxContentWidth(MaxWidth::Full)
+            ->sidebarWidth('18rem')
+            ->maxContentWidth(MaxWidth::ScreenTwoExtraLarge)
             ->colors([
                 'primary' => Color::Amber,
             ])
@@ -98,12 +99,12 @@ class AdminPanelProvider extends PanelProvider
                 Dashboard::class,
             ])
             ->widgets([
-                ActivePromotionsWidget::class,
+                SummaryCardsWidget::class,
                 MyTasksWidget::class,
                 UpcomingEventsWidget::class,
-                SummaryCardsWidget::class,
                 RevenueChartWidget::class,
                 TopWorksByRevenueWidget::class,
+                ActivePromotionsWidget::class,
                 ExpiringKdpSelectWidget::class,
                 RecentActivityWidget::class,
             ])

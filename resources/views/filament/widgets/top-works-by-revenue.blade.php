@@ -1,5 +1,5 @@
 @php($works = $this->getWorks())
-<x-filament::section icon="heroicon-o-trophy" heading="Obras con más ingresos" description="Rendimiento acumulado del catálogo">
+<x-filament::section icon="heroicon-o-trophy" heading="Obras con más ingresos" description="Las cinco obras con mayor rendimiento acumulado">
     @if(empty($works))
         <div class="editorial-empty"><p class="editorial-muted">Aún no hay regalías para comparar.</p></div>
     @else

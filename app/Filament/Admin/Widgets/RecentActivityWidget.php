@@ -11,7 +11,7 @@ class RecentActivityWidget extends Widget
 {
     protected static string $view = 'filament.widgets.recent-activity';
 
-    protected static ?int $sort = 5;
+    protected static ?int $sort = 8;
 
     protected int|string|array $columnSpan = 'full';
 
@@ -29,7 +29,7 @@ class RecentActivityWidget extends Widget
                         ->where('causer_id', $user->getKey()),
                 )
                 ->latest()
-                ->limit(10)
+                ->limit(6)
                 ->get()
                 ->map(fn (Activity $log) => [
                     'user' => $log->causer->name ?? 'Sistema',

@@ -10,7 +10,7 @@ class ExpiringKdpSelectWidget extends Widget
 {
     protected static string $view = 'filament.widgets.expiring-kdp-select';
 
-    protected static ?int $sort = 4;
+    protected static ?int $sort = 7;
 
     protected int|string|array $columnSpan = ['md' => 2, 'xl' => 5];
 

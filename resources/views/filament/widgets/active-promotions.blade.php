@@ -1,6 +1,6 @@
 @php($promotions = $this->getPromotionsProperty())
 <x-filament::section icon="heroicon-o-megaphone" heading="Promociones activas" description="Coste, retorno y fechas de las campañas en curso">
-<div class="space-y-3">
+<div class="grid gap-3 md:grid-cols-2">
     @if(empty($promotions))
         <div class="editorial-empty"><p class="editorial-muted">No hay promociones activas.</p></div>
     @else

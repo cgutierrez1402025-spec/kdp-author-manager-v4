@@ -9,6 +9,8 @@ class UpcomingEventsWidget extends Widget
 {
     protected static string $view = 'filament.widgets.upcoming-events';
 
+    protected static ?int $sort = 3;
+
     protected int $eventsLimit = 5;
 
     protected int|string|array $columnSpan = ['md' => 1, 'xl' => 6];

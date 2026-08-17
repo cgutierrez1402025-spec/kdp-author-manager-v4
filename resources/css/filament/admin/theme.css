@@ -40,6 +40,18 @@
     @apply tracking-tight text-gray-950 dark:text-white;
 }
 
+.fi-main {
+    @apply pb-12;
+}
+
+.fi-page-header-main-ctn {
+    @apply gap-5;
+}
+
+.fi-wi {
+    @apply min-w-0;
+}
+
 .fi-section,
 .fi-ta-ctn,
 .editorial-card {
@@ -48,6 +60,10 @@
 
 .fi-section-header {
     @apply border-b border-gray-100 dark:border-white/5;
+}
+
+.fi-section-content-ctn {
+    @apply min-w-0;
 }
 
 .fi-btn {

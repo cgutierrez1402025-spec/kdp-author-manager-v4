@@ -9,7 +9,9 @@ class MyTasksWidget extends Widget
 {
     protected static string $view = 'filament.widgets.my-tasks';
 
-    protected int $tasksLimit = 10;
+    protected static ?int $sort = 2;
+
+    protected int $tasksLimit = 5;
 
     protected int|string|array $columnSpan = ['md' => 1, 'xl' => 6];
 
