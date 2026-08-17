@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\BookPromotion;
+use App\Models\User;
 use Illuminate\Support\Collection;
 
 class PromotionAnalyticsService
@@ -77,11 +78,19 @@ class PromotionAnalyticsService
         ];
     }
 
-    public function getAllActivePromotionsWithROI(): Collection
+    public function getAllActivePromotionsWithROI(?User $user = null): Collection
     {
-        return BookPromotion::active()
+        $query = BookPromotion::active()
             ->with(['publication.work', 'marketplace'])
-            ->get()
+            ->when(
+                $user && ! $user->canViewAllAuthorData(),
+                fn ($query) => $query->whereHas(
+                    'publication.work',
+                    fn ($workQuery) => $workQuery->where('user_id', $user->getKey()),
+                ),
+            );
+
+        return $query->get()
             ->map(fn ($promotion) => [
                 'id' => $promotion->id,
                 'promotion_name' => $promotion->promotion_name,

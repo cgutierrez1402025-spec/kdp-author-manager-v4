@@ -13,7 +13,6 @@ use App\Models\ManuscriptVersion;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
-use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
 
 class ManuscriptVersionResource extends Resource
@@ -48,7 +47,7 @@ class ManuscriptVersionResource extends Resource
     {
         $query = parent::getEloquentQuery();
 
-        return auth()->user()?->hasRole('admin')
+        return auth()->user()?->canViewAllAuthorData()
             ? $query
             : $query->whereHas('work', fn (Builder $workQuery) => $workQuery->where('user_id', auth()->id()));
     }

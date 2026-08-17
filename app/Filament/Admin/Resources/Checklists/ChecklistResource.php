@@ -8,14 +8,18 @@ use App\Filament\Admin\Resources\Checklists\Pages\ListChecklists;
 use App\Filament\Admin\Resources\Checklists\RelationManagers\ItemsRelationManager;
 use App\Filament\Admin\Resources\Checklists\Schemas\ChecklistForm;
 use App\Filament\Admin\Resources\Checklists\Tables\ChecklistsTable;
+use App\Filament\Concerns\ScopesAuthorOwnedRecords;
 use App\Models\Checklist;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
-use Filament\Tables;
 
 class ChecklistResource extends Resource
 {
+    use ScopesAuthorOwnedRecords;
+
+    protected static string $authorOwnershipPath = 'work';
+
     protected static ?string $slug = 'checklists';
 
     protected static ?string $model = Checklist::class;

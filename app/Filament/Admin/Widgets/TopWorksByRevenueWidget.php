@@ -21,7 +21,7 @@ class TopWorksByRevenueWidget extends Widget
             ->orderByDesc('total_revenue')
             ->limit(10);
 
-        if (! auth()->user()?->hasRole('admin')) {
+        if (! auth()->user()?->canViewAllAuthorData()) {
             $query->where('works.user_id', auth()->id());
         }
 

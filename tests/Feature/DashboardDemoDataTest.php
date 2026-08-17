@@ -2,13 +2,13 @@
 
 namespace Tests\Feature;
 
-use App\Models\User;
 use App\Filament\Admin\Widgets\ActivePromotionsWidget;
 use App\Filament\Admin\Widgets\ExpiringKdpSelectWidget;
 use App\Filament\Admin\Widgets\MyTasksWidget;
 use App\Filament\Admin\Widgets\RevenueChartWidget;
 use App\Filament\Admin\Widgets\TopWorksByRevenueWidget;
 use App\Filament\Admin\Widgets\UpcomingEventsWidget;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
 use Tests\TestCase;

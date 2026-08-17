@@ -2,14 +2,13 @@
 
 namespace Database\Factories;
 
+use App\Models\ManuscriptVersion;
+use App\Models\Marketplace;
+use App\Models\Platform;
 use App\Models\Publication;
 use App\Models\Work;
 use App\Models\WorkLanguage;
-use App\Models\ManuscriptVersion;
-use App\Models\Platform;
-use App\Models\Marketplace;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
 
 /**
  * @extends Factory<Publication>

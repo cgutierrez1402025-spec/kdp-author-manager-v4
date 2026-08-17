@@ -1,6 +1,6 @@
 <?php
 
-use Laravel\Horizon\Horizon;
+use App\Http\Middleware\EnsureMfaForRoles;
 
 return [
     'use' => 'redis',
@@ -19,7 +19,7 @@ return [
 
     'middleware' => [
         'web',
-        \App\Http\Middleware\EnsureMfaForRoles::class,
+        EnsureMfaForRoles::class,
     ],
 
     'waits' => [

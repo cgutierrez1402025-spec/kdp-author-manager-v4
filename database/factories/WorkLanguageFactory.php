@@ -2,8 +2,8 @@
 
 namespace Database\Factories;
 
-use App\Models\WorkLanguage;
 use App\Models\Work;
+use App\Models\WorkLanguage;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**

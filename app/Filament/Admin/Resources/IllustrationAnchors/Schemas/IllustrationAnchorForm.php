@@ -2,6 +2,7 @@
 
 namespace App\Filament\Admin\Resources\IllustrationAnchors\Schemas;
 
+use App\Models\Illustration;
 use Filament\Forms;
 use Filament\Forms\Form;
 
@@ -14,8 +15,7 @@ class IllustrationAnchorForm
                 Forms\Components\Section::make('Información del Anclaje')
                     ->schema([
                         Forms\Components\Select::make('illustration_id')
-                            ->relationship('illustration', 'title', modifyQueryUsing: fn ($query) =>
-                                auth()->user()?->hasRole('admin') ? $query : $query->whereHas('work', fn ($work) => $work->where('user_id', auth()->id()))
+                            ->relationship('illustration', 'title', modifyQueryUsing: fn ($query) => auth()->user()?->hasRole('admin') ? $query : $query->whereHas('work', fn ($work) => $work->where('user_id', auth()->id()))
                             )
                             ->live()
                             ->afterStateUpdated(function ($set): void {
@@ -27,7 +27,8 @@ class IllustrationAnchorForm
 
                         Forms\Components\Select::make('manuscript_version_id')
                             ->relationship('manuscriptVersion', 'name', modifyQueryUsing: function ($query, $get) {
-                                $workId = $get('illustration_id') ? \App\Models\Illustration::find($get('illustration_id'))?->work_id : null;
+                                $workId = $get('illustration_id') ? Illustration::find($get('illustration_id'))?->work_id : null;
+
                                 return $query->when($workId, fn ($q) => $q->where('work_id', $workId));
                             })
                             ->getOptionLabelFromRecordUsing(fn ($record): string => $record->name ?? "Versión {$record->version_number}")
@@ -37,8 +38,7 @@ class IllustrationAnchorForm
                             ->required(),
 
                         Forms\Components\Select::make('chapter_id')
-                            ->relationship('chapter', 'title', modifyQueryUsing: fn ($query, $get) =>
-                                $query->when($get('manuscript_version_id'), fn ($q, $versionId) => $q->where('manuscript_version_id', $versionId))
+                            ->relationship('chapter', 'title', modifyQueryUsing: fn ($query, $get) => $query->when($get('manuscript_version_id'), fn ($q, $versionId) => $q->where('manuscript_version_id', $versionId))
                             )
                             ->label('Capítulo')
                             ->nullable(),

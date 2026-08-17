@@ -15,7 +15,7 @@ class ActivePromotionsWidget extends Widget
     {
         $service = app(PromotionAnalyticsService::class);
 
-        return $service->getAllActivePromotionsWithROI()
+        return $service->getAllActivePromotionsWithROI(auth()->user())
             ->take($this->promotionsLimit)
             ->values()
             ->all();

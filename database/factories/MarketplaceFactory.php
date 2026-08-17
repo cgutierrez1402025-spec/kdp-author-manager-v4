@@ -41,7 +41,7 @@ class MarketplaceFactory extends Factory
     public function amazonUs(): static
     {
         return $this->state(fn (array $attributes) => [
-            'platform_id' => \App\Models\Platform::where('name', 'Amazon KDP')->first()->id ?? \App\Models\Platform::factory()->kdp()->create()->id,
+            'platform_id' => Platform::where('name', 'Amazon KDP')->first()->id ?? Platform::factory()->kdp()->create()->id,
             'code' => 'amazon_us',
             'name' => 'Amazon.com',
             'currency' => 'USD',
@@ -54,7 +54,7 @@ class MarketplaceFactory extends Factory
     public function amazonUk(): static
     {
         return $this->state(fn (array $attributes) => [
-            'platform_id' => \App\Models\Platform::where('name', 'Amazon KDP')->first()->id ?? \App\Models\Platform::factory()->kdp()->create()->id,
+            'platform_id' => Platform::where('name', 'Amazon KDP')->first()->id ?? Platform::factory()->kdp()->create()->id,
             'code' => 'amazon_uk',
             'name' => 'Amazon.co.uk',
             'currency' => 'GBP',
@@ -67,7 +67,7 @@ class MarketplaceFactory extends Factory
     public function amazonDe(): static
     {
         return $this->state(fn (array $attributes) => [
-            'platform_id' => \App\Models\Platform::where('name', 'Amazon KDP')->first()->id ?? \App\Models\Platform::factory()->kdp()->create()->id,
+            'platform_id' => Platform::where('name', 'Amazon KDP')->first()->id ?? Platform::factory()->kdp()->create()->id,
             'code' => 'amazon_de',
             'name' => 'Amazon.de',
             'currency' => 'EUR',
@@ -80,7 +80,7 @@ class MarketplaceFactory extends Factory
     public function appleBooksUs(): static
     {
         return $this->state(fn (array $attributes) => [
-            'platform_id' => \App\Models\Platform::where('name', 'Apple Books')->first()->id ?? \App\Models\Platform::factory()->appleBooks()->create()->id,
+            'platform_id' => Platform::where('name', 'Apple Books')->first()->id ?? Platform::factory()->appleBooks()->create()->id,
             'code' => 'apple_us',
             'name' => 'Apple Books US',
             'currency' => 'USD',

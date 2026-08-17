@@ -11,7 +11,6 @@ use App\Models\Publication;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
-use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
 
 class PublicationResource extends Resource
@@ -42,7 +41,7 @@ class PublicationResource extends Resource
     {
         $query = parent::getEloquentQuery();
 
-        return auth()->user()?->hasRole('admin')
+        return auth()->user()?->canViewAllAuthorData()
             ? $query
             : $query->whereHas('work', fn (Builder $workQuery) => $workQuery->where('user_id', auth()->id()));
     }

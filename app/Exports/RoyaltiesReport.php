@@ -4,17 +4,20 @@ namespace App\Exports;
 
 use App\Models\RoyaltyEntry;
 use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
-use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class RoyaltiesReport implements FromCollection, WithHeadings, WithMapping, ShouldAutoSize, WithStyles
+class RoyaltiesReport implements FromCollection, ShouldAutoSize, WithHeadings, WithMapping, WithStyles
 {
     protected ?int $publicationId;
+
     protected ?int $platformId;
+
     protected ?string $startDate;
+
     protected ?string $endDate;
 
     public function __construct(?int $publicationId = null, ?int $platformId = null, ?string $startDate = null, ?string $endDate = null)
@@ -40,10 +43,10 @@ class RoyaltiesReport implements FromCollection, WithHeadings, WithMapping, Shou
         if ($this->startDate) {
             $query->where(function ($q) {
                 $q->where('year', '>', substr($this->startDate, 0, 4))
-                  ->orWhere(function ($sub) {
-                      $sub->where('year', substr($this->startDate, 0, 4))
-                          ->where('month', '>=', substr($this->startDate, 5, 2));
-                  });
+                    ->orWhere(function ($sub) {
+                        $sub->where('year', substr($this->startDate, 0, 4))
+                            ->where('month', '>=', substr($this->startDate, 5, 2));
+                    });
             });
         }
 

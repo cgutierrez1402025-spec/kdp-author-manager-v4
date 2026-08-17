@@ -2,11 +2,11 @@
 
 namespace Tests\Feature;
 
+use App\Models\Chapter;
 use App\Models\ManuscriptVersion;
 use App\Models\User;
 use App\Models\Work;
 use App\Models\WorkLanguage;
-use App\Models\Chapter;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 

@@ -7,14 +7,18 @@ use App\Filament\Admin\Resources\KdpMetadatas\Pages\EditKdpMetadata;
 use App\Filament\Admin\Resources\KdpMetadatas\Pages\ListKdpMetadatas;
 use App\Filament\Admin\Resources\KdpMetadatas\Schemas\KdpMetadataForm;
 use App\Filament\Admin\Resources\KdpMetadatas\Tables\KdpMetadatasTable;
+use App\Filament\Concerns\ScopesAuthorOwnedRecords;
 use App\Models\KdpMetadata;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
-use Filament\Tables;
 
 class KdpMetadataResource extends Resource
 {
+    use ScopesAuthorOwnedRecords;
+
+    protected static string $authorOwnershipPath = 'publication.work';
+
     protected static ?string $slug = 'kdp-metadata';
 
     protected static ?string $model = KdpMetadata::class;

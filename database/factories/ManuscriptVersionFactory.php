@@ -3,9 +3,9 @@
 namespace Database\Factories;
 
 use App\Models\ManuscriptVersion;
+use App\Models\User;
 use App\Models\Work;
 use App\Models\WorkLanguage;
-use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**

@@ -5,9 +5,9 @@ namespace App\Models;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 class User extends Authenticatable implements FilamentUser
 {
@@ -61,5 +61,15 @@ class User extends Authenticatable implements FilamentUser
     {
         return $this->permissions()->where('name', $permission)->exists()
             || $this->roles()->whereHas('permissions', fn ($query) => $query->where('name', $permission))->exists();
+    }
+
+    public function canViewAllAuthorData(): bool
+    {
+        return $this->hasAnyRole(['admin', 'editor', 'accountant']);
+    }
+
+    public function dashboardCacheNamespace(): string
+    {
+        return 'dashboard:user:'.$this->getKey();
     }
 }

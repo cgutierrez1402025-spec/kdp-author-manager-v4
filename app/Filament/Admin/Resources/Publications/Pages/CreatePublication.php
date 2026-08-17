@@ -3,8 +3,8 @@
 namespace App\Filament\Admin\Resources\Publications\Pages;
 
 use App\Filament\Admin\Resources\Publications\PublicationResource;
-use Filament\Resources\Pages\CreateRecord;
 use App\Services\EditorialIntegrityService;
+use Filament\Resources\Pages\CreateRecord;
 
 class CreatePublication extends CreateRecord
 {

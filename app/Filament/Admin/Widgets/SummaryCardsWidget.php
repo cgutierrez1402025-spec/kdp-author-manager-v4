@@ -17,17 +17,29 @@ class SummaryCardsWidget extends Widget
 
     public function getStats(): array
     {
-        return Cache::remember('dashboard_summary_cards', 3600, function () {
+        $user = auth()->user();
+        $cacheKey = $user->dashboardCacheNamespace().':summary';
+
+        return Cache::remember($cacheKey, 3600, function () use ($user) {
             $currentMonth = now()->month;
             $currentYear = now()->year;
 
+            $works = Work::query()
+                ->when(! $user->canViewAllAuthorData(), fn ($query) => $query->where('user_id', $user->getKey()));
+            $publications = Publication::query()
+                ->when(! $user->canViewAllAuthorData(), fn ($query) => $query->whereHas('work', fn ($workQuery) => $workQuery->where('user_id', $user->getKey())));
+            $royalties = RoyaltyEntry::query()
+                ->when(! $user->canViewAllAuthorData(), fn ($query) => $query->whereHas('publication.work', fn ($workQuery) => $workQuery->where('user_id', $user->getKey())));
+            $promotions = BookPromotion::query()
+                ->when(! $user->canViewAllAuthorData(), fn ($query) => $query->whereHas('publication.work', fn ($workQuery) => $workQuery->where('user_id', $user->getKey())));
+
             return [
-                'total_works' => Work::count(),
-                'monthly_revenue' => RoyaltyEntry::where('month', $currentMonth)
+                'total_works' => $works->count(),
+                'monthly_revenue' => $royalties->where('month', $currentMonth)
                     ->where('year', $currentYear)
                     ->sum('total_royalty'),
-                'active_publications' => Publication::where('status', 'published')->count(),
-                'active_promotions' => BookPromotion::active()->count(),
+                'active_publications' => $publications->where('status', 'published')->count(),
+                'active_promotions' => $promotions->active()->count(),
             ];
         });
     }

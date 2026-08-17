@@ -7,14 +7,18 @@ use App\Filament\Admin\Resources\Tasks\Pages\EditTask;
 use App\Filament\Admin\Resources\Tasks\Pages\ListTasks;
 use App\Filament\Admin\Resources\Tasks\Schemas\TaskForm;
 use App\Filament\Admin\Resources\Tasks\Tables\TasksTable;
+use App\Filament\Concerns\ScopesAuthorOwnedRecords;
 use App\Models\Task;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
-use Filament\Tables;
 
 class TaskResource extends Resource
 {
+    use ScopesAuthorOwnedRecords;
+
+    protected static string $authorOwnershipPath = 'work';
+
     protected static ?string $slug = 'tasks';
 
     protected static ?string $model = Task::class;

@@ -7,14 +7,18 @@ use App\Filament\Admin\Resources\PromotionCosts\Pages\EditPromotionCost;
 use App\Filament\Admin\Resources\PromotionCosts\Pages\ListPromotionCosts;
 use App\Filament\Admin\Resources\PromotionCosts\Schemas\PromotionCostForm;
 use App\Filament\Admin\Resources\PromotionCosts\Tables\PromotionCostsTable;
+use App\Filament\Concerns\ScopesAuthorOwnedRecords;
 use App\Models\PromotionCost;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
-use Filament\Tables;
 
 class PromotionCostResource extends Resource
 {
+    use ScopesAuthorOwnedRecords;
+
+    protected static string $authorOwnershipPath = 'bookPromotion.publication.work';
+
     protected static ?string $slug = 'promotion-costs';
 
     protected static ?string $model = PromotionCost::class;

@@ -14,15 +14,13 @@ class AiTaskForm
                 Forms\Components\Section::make('Tarea de IA')
                     ->schema([
                         Forms\Components\Select::make('work_id')
-                            ->relationship('work', 'title_public', modifyQueryUsing: fn ($query) =>
-                                auth()->user()?->hasRole('admin') ? $query : $query->where('user_id', auth()->id())
+                            ->relationship('work', 'title_public', modifyQueryUsing: fn ($query) => auth()->user()?->hasRole('admin') ? $query : $query->where('user_id', auth()->id())
                             )
                             ->label('Obra')
                             ->required(),
 
                         Forms\Components\Select::make('preferred_ai_tool_id')
-                            ->relationship('preferredAiTool', 'name', modifyQueryUsing: fn ($query) =>
-                                auth()->user()?->hasRole('admin') ? $query : $query->where('user_id', auth()->id())
+                            ->relationship('preferredAiTool', 'name', modifyQueryUsing: fn ($query) => auth()->user()?->hasRole('admin') ? $query : $query->where('user_id', auth()->id())
                             )
                             ->label('Herramienta IA Preferida')
                             ->nullable(),

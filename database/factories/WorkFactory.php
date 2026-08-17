@@ -2,10 +2,10 @@
 
 namespace Database\Factories;
 
-use App\Models\Work;
+use App\Models\Series;
 use App\Models\User;
+use App\Models\Work;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
 
 /**
  * @extends Factory<Work>
@@ -47,7 +47,7 @@ class WorkFactory extends Factory
     public function inSeries(): static
     {
         return $this->state(fn (array $attributes) => [
-            'series_id' => \App\Models\Series::factory(), // Creates and associates a series
+            'series_id' => Series::factory(), // Creates and associates a series
         ]);
     }
 
@@ -70,5 +70,4 @@ class WorkFactory extends Factory
             'status' => 'published',
         ]);
     }
-
 }

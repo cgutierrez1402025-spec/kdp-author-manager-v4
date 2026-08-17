@@ -13,7 +13,10 @@ class UpcomingEventsWidget extends Widget
 
     public function getEventsProperty(): array
     {
+        $user = auth()->user();
+
         return BookEvent::upcoming(30)
+            ->when(! $user->canViewAllAuthorData(), fn ($query) => $query->where('user_id', $user->getKey()))
             ->orderBy('event_date')
             ->limit($this->eventsLimit)
             ->get()

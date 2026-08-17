@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\RoyaltyEntry;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 
 class RoyaltyImportService
 {
@@ -40,7 +41,7 @@ class RoyaltyImportService
                 );
 
                 if (abs($componentTotal - round((float) $data['total_royalty'], 2)) > 0.01) {
-                    throw \Illuminate\Validation\ValidationException::withMessages([
+                    throw ValidationException::withMessages([
                         "rows.{$index}.total_royalty" => 'El total no coincide con la suma de los componentes.',
                     ]);
                 }

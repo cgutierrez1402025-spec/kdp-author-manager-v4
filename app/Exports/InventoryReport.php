@@ -2,9 +2,8 @@
 
 namespace App\Exports;
 
-use App\Models\StockMovement;
 use App\Models\StockLocation;
-use App\Models\Work;
+use App\Models\StockMovement;
 use Illuminate\Support\Collection;
 
 class InventoryReport

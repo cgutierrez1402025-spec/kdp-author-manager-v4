@@ -14,8 +14,7 @@ class PromptForm
                 Forms\Components\Section::make('Información del Prompt')
                     ->schema([
                         Forms\Components\Select::make('work_id')
-                            ->relationship('work', 'title_public', modifyQueryUsing: fn ($query) =>
-                                auth()->user()?->hasRole('admin') ? $query : $query->where('user_id', auth()->id())
+                            ->relationship('work', 'title_public', modifyQueryUsing: fn ($query) => auth()->user()?->hasRole('admin') ? $query : $query->where('user_id', auth()->id())
                             )
                             ->live()
                             ->afterStateUpdated(fn ($set) => $set('task_id', null))
@@ -23,15 +22,13 @@ class PromptForm
                             ->required(),
 
                         Forms\Components\Select::make('ai_tool_id')
-                            ->relationship('aiTool', 'name', modifyQueryUsing: fn ($query) =>
-                                auth()->user()?->hasRole('admin') ? $query : $query->where('user_id', auth()->id())
+                            ->relationship('aiTool', 'name', modifyQueryUsing: fn ($query) => auth()->user()?->hasRole('admin') ? $query : $query->where('user_id', auth()->id())
                             )
                             ->label('Herramienta IA')
                             ->required(),
 
                         Forms\Components\Select::make('task_id')
-                            ->relationship('task', 'task_type', modifyQueryUsing: fn ($query, $get) =>
-                                $query->when($get('work_id'), fn ($q, $workId) => $q->where('work_id', $workId))
+                            ->relationship('task', 'task_type', modifyQueryUsing: fn ($query, $get) => $query->when($get('work_id'), fn ($q, $workId) => $q->where('work_id', $workId))
                             )
                             ->label('Tarea IA')
                             ->nullable(),

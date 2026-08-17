@@ -101,7 +101,7 @@ class IllustrationAnchoringService
         $crawler = new Crawler($html);
         $imageTag = $this->buildImageTag($illustration);
 
-        $crawler->filter($anchor->css_selector)->each(function (Crawler $node, $i) use (&$html, $imageTag) {
+        $crawler->filter($anchor->css_selector)->each(function (Crawler $node, int $i) use ($imageTag): void {
             if ($i === 0) {
                 $node->getNode(0)->appendChild(
                     $node->getDocument()->createElement('div', $imageTag)
@@ -133,9 +133,9 @@ class IllustrationAnchoringService
 
         return sprintf(
             '<img src="%s" alt="%s" class="illustration %s" data-illustration-id="%d" />',
-            $url,
+            e($url),
             $alt,
-            $class,
+            $alignment,
             $illustration->id
         );
     }

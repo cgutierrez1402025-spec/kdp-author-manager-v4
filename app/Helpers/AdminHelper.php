@@ -12,7 +12,7 @@ class AdminHelper
     public static function getTableConfig(string $table): array
     {
         $config = config('admin-tables');
-        
+
         if (isset($config[$table])) {
             return $config[$table];
         }
@@ -70,7 +70,7 @@ class AdminHelper
             'label' => Str::headline($table),
             'icon' => '📋',
             'module' => 'Otros',
-            'description' => 'Gestiona registros de ' . Str::headline(Str::plural($table)),
+            'description' => 'Gestiona registros de '.Str::headline(Str::plural($table)),
             'priority' => 999,
         ];
     }
@@ -85,7 +85,7 @@ class AdminHelper
 
         foreach ($config as $table => $data) {
             $module = $data['module'] ?? 'Otros';
-            if (!isset($grouped[$module])) {
+            if (! isset($grouped[$module])) {
                 $grouped[$module] = [];
             }
             $grouped[$module][$table] = $data;
@@ -103,7 +103,7 @@ class AdminHelper
         $tables = [];
 
         foreach ($config as $table => $data) {
-            if (!isset($tables[$table])) {
+            if (! isset($tables[$table])) {
                 $tables[$table] = $data;
             }
         }

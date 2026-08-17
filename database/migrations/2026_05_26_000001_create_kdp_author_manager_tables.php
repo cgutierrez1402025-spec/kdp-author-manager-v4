@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        $createIfMissing = function (string $table, \Closure $callback): void {
+        $createIfMissing = function (string $table, Closure $callback): void {
             if (! Schema::hasTable($table)) {
                 Schema::create($table, $callback);
             }

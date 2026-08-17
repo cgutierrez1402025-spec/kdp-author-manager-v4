@@ -2,6 +2,7 @@
 
 namespace App\Filament\Admin\Widgets;
 
+use App\Models\User;
 use Filament\Widgets\Widget;
 use Illuminate\Support\Facades\Cache;
 use Spatie\Activitylog\Models\Activity;
@@ -14,8 +15,17 @@ class RecentActivityWidget extends Widget
 
     public function getActivities(): array
     {
-        return Cache::remember('dashboard_recent_activity', 3600, function () {
+        $user = auth()->user();
+        $cacheKey = $user->dashboardCacheNamespace().':recent-activity';
+
+        return Cache::remember($cacheKey, 3600, function () use ($user) {
             return Activity::with(['causer', 'subject'])
+                ->when(
+                    ! $user->canViewAllAuthorData(),
+                    fn ($query) => $query
+                        ->where('causer_type', User::class)
+                        ->where('causer_id', $user->getKey()),
+                )
                 ->latest()
                 ->limit(10)
                 ->get()

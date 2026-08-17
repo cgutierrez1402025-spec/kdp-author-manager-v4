@@ -35,7 +35,7 @@ class PlatformFactory extends Factory
                 'Draft2Digital',
                 'PublishDrive',
                 'StreetLib',
-                'IngramSpark'
+                'IngramSpark',
             ]),
             'description' => $this->faker->sentence(),
         ];

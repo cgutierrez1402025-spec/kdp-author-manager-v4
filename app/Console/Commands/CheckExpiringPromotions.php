@@ -23,7 +23,7 @@ class CheckExpiringPromotions extends Command
             ->get();
 
         if ($expiringSoon->isEmpty()) {
-            $this->info('No promotions expiring in the next ' . $days . ' days.');
+            $this->info('No promotions expiring in the next '.$days.' days.');
 
             return self::SUCCESS;
         }
@@ -36,7 +36,7 @@ class CheckExpiringPromotions extends Command
                     "KDP Select period for '{$period->publication->work->title_public}' expires on {$period->end_date->format('Y-m-d')}.\n\nRemaining free days: {$period->free_promo_days_remaining}",
                     function ($message) use ($admin, $period) {
                         $message->to($admin->email)
-                            ->subject('KDP Select Period Expiring Soon - ' . $period->publication->work->title_public);
+                            ->subject('KDP Select Period Expiring Soon - '.$period->publication->work->title_public);
                     }
                 );
             }

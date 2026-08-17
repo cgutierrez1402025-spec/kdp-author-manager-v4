@@ -7,14 +7,18 @@ use App\Filament\Admin\Resources\PromotionDailyResults\Pages\EditPromotionDailyR
 use App\Filament\Admin\Resources\PromotionDailyResults\Pages\ListPromotionDailyResults;
 use App\Filament\Admin\Resources\PromotionDailyResults\Schemas\PromotionDailyResultForm;
 use App\Filament\Admin\Resources\PromotionDailyResults\Tables\PromotionDailyResultsTable;
+use App\Filament\Concerns\ScopesAuthorOwnedRecords;
 use App\Models\PromotionDailyResult;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
-use Filament\Tables;
 
 class PromotionDailyResultResource extends Resource
 {
+    use ScopesAuthorOwnedRecords;
+
+    protected static string $authorOwnershipPath = 'bookPromotion.publication.work';
+
     protected static ?string $slug = 'promotion-daily-results';
 
     protected static ?string $model = PromotionDailyResult::class;

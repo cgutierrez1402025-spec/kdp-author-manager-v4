@@ -2,14 +2,14 @@
 
 namespace Database\Seeders;
 
-use App\Models\Role;
-use App\Models\Permission;
-use App\Models\User;
-use App\Models\Platform;
 use App\Models\Marketplace;
+use App\Models\Permission;
+use App\Models\Platform;
+use App\Models\Role;
+use App\Models\User;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {

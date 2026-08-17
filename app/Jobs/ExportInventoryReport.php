@@ -3,6 +3,8 @@
 namespace App\Jobs;
 
 use App\Exports\InventoryReport;
+use App\Models\User;
+use App\Notifications\ExportReadyNotification;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -23,13 +25,13 @@ class ExportInventoryReport implements ShouldQueue
 
     public function handle(): void
     {
-        $fileName = 'inventory-report-' . now()->format('Y-m-d-H-i-s') . '.xlsx';
+        $fileName = 'inventory-report-'.now()->format('Y-m-d-H-i-s').'.xlsx';
 
-        Excel::store(new InventoryReport(), "exports/$fileName", 'public');
+        Excel::store(new InventoryReport, "exports/$fileName", 'public');
 
         if ($this->userId) {
-            \App\Models\User::find($this->userId)?->notify(
-                new \App\Notifications\ExportReadyNotification($fileName)
+            User::find($this->userId)?->notify(
+                new ExportReadyNotification($fileName)
             );
         }
     }

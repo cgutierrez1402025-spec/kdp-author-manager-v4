@@ -3,10 +3,15 @@
 namespace Tests\Feature;
 
 use App\Models\BookPromotion;
-use App\Models\Publication;
+use App\Models\ManuscriptVersion;
+use App\Models\Marketplace;
+use App\Models\Platform;
 use App\Models\PromotionCost;
 use App\Models\PromotionDailyResult;
+use App\Models\Publication;
 use App\Models\User;
+use App\Models\Work;
+use App\Models\WorkLanguage;
 use App\Services\PromotionAnalyticsService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -18,21 +23,21 @@ class PromotionRoiTest extends TestCase
     public function test_roi_calculation_is_correct(): void
     {
         $user = User::factory()->create();
-        $work = \App\Models\Work::factory()->create(['user_id' => $user->id]);
-        $workLanguage = \App\Models\WorkLanguage::create([
+        $work = Work::factory()->create(['user_id' => $user->id]);
+        $workLanguage = WorkLanguage::create([
             'work_id' => $work->id,
             'language_code' => $work->original_language,
             'translation_status' => 'original',
         ]);
-        $manuscript = \App\Models\ManuscriptVersion::create([
+        $manuscript = ManuscriptVersion::create([
             'work_id' => $work->id,
             'work_language_id' => $workLanguage->id,
             'version_number' => '1',
             'status' => 'final',
             'created_by' => $user->id,
         ]);
-        $platform = \App\Models\Platform::factory()->create();
-        $marketplace = \App\Models\Marketplace::factory()->create([
+        $platform = Platform::factory()->create();
+        $marketplace = Marketplace::factory()->create([
             'platform_id' => $platform->id,
         ]);
         $publication = Publication::create([
@@ -73,7 +78,7 @@ class PromotionRoiTest extends TestCase
             'currency' => 'EUR',
         ]);
 
-        $service = new PromotionAnalyticsService();
+        $service = new PromotionAnalyticsService;
 
         $costs = $service->calculateTotalCost($promotion->id);
         $revenue = $service->calculateTotalRevenue($promotion->id);

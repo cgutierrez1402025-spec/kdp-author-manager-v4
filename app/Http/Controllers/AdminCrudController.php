@@ -56,7 +56,7 @@ class AdminCrudController extends Controller
                 'table' => $config['table'] ?? null,
             ];
 
-            if (!empty($config['table']) && in_array($config['table'], $tables->toArray(), true)) {
+            if (! empty($config['table']) && in_array($config['table'], $tables->toArray(), true)) {
                 $table = $config['table'];
                 $columns = $this->getColumns($table);
                 $primaryKey = $this->getPrimaryKey($table);
@@ -183,7 +183,7 @@ class AdminCrudController extends Controller
                 ->with('success', "Registro creado en {$table}.");
         } catch (\Exception $e) {
             return back()
-                ->with('error', "Error al crear registro: " . $e->getMessage())
+                ->with('error', 'Error al crear registro: '.$e->getMessage())
                 ->withInput();
         }
     }
@@ -195,7 +195,7 @@ class AdminCrudController extends Controller
         $primary = $this->decodeKey($key);
 
         $row = DB::table($table)->where($primary)->first();
-        abort_if(!$row, 404);
+        abort_if(! $row, 404);
 
         return view('admin.form', [
             'table' => $table,
@@ -221,7 +221,7 @@ class AdminCrudController extends Controller
                 ->with('success', "Registro actualizado en {$table}.");
         } catch (\Exception $e) {
             return back()
-                ->with('error', "Error al actualizar registro: " . $e->getMessage())
+                ->with('error', 'Error al actualizar registro: '.$e->getMessage())
                 ->withInput();
         }
     }
@@ -238,13 +238,13 @@ class AdminCrudController extends Controller
                 ->with('success', "Registro eliminado de {$table}.");
         } catch (\Exception $e) {
             return back()
-                ->with('error', "Error al eliminar registro: " . $e->getMessage());
+                ->with('error', 'Error al eliminar registro: '.$e->getMessage());
         }
     }
 
     protected function ensureTableExists(string $table): void
     {
-        abort_if(!Schema::hasTable($table), 404, "Tabla {$table} no encontrada.");
+        abort_if(! Schema::hasTable($table), 404, "Tabla {$table} no encontrada.");
     }
 
     protected function getTables(): array
@@ -282,7 +282,8 @@ class AdminCrudController extends Controller
         if (DB::getDriverName() === 'sqlite') {
             $columns = collect(DB::select("PRAGMA table_info('{$table}')"));
             $keys = $columns->filter(fn ($column) => $column->pk > 0)->pluck('name')->all();
-            return !empty($keys) ? $keys : ['id'];
+
+            return ! empty($keys) ? $keys : ['id'];
         }
 
         $keys = DB::select("SHOW Keys FROM `{$table}` WHERE Key_name = 'PRIMARY'");
@@ -307,6 +308,7 @@ class AdminCrudController extends Controller
                 if ($column->Null === 'YES') {
                     $data[$column->Field] = null;
                 }
+
                 continue;
             }
 
@@ -315,7 +317,7 @@ class AdminCrudController extends Controller
             } elseif ($this->isNumericColumn($column)) {
                 $data[$column->Field] = is_numeric($value) ? $value : (empty($value) ? null : $value);
             } elseif ($this->isDateColumn($column)) {
-                $data[$column->Field] = !empty($value) ? $value : null;
+                $data[$column->Field] = ! empty($value) ? $value : null;
             } else {
                 $data[$column->Field] = (string) $value;
             }
@@ -327,41 +329,47 @@ class AdminCrudController extends Controller
     protected function isBooleanColumn($column): bool
     {
         $type = Str::lower($column->Type);
+
         return Str::contains($type, ['tinyint(1)', 'boolean', 'bit']);
     }
 
     protected function isNumericColumn($column): bool
     {
         $type = Str::lower($column->Type);
+
         return Str::contains($type, ['int', 'bigint', 'smallint', 'tinyint', 'mediumint', 'decimal', 'float', 'double', 'real', 'numeric']);
     }
 
     protected function isDateColumn($column): bool
     {
         $type = Str::lower($column->Type);
+
         return Str::contains($type, ['date', 'time', 'datetime', 'timestamp']);
     }
 
     protected function isSearchableColumn($column): bool
     {
         $type = Str::lower($column->Type);
+
         return Str::contains($type, ['char', 'text', 'varchar']);
     }
 
     protected function getFilterableColumns(array $columns): array
     {
-        return array_values(array_filter($columns, fn ($column) => $this->isSearchableColumn($column) && !in_array($column->Field, ['created_at', 'updated_at', 'deleted_at'], true)));
+        return array_values(array_filter($columns, fn ($column) => $this->isSearchableColumn($column) && ! in_array($column->Field, ['created_at', 'updated_at', 'deleted_at'], true)));
     }
 
     protected function encodeKey(array $primaryKey): string
     {
         $encoded = base64_encode(json_encode($primaryKey));
+
         return rtrim(strtr($encoded, '+/', '-_'), '=');
     }
 
     protected function decodeKey(string $encoded): array
     {
         $decoded = base64_decode(strtr($encoded, '-_', '+/'));
+
         return json_decode($decoded, true) ?: [];
     }
 }

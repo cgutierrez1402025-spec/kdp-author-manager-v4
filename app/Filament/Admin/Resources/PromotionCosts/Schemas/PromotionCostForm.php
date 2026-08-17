@@ -14,8 +14,7 @@ class PromotionCostForm
                 Forms\Components\Section::make('Costo de Promoción')
                     ->schema([
                         Forms\Components\Select::make('book_promotion_id')
-                            ->relationship('bookPromotion', 'promotion_name', modifyQueryUsing: fn ($query) =>
-                                auth()->user()?->hasRole('admin') ? $query : $query->whereHas('publication.work', fn ($work) => $work->where('user_id', auth()->id()))
+                            ->relationship('bookPromotion', 'promotion_name', modifyQueryUsing: fn ($query) => auth()->user()?->hasRole('admin') ? $query : $query->whereHas('publication.work', fn ($work) => $work->where('user_id', auth()->id()))
                             )
                             ->label('Promoción')
                             ->required(),

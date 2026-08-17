@@ -1,8 +1,8 @@
 <?php
 
+use App\Models\Marketplace;
+use App\Models\Platform;
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
@@ -18,13 +18,13 @@ return new class extends Migration
         ];
 
         foreach ($platforms as $platform) {
-            \App\Models\Platform::updateOrCreate(
+            Platform::updateOrCreate(
                 ['name' => $platform['name']],
                 $platform
             );
         }
 
-        $kdp = \App\Models\Platform::where('name', 'Amazon KDP')->first();
+        $kdp = Platform::where('name', 'Amazon KDP')->first();
 
         $marketplaces = [
             ['platform_id' => $kdp->id, 'code' => 'amazon_com', 'name' => 'Amazon.com', 'currency' => 'USD'],
@@ -38,7 +38,7 @@ return new class extends Migration
         ];
 
         foreach ($marketplaces as $marketplace) {
-            \App\Models\Marketplace::updateOrCreate(
+            Marketplace::updateOrCreate(
                 ['code' => $marketplace['code']],
                 $marketplace
             );
@@ -47,12 +47,12 @@ return new class extends Migration
 
     public function down(): void
     {
-        \App\Models\Marketplace::whereIn('code', [
+        Marketplace::whereIn('code', [
             'amazon_com', 'amazon_es', 'amazon_co_uk', 'amazon_de',
             'amazon_fr', 'amazon_it', 'amazon_jp', 'amazon_br',
         ])->delete();
 
-        \App\Models\Platform::whereIn('name', [
+        Platform::whereIn('name', [
             'Amazon KDP', 'Smashwords', 'Google Play Books',
             'Apple Books', 'Kobo Writing Life', 'Draft2Digital',
         ])->delete();

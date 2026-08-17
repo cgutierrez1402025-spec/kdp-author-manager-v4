@@ -3,9 +3,9 @@
 namespace App\Observers;
 
 use App\Models\ActivityLog;
-use App\Models\Work;
 use App\Models\ManuscriptVersion;
 use App\Models\Publication;
+use App\Models\Work;
 
 class ActivityLogObserver
 {

@@ -11,7 +11,6 @@ use App\Models\Work;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
-use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
 
 class WorkResource extends Resource
@@ -42,7 +41,7 @@ class WorkResource extends Resource
     {
         $query = parent::getEloquentQuery();
 
-        return auth()->user()?->hasRole('admin')
+        return auth()->user()?->canViewAllAuthorData()
             ? $query
             : $query->where('user_id', auth()->id());
     }

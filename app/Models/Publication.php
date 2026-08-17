@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
-use Illuminate\Database\Eloquent\Relations\{BelongsTo, HasMany, HasOne};
-use Spatie\Activitylog\Traits\LogsActivity;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class Publication extends Model
 {
@@ -16,7 +17,7 @@ class Publication extends Model
     protected $fillable = [
         'work_id', 'work_language_id', 'manuscript_version_id', 'platform_id',
         'marketplace_id', 'format', 'external_identifier', 'public_url', 'status',
-        'price', 'currency', 'territories', 'isbn', 'asin', 'published_at', 'notes'
+        'price', 'currency', 'territories', 'isbn', 'asin', 'published_at', 'notes',
     ];
 
     protected $casts = [

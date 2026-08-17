@@ -11,7 +11,6 @@ use App\Models\Platform;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
-use Filament\Tables;
 
 class PlatformResource extends Resource
 {

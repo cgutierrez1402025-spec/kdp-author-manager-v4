@@ -2,6 +2,33 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Admin\Resources\AiTasks\AiTaskResource;
+use App\Filament\Admin\Resources\BookEvents\BookEventResource;
+use App\Filament\Admin\Resources\BookPromotions\BookPromotionResource;
+use App\Filament\Admin\Resources\Checklists\ChecklistResource;
+use App\Filament\Admin\Resources\EventBooks\EventBookResource;
+use App\Filament\Admin\Resources\IllustrationAnchors\IllustrationAnchorResource;
+use App\Filament\Admin\Resources\KdpMetadatas\KdpMetadataResource;
+use App\Filament\Admin\Resources\KdpSelectPeriods\KdpSelectPeriodResource;
+use App\Filament\Admin\Resources\ManuscriptVersions\ManuscriptVersionResource;
+use App\Filament\Admin\Resources\Marketplaces\MarketplaceResource;
+use App\Filament\Admin\Resources\Platforms\PlatformResource;
+use App\Filament\Admin\Resources\PromotionCosts\PromotionCostResource;
+use App\Filament\Admin\Resources\PromotionDailyResults\PromotionDailyResultResource;
+use App\Filament\Admin\Resources\Prompts\PromptResource;
+use App\Filament\Admin\Resources\Publications\PublicationResource;
+use App\Filament\Admin\Resources\Sources\SourceResource;
+use App\Filament\Admin\Resources\SourceUsages\SourceUsageResource;
+use App\Filament\Admin\Resources\Tasks\TaskResource;
+use App\Filament\Admin\Resources\Works\WorkResource;
+use App\Filament\Admin\Widgets\ActivePromotionsWidget;
+use App\Filament\Admin\Widgets\ExpiringKdpSelectWidget;
+use App\Filament\Admin\Widgets\MyTasksWidget;
+use App\Filament\Admin\Widgets\RecentActivityWidget;
+use App\Filament\Admin\Widgets\RevenueChartWidget;
+use App\Filament\Admin\Widgets\SummaryCardsWidget;
+use App\Filament\Admin\Widgets\TopWorksByRevenueWidget;
+use App\Filament\Admin\Widgets\UpcomingEventsWidget;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -31,39 +58,39 @@ class AdminPanelProvider extends PanelProvider
                 'primary' => Color::Amber,
             ])
             ->resources([
-                \App\Filament\Admin\Resources\AiTasks\AiTaskResource::class,
-                \App\Filament\Admin\Resources\BookEvents\BookEventResource::class,
-                \App\Filament\Admin\Resources\BookPromotions\BookPromotionResource::class,
-                \App\Filament\Admin\Resources\Checklists\ChecklistResource::class,
-                \App\Filament\Admin\Resources\EventBooks\EventBookResource::class,
-                \App\Filament\Admin\Resources\IllustrationAnchors\IllustrationAnchorResource::class,
-                \App\Filament\Admin\Resources\KdpMetadatas\KdpMetadataResource::class,
-                \App\Filament\Admin\Resources\KdpSelectPeriods\KdpSelectPeriodResource::class,
-                \App\Filament\Admin\Resources\ManuscriptVersions\ManuscriptVersionResource::class,
-                \App\Filament\Admin\Resources\Marketplaces\MarketplaceResource::class,
-                \App\Filament\Admin\Resources\Platforms\PlatformResource::class,
-                \App\Filament\Admin\Resources\PromotionCosts\PromotionCostResource::class,
-                \App\Filament\Admin\Resources\PromotionDailyResults\PromotionDailyResultResource::class,
-                \App\Filament\Admin\Resources\Prompts\PromptResource::class,
-                \App\Filament\Admin\Resources\Publications\PublicationResource::class,
-                \App\Filament\Admin\Resources\SourceUsages\SourceUsageResource::class,
-                \App\Filament\Admin\Resources\Sources\SourceResource::class,
-                \App\Filament\Admin\Resources\Tasks\TaskResource::class,
-                \App\Filament\Admin\Resources\Works\WorkResource::class,
+                AiTaskResource::class,
+                BookEventResource::class,
+                BookPromotionResource::class,
+                ChecklistResource::class,
+                EventBookResource::class,
+                IllustrationAnchorResource::class,
+                KdpMetadataResource::class,
+                KdpSelectPeriodResource::class,
+                ManuscriptVersionResource::class,
+                MarketplaceResource::class,
+                PlatformResource::class,
+                PromotionCostResource::class,
+                PromotionDailyResultResource::class,
+                PromptResource::class,
+                PublicationResource::class,
+                SourceUsageResource::class,
+                SourceResource::class,
+                TaskResource::class,
+                WorkResource::class,
             ])
             ->discoverPages(in: app_path('Filament/Admin/Pages'), for: 'App\\Filament\\Admin\\Pages')
             ->pages([
                 Pages\Dashboard::class,
             ])
             ->widgets([
-                \App\Filament\Admin\Widgets\ActivePromotionsWidget::class,
-                \App\Filament\Admin\Widgets\MyTasksWidget::class,
-                \App\Filament\Admin\Widgets\UpcomingEventsWidget::class,
-                \App\Filament\Admin\Widgets\SummaryCardsWidget::class,
-                \App\Filament\Admin\Widgets\RevenueChartWidget::class,
-                \App\Filament\Admin\Widgets\TopWorksByRevenueWidget::class,
-                \App\Filament\Admin\Widgets\ExpiringKdpSelectWidget::class,
-                \App\Filament\Admin\Widgets\RecentActivityWidget::class,
+                ActivePromotionsWidget::class,
+                MyTasksWidget::class,
+                UpcomingEventsWidget::class,
+                SummaryCardsWidget::class,
+                RevenueChartWidget::class,
+                TopWorksByRevenueWidget::class,
+                ExpiringKdpSelectWidget::class,
+                RecentActivityWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,

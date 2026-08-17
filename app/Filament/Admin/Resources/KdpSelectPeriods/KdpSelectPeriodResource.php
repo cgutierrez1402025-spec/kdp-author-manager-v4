@@ -7,14 +7,18 @@ use App\Filament\Admin\Resources\KdpSelectPeriods\Pages\EditKdpSelectPeriod;
 use App\Filament\Admin\Resources\KdpSelectPeriods\Pages\ListKdpSelectPeriods;
 use App\Filament\Admin\Resources\KdpSelectPeriods\Schemas\KdpSelectPeriodForm;
 use App\Filament\Admin\Resources\KdpSelectPeriods\Tables\KdpSelectPeriodsTable;
+use App\Filament\Concerns\ScopesAuthorOwnedRecords;
 use App\Models\KdpSelectPeriod;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
-use Filament\Tables;
 
 class KdpSelectPeriodResource extends Resource
 {
+    use ScopesAuthorOwnedRecords;
+
+    protected static string $authorOwnershipPath = 'publication.work';
+
     protected static ?string $slug = 'kdp-select-periods';
 
     protected static ?string $model = KdpSelectPeriod::class;

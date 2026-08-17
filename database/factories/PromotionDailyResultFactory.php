@@ -2,8 +2,8 @@
 
 namespace Database\Factories;
 
-use App\Models\PromotionDailyResult;
 use App\Models\BookPromotion;
+use App\Models\PromotionDailyResult;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**

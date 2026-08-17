@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\Task;
-use App\Models\User;
+use App\Notifications\OverdueTaskNotification;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Notification;
 
@@ -29,7 +29,7 @@ class CheckOverdueTasks extends Command
         foreach ($overdueTasks as $task) {
             if ($task->assignedTo) {
                 Notification::route('mail', $task->assignedTo->email)
-                    ->notify(new \App\Notifications\OverdueTaskNotification($task));
+                    ->notify(new OverdueTaskNotification($task));
             }
         }
 

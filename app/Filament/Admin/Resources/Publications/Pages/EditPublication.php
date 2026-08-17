@@ -3,11 +3,11 @@
 namespace App\Filament\Admin\Resources\Publications\Pages;
 
 use App\Filament\Admin\Resources\Publications\PublicationResource;
+use App\Services\EditorialIntegrityService;
 use App\Services\KdpApiService;
 use Filament\Actions\Action;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
-use App\Services\EditorialIntegrityService;
 
 class EditPublication extends EditRecord
 {

@@ -3,9 +3,9 @@
 namespace Database\Factories;
 
 use App\Models\BookPromotion;
-use App\Models\Publication;
-use App\Models\Marketplace;
 use App\Models\KdpSelectPeriod;
+use App\Models\Marketplace;
+use App\Models\Publication;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**

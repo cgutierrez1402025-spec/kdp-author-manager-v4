@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Facades\DB;
 
 class BookPromotion extends Model
 {
@@ -118,7 +117,7 @@ class BookPromotion extends Model
                     ->orWhereBetween('end_date', [$this->start_date, $this->end_date])
                     ->orWhere(function ($q) {
                         $q->where('start_date', '<', $this->start_date)
-                          ->where('end_date', '>', $this->end_date);
+                            ->where('end_date', '>', $this->end_date);
                     });
             })
             ->exists();

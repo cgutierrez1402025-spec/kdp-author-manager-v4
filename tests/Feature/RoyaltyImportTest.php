@@ -2,15 +2,17 @@
 
 namespace Tests\Feature;
 
-use App\Models\Publication;
-use App\Models\RoyaltyEntry;
-use App\Models\RoyaltyPayment;
+use App\Models\ManuscriptVersion;
 use App\Models\Marketplace;
 use App\Models\Platform;
+use App\Models\Publication;
+use App\Models\RoyaltyEntry;
 use App\Models\User;
 use App\Models\Work;
+use App\Models\WorkLanguage;
 use App\Services\RoyaltyImportService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Validation\ValidationException;
 use Tests\TestCase;
 
 class RoyaltyImportTest extends TestCase
@@ -21,12 +23,12 @@ class RoyaltyImportTest extends TestCase
     {
         $user = User::factory()->create();
         $work = Work::factory()->create(['user_id' => $user->id]);
-        $workLanguage = \App\Models\WorkLanguage::create([
+        $workLanguage = WorkLanguage::create([
             'work_id' => $work->id,
             'language_code' => $work->original_language,
             'translation_status' => 'original',
         ]);
-        $manuscript = \App\Models\ManuscriptVersion::create([
+        $manuscript = ManuscriptVersion::create([
             'work_id' => $work->id,
             'work_language_id' => $workLanguage->id,
             'version_number' => '1',
@@ -82,7 +84,7 @@ class RoyaltyImportTest extends TestCase
 
     public function test_import_is_atomic_when_a_row_is_invalid(): void
     {
-        $this->expectException(\Illuminate\Validation\ValidationException::class);
+        $this->expectException(ValidationException::class);
 
         try {
             app(RoyaltyImportService::class)->import([

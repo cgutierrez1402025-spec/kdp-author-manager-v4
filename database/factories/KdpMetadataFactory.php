@@ -5,7 +5,6 @@ namespace Database\Factories;
 use App\Models\KdpMetadata;
 use App\Models\Publication;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
 
 /**
  * @extends Factory<KdpMetadata>
@@ -49,14 +48,14 @@ class KdpMetadataFactory extends Factory
                 '6-8 years',
                 '9-12 years',
                 'Teens',
-                'Adults'
+                'Adults',
             ]),
             'rights' => $this->faker->optional()->sentence(),
             'ai_declaration' => $this->faker->optional()->randomElement([
                 'No AI was used in the creation of this work.',
                 'AI-assisted writing was used for brainstorming and outline creation.',
                 'AI-generated text was used and subsequently edited by a human author.',
-                'This work was created entirely by AI.'
+                'This work was created entirely by AI.',
             ]),
         ];
     }

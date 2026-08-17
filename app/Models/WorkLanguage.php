@@ -18,7 +18,7 @@ class WorkLanguage extends Model
     protected $fillable = [
         'work_id', 'language_code', 'regional_variant', 'translated_title',
         'translated_subtitle', 'translator_name', 'translation_status',
-        'ai_translation_used', 'human_review_level', 'notes'
+        'ai_translation_used', 'human_review_level', 'notes',
     ];
 
     protected $casts = [

@@ -2,8 +2,8 @@
 
 namespace Database\Factories;
 
-use App\Models\RoyaltyEntry;
 use App\Models\Publication;
+use App\Models\RoyaltyEntry;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -38,7 +38,7 @@ class RoyaltyEntryFactory extends Factory
             'royalty_kenp' => $this->faker->randomFloat(2, 0, 1000),
             'total_royalty' => $this->faker->randomFloat(2, 0, 8000),
             'currency' => $this->faker->randomElement(['USD', 'EUR', 'GBP', 'JPY', 'CAD', 'AUD']),
-            'source_file' => $this->faker->optional()->fileName('royalty_report_.csv'),
+            'source_file' => $this->faker->optional()->bothify('royalty_report_##.csv'),
             'notes' => $this->faker->sentence(),
         ];
     }

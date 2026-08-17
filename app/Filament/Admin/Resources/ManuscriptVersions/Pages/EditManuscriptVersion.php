@@ -3,8 +3,8 @@
 namespace App\Filament\Admin\Resources\ManuscriptVersions\Pages;
 
 use App\Filament\Admin\Resources\ManuscriptVersions\ManuscriptVersionResource;
-use Filament\Resources\Pages\EditRecord;
 use App\Services\EditorialIntegrityService;
+use Filament\Resources\Pages\EditRecord;
 
 class EditManuscriptVersion extends EditRecord
 {

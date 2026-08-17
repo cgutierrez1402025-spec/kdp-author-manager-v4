@@ -14,8 +14,18 @@ class ExpiringKdpSelectWidget extends Widget
 
     public function getExpiringPeriods(): array
     {
-        return Cache::remember('dashboard_expiring_kdp', 3600, function () {
+        $user = auth()->user();
+        $cacheKey = $user->dashboardCacheNamespace().':expiring-kdp';
+
+        return Cache::remember($cacheKey, 3600, function () use ($user) {
             return KdpSelectPeriod::where('status', 'active')
+                ->when(
+                    ! $user->canViewAllAuthorData(),
+                    fn ($query) => $query->whereHas(
+                        'publication.work',
+                        fn ($workQuery) => $workQuery->where('user_id', $user->getKey()),
+                    ),
+                )
                 ->whereDate('end_date', '<=', now()->addDays(30))
                 ->whereDate('end_date', '>=', now())
                 ->with('publication.work')

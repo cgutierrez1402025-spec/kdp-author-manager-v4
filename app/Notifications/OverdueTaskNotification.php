@@ -11,9 +11,7 @@ class OverdueTaskNotification extends Notification
 {
     use Queueable;
 
-    public function __construct(public Task $task)
-    {
-    }
+    public function __construct(public Task $task) {}
 
     public function via($notifiable): array
     {
@@ -23,9 +21,9 @@ class OverdueTaskNotification extends Notification
     public function toMail($notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject('Tarea Vencida - ' . $this->task->title)
-            ->line('La tarea "' . $this->task->title . '" ha vencido el ' . $this->task->due_date->format('d/m/Y'))
-            ->action('Ver Tarea', url('/admin/tasks/' . $this->task->id . '/edit'))
+            ->subject('Tarea Vencida - '.$this->task->title)
+            ->line('La tarea "'.$this->task->title.'" ha vencido el '.$this->task->due_date->format('d/m/Y'))
+            ->action('Ver Tarea', url('/admin/tasks/'.$this->task->id.'/edit'))
             ->line('Por favor, actualiza el estado de la tarea.');
     }
 }

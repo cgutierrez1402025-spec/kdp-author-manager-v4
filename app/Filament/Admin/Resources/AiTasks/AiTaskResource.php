@@ -2,19 +2,24 @@
 
 namespace App\Filament\Admin\Resources\AiTasks;
 
+use App\Filament\Concerns\ScopesAuthorOwnedRecords;
 use App\Models\AiTask;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Tables;
 use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Filament\Tables;
 
 class AiTaskResource extends Resource
 {
+    use ScopesAuthorOwnedRecords;
+
+    protected static string $authorOwnershipPath = 'work';
+
     protected static ?string $slug = 'ai-tasks';
 
     protected static ?string $model = AiTask::class;

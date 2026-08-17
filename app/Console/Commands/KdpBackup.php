@@ -2,11 +2,9 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\DB;
-use Symfony\Component\Process\Process;
 use Carbon\Carbon;
+use Illuminate\Console\Command;
+use Symfony\Component\Process\Process;
 
 class KdpBackup extends Command
 {
@@ -19,11 +17,11 @@ class KdpBackup extends Command
         $timestamp = Carbon::now()->format('Y-m-d_H-i-s');
         $backupDir = $this->option('output') ?? storage_path('backups');
 
-        if (!is_dir($backupDir)) {
+        if (! is_dir($backupDir)) {
             mkdir($backupDir, 0755, true);
         }
 
-        $dbFile = $backupDir . "/backup_{$timestamp}.sql";
+        $dbFile = $backupDir."/backup_{$timestamp}.sql";
         $storageDir = storage_path('app/public');
         $archiveFile = "{$backupDir}/backup_{$timestamp}.tar.gz";
 
@@ -39,30 +37,32 @@ class KdpBackup extends Command
             $this->output->write($buffer);
         });
 
-        if (!$process->isSuccessful()) {
-            $this->error('Database dump failed: ' . $process->getErrorOutput());
+        if (! $process->isSuccessful()) {
+            $this->error('Database dump failed: '.$process->getErrorOutput());
+
             return self::FAILURE;
         }
 
-        $this->info('Database dumped successfully to: ' . $dbFile);
+        $this->info('Database dumped successfully to: '.$dbFile);
 
         $this->info('Archiving files...');
         $archiveProcess = new Process([
             'tar', '-czf', $archiveFile,
             '-C', dirname($dbFile), basename($dbFile),
-            '-C', dirname($storageDir), basename($storageDir)
+            '-C', dirname($storageDir), basename($storageDir),
         ]);
         $archiveProcess->run();
 
-        if (!$archiveProcess->isSuccessful()) {
+        if (! $archiveProcess->isSuccessful()) {
             $this->error('Archive creation failed');
+
             return self::FAILURE;
         }
 
         unlink($dbFile);
 
-        $this->info('Backup completed: ' . $archiveFile);
-        $this->info('Size: ' . $this->formatBytes(filesize($archiveFile)));
+        $this->info('Backup completed: '.$archiveFile);
+        $this->info('Size: '.$this->formatBytes(filesize($archiveFile)));
 
         return self::SUCCESS;
     }
@@ -71,7 +71,7 @@ class KdpBackup extends Command
     {
         $config = config("database.connections.{$connection}");
 
-        return match($connection) {
+        return match ($connection) {
             'mysql' => sprintf(
                 'mysqldump -h %s -u %s -p%s %s > %s',
                 $config['host'],
@@ -104,6 +104,6 @@ class KdpBackup extends Command
         $pow = min($pow, count($units) - 1);
         $bytes /= pow(1024, $pow);
 
-        return round($bytes, 2) . ' ' . $units[$pow];
+        return round($bytes, 2).' '.$units[$pow];
     }
 }

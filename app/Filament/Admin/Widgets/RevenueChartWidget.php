@@ -14,10 +14,20 @@ class RevenueChartWidget extends Widget
 
     public function getChartData(): array
     {
-        return Cache::remember('dashboard_revenue_chart', 3600, function () {
+        $user = auth()->user();
+        $cacheKey = $user->dashboardCacheNamespace().':revenue-chart';
+
+        return Cache::remember($cacheKey, 3600, function () use ($user) {
             $months = collect(range(5, 0))->map(fn ($i) => now()->subMonths($i)->startOfMonth());
 
             $entries = RoyaltyEntry::selectRaw('year, month, SUM(total_royalty) as total')
+                ->when(
+                    ! $user->canViewAllAuthorData(),
+                    fn ($query) => $query->whereHas(
+                        'publication.work',
+                        fn ($workQuery) => $workQuery->where('user_id', $user->getKey()),
+                    ),
+                )
                 ->where(function ($query) {
                     $query->where('year', '>', now()->subYear()->year)
                         ->orWhere(function ($q) {

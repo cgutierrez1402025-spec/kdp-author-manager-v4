@@ -3,6 +3,8 @@
 namespace App\Jobs;
 
 use App\Exports\WorksProgressReport;
+use App\Models\User;
+use App\Notifications\ExportReadyNotification;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -23,13 +25,13 @@ class ExportWorksProgressReport implements ShouldQueue
 
     public function handle(): void
     {
-        $fileName = 'works-progress-report-' . now()->format('Y-m-d-H-i-s') . '.xlsx';
+        $fileName = 'works-progress-report-'.now()->format('Y-m-d-H-i-s').'.xlsx';
 
-        Excel::store(new WorksProgressReport(), "exports/$fileName", 'public');
+        Excel::store(new WorksProgressReport, "exports/$fileName", 'public');
 
         if ($this->userId) {
-            \App\Models\User::find($this->userId)?->notify(
-                new \App\Notifications\ExportReadyNotification($fileName)
+            User::find($this->userId)?->notify(
+                new ExportReadyNotification($fileName)
             );
         }
     }

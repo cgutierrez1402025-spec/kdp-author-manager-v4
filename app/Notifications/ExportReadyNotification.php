@@ -10,9 +10,7 @@ class ExportReadyNotification extends Notification
 {
     use Queueable;
 
-    public function __construct(public string $fileName)
-    {
-    }
+    public function __construct(public string $fileName) {}
 
     public function via($notifiable): array
     {

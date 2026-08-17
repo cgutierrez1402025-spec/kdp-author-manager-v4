@@ -7,14 +7,18 @@ use App\Filament\Admin\Resources\Prompts\Pages\EditPrompt;
 use App\Filament\Admin\Resources\Prompts\Pages\ListPrompts;
 use App\Filament\Admin\Resources\Prompts\Schemas\PromptForm;
 use App\Filament\Admin\Resources\Prompts\Tables\PromptsTable;
+use App\Filament\Concerns\ScopesAuthorOwnedRecords;
 use App\Models\Prompt;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
-use Filament\Tables;
 
 class PromptResource extends Resource
 {
+    use ScopesAuthorOwnedRecords;
+
+    protected static string $authorOwnershipPath = 'work';
+
     protected static ?string $slug = 'prompts';
 
     protected static ?string $model = Prompt::class;

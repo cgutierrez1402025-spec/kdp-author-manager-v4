@@ -4,10 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
-use Illuminate\Database\Eloquent\Relations\{BelongsTo, HasMany};
-use Spatie\Activitylog\Traits\LogsActivity;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class Work extends Model
 {
@@ -19,7 +19,7 @@ class Work extends Model
         'subtitle', 'author_name', 'pen_name', 'genre', 'subgenre', 'work_type',
         'original_language', 'status', 'target_audience', 'age_recommendation',
         'description_internal', 'description_marketing', 'start_date',
-        'planned_publish_date', 'notes'
+        'planned_publish_date', 'notes',
     ];
 
     protected $casts = [

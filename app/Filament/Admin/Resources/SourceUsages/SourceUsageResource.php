@@ -7,14 +7,18 @@ use App\Filament\Admin\Resources\SourceUsages\Pages\EditSourceUsage;
 use App\Filament\Admin\Resources\SourceUsages\Pages\ListSourceUsages;
 use App\Filament\Admin\Resources\SourceUsages\Schemas\SourceUsageForm;
 use App\Filament\Admin\Resources\SourceUsages\Tables\SourceUsagesTable;
+use App\Filament\Concerns\ScopesAuthorOwnedRecords;
 use App\Models\SourceUsage;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
-use Filament\Tables;
 
 class SourceUsageResource extends Resource
 {
+    use ScopesAuthorOwnedRecords;
+
+    protected static string $authorOwnershipPath = 'work';
+
     protected static ?string $slug = 'source-usages';
 
     protected static ?string $model = SourceUsage::class;

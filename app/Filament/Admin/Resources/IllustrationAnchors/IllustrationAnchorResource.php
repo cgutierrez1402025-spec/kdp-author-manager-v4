@@ -7,14 +7,18 @@ use App\Filament\Admin\Resources\IllustrationAnchors\Pages\EditIllustrationAncho
 use App\Filament\Admin\Resources\IllustrationAnchors\Pages\ListIllustrationAnchors;
 use App\Filament\Admin\Resources\IllustrationAnchors\Schemas\IllustrationAnchorForm;
 use App\Filament\Admin\Resources\IllustrationAnchors\Tables\IllustrationAnchorsTable;
+use App\Filament\Concerns\ScopesAuthorOwnedRecords;
 use App\Models\IllustrationAnchor;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
-use Filament\Tables;
 
 class IllustrationAnchorResource extends Resource
 {
+    use ScopesAuthorOwnedRecords;
+
+    protected static string $authorOwnershipPath = 'manuscriptVersion.work';
+
     protected static ?string $slug = 'illustration-anchors';
 
     protected static ?string $model = IllustrationAnchor::class;
