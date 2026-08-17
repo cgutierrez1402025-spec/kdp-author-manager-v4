@@ -7,10 +7,33 @@
     --editorial-paper: 248 250 252;
 }
 
+html {
+    min-height: 100%;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    scroll-behavior: smooth;
+    scroll-padding-bottom: 3rem;
+}
+
 .fi-body {
+    min-height: 100dvh;
+    overflow-x: hidden;
+    overflow-y: auto;
     background:
         radial-gradient(circle at top right, rgb(245 158 11 / 0.08), transparent 28rem),
         rgb(var(--editorial-paper));
+}
+
+.fi-layout {
+    min-height: 100dvh;
+    height: auto;
+    overflow-y: visible;
+}
+
+.fi-main-ctn {
+    min-height: 100dvh;
+    height: auto;
+    overflow: visible;
 }
 
 .dark .fi-body {
@@ -41,7 +64,10 @@
 }
 
 .fi-main {
-    @apply pb-12;
+    min-height: calc(100dvh - 4rem);
+    height: auto;
+    overflow: visible;
+    @apply pb-20;
 }
 
 .fi-page-header-main-ctn {
@@ -87,6 +113,14 @@
 }
 
 @media (max-width: 640px) {
+    html {
+        scroll-padding-top: 4rem;
+    }
+
+    .fi-main {
+        @apply px-3 pb-24;
+    }
+
     .fi-header-actions {
         @apply w-full;
     }
