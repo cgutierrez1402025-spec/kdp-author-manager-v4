@@ -11,16 +11,19 @@ use App\Models\BookPromotion;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
+use Filament\Tables;
 
 class BookPromotionResource extends Resource
 {
+    protected static ?string $slug = 'book-promotions';
+
     protected static ?string $model = BookPromotion::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
 
     protected static ?string $navigationLabel = 'Promociones';
 
-    protected static ?string $navigationGroup = 'Publicaciones';
+    protected static ?string $navigationGroup = 'Marketing';
 
     protected static ?string $recordTitleAttribute = 'promotion_name';
 

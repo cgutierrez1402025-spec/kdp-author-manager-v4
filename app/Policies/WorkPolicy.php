@@ -9,29 +9,26 @@ class WorkPolicy
 {
     public function viewAny(User $user): bool
     {
-        return $user->roles()->whereIn('name', ['admin', 'author', 'editor', 'reviewer'])->exists();
+        return $user->hasAnyRole(['admin', 'author', 'editor']);
     }
 
     public function view(User $user, Work $work): bool
     {
-        return $user->id === $work->user_id ||
-               $user->roles()->where('name', 'admin')->exists();
+        return $user->id === $work->user_id || $user->hasAnyRole(['admin', 'editor']);
     }
 
     public function create(User $user): bool
     {
-        return $user->roles()->whereIn('name', ['admin', 'author'])->exists();
+        return $user->hasAnyRole(['admin', 'author']);
     }
 
     public function update(User $user, Work $work): bool
     {
-        return $user->id === $work->user_id ||
-               $user->roles()->where('name', 'admin')->exists();
+        return $user->id === $work->user_id || $user->hasAnyRole(['admin', 'editor']);
     }
 
     public function delete(User $user, Work $work): bool
     {
-        return $user->id === $work->user_id ||
-               $user->roles()->where('name', 'admin')->exists();
+        return $user->id === $work->user_id || $user->hasRole('admin');
     }
 }

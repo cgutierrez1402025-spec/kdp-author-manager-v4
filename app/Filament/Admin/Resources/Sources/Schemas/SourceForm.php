@@ -14,7 +14,11 @@ class SourceForm
                 Forms\Components\Section::make('Información de Fuente')
                     ->schema([
                         Forms\Components\Select::make('work_id')
-                            ->relationship('work', 'title_public')
+                            ->relationship('work', 'title_public', modifyQueryUsing: fn ($query) =>
+                                auth()->user()?->hasRole('admin') ? $query : $query->where('user_id', auth()->id())
+                            )
+                            ->searchable()
+                            ->preload()
                             ->label('Obra')
                             ->required(),
 
@@ -49,8 +53,7 @@ class SourceForm
                                 'en' => 'Inglés',
                                 'fr' => 'Francés',
                                 'de' => 'Alemán',
-                            ])
-                            ->maxLength(2),
+                            ]),
                     ])
                     ->columns(2),
 

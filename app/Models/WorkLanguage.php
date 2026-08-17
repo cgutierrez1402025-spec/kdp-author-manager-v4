@@ -11,17 +11,14 @@ class WorkLanguage extends Model
 {
     use HasFactory;
 
+    protected $attributes = [
+        'ai_translation_used' => false,
+    ];
+
     protected $fillable = [
-        'work_id',
-        'language_code',
-        'regional_variant',
-        'translated_title',
-        'translated_subtitle',
-        'translator_name',
-        'translation_status',
-        'ai_translation_used',
-        'human_review_level',
-        'notes',
+        'work_id', 'language_code', 'regional_variant', 'translated_title',
+        'translated_subtitle', 'translator_name', 'translation_status',
+        'ai_translation_used', 'human_review_level', 'notes'
     ];
 
     protected $casts = [
@@ -33,9 +30,9 @@ class WorkLanguage extends Model
         return $this->belongsTo(Work::class);
     }
 
-    public function editions(): HasMany
+    public function manuscriptVersions(): HasMany
     {
-        return $this->hasMany(Edition::class);
+        return $this->hasMany(ManuscriptVersion::class);
     }
 
     public function publications(): HasMany

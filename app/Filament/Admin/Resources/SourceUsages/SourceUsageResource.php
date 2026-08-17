@@ -11,14 +11,19 @@ use App\Models\SourceUsage;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
+use Filament\Tables;
 
 class SourceUsageResource extends Resource
 {
+    protected static ?string $slug = 'source-usages';
+
     protected static ?string $model = SourceUsage::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
 
     protected static ?string $navigationLabel = 'Usos de Fuente';
+
+    protected static ?string $navigationGroup = 'Documentación';
 
     protected static ?string $recordTitleAttribute = 'id';
 

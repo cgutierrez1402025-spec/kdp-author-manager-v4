@@ -86,9 +86,11 @@ class BookPromotion extends Model
         $costs = $this->getTotalCostsAttribute();
         $royalties = $this->getTotalRevenueAttribute();
 
-        $profit = $royalties - $costs;
+        if ($costs === 0.0) {
+            return 0.0;
+        }
 
-        return $profit;
+        return round((($royalties - $costs) / $costs) * 100, 2);
     }
 
     public function getRemainingFreeDays(): int
@@ -104,8 +106,8 @@ class BookPromotion extends Model
     {
         $errors = [];
 
-        if ($this->start_date >= $this->end_date) {
-            $errors[] = 'La fecha de inicio debe ser anterior a la fecha de fin';
+        if ($this->start_date > $this->end_date) {
+            $errors[] = 'La fecha de inicio no puede ser posterior a la fecha de fin';
         }
 
         $overlapping = static::where('publication_id', $this->publication_id)

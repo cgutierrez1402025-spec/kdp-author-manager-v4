@@ -2,9 +2,9 @@
 
 namespace App\Filament\Admin\Resources\ManuscriptVersions\RelationManagers;
 
-use Filament\Actions\CreateAction;
-use Filament\Actions\DeleteAction;
-use Filament\Actions\EditAction;
+use Filament\Tables\Actions\CreateAction;
+use Filament\Tables\Actions\DeleteAction;
+use Filament\Tables\Actions\EditAction;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -38,11 +38,11 @@ class ChaptersRelationManager extends RelationManager
             ->headerActions([
                 CreateAction::make(),
             ])
-            ->recordActions([
+            ->actions([
                 EditAction::make(),
                 DeleteAction::make(),
             ])
-            ->toolbarActions([
+            ->bulkActions([
                 DeleteAction::make()->bulk(),
             ]);
     }

@@ -11,14 +11,17 @@ use App\Models\BookEvent;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
+use Filament\Tables;
 
 class BookEventResource extends Resource
 {
+    protected static ?string $slug = 'book-events';
+
     protected static ?string $model = BookEvent::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
 
-    protected static ?string $navigationLabel = 'Eventos';
+    protected static ?string $navigationLabel = 'Calendario de eventos';
 
     protected static ?string $navigationGroup = 'Eventos';
 

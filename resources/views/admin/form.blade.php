@@ -5,14 +5,14 @@
     <div class="mb-8">
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-                <h1 class="text-3xl font-bold text-slate-900 dark:text-white">
+                <h1 class="text-3xl font-bold text-slate-900">
                     {{ $row ? 'Editar' : 'Crear' }} {{ str_replace('_', ' ', $table) }}
                 </h1>
-                <p class="text-slate-600 dark:text-slate-400 mt-1">
+                <p class="text-slate-600 mt-1">
                     Completa el formulario {{ $row ? 'para actualizar' : 'para crear' }} un nuevo registro
                 </p>
             </div>
-            <a href="{{ route('admin.table.index', ['table' => $table]) }}" class="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600 transition-all duration-200 font-medium transform hover:scale-105">
+            <a href="{{ route('admin.table.index', ['table' => $table]) }}" class="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 transition-all duration-200 font-medium transform hover:scale-105">
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
                 </svg>
@@ -66,10 +66,10 @@
 
         @foreach($groupedColumns as $groupName => $groupColumns)
             @if(!empty($groupColumns))
-                <div class="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300">
+                <div class="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300">
                     <!-- Group Header -->
-                    <div class="px-6 py-4 border-b border-slate-200 dark:border-slate-700 bg-gradient-to-r from-slate-50 to-slate-100 dark:from-slate-900/80 dark:to-slate-800/80">
-                        <h2 class="text-lg font-semibold text-slate-900 dark:text-white flex items-center gap-2">
+                    <div class="px-6 py-4 border-b border-slate-200 bg-gradient-to-r from-slate-50 to-slate-100">
+                        <h2 class="text-lg font-semibold text-slate-900 flex items-center gap-2">
                             <div class="w-1 h-6 bg-blue-500 rounded-full"></div>
                             {{ $groupName }}
                         </h2>
@@ -92,7 +92,7 @@
 
                                 <div class="form-group group">
                                     <!-- Label -->
-                                    <label for="{{ $field }}" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2.5 flex items-center gap-1">
+                                    <label for="{{ $field }}" class="block text-sm font-semibold text-slate-700 mb-2.5 flex items-center gap-1">
                                         <span>{{ $fieldLabel }}</span>
                                         @if($isRequired)
                                             <span class="text-red-500 font-bold" title="Campo requerido">*</span>
@@ -108,7 +108,7 @@
                                         <!-- Timestamp Display (readonly) -->
                                         <div class="relative group/readonly">
                                             <input type="text" 
-                                                class="w-full px-4 py-2.5 rounded-lg bg-slate-100 dark:bg-slate-900/50 border border-slate-300 dark:border-slate-600 text-slate-600 dark:text-slate-400 cursor-not-allowed font-medium" 
+                                                class="w-full px-4 py-2.5 rounded-lg bg-slate-100 border border-slate-300 text-slate-600 cursor-not-allowed font-medium" 
                                                 value="{{ $value ? \Carbon\Carbon::parse($value)->format('d/m/Y H:i') : 'N/A' }}" 
                                                 disabled>
                                             <div class="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none">
@@ -125,11 +125,11 @@
                                                 name="{{ $field }}" 
                                                 id="{{ $field }}" 
                                                 rows="6"
-                                                class="w-full px-4 py-3 rounded-lg border-2 {{ $hasError ? 'border-red-500 focus:border-red-600' : 'border-slate-300 dark:border-slate-600 focus:border-blue-500' }} bg-white dark:bg-slate-900 text-slate-900 dark:text-white font-mono text-sm placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none transition-all duration-200 {{ $isReadonly ? 'bg-slate-100 dark:bg-slate-900/70 text-slate-600 dark:text-slate-400 cursor-not-allowed opacity-75' : 'hover:border-slate-400 dark:hover:border-slate-500' }}"
+                                                class="w-full px-4 py-3 rounded-lg border-2 {{ $hasError ? 'border-red-500 focus:border-red-600' : 'border-slate-300 focus:border-blue-500' }} bg-white text-slate-900 font-mono text-sm placeholder-slate-400 focus:outline-none transition-all duration-200 {{ $isReadonly ? 'bg-slate-100 text-slate-600 cursor-not-allowed opacity-75' : 'hover:border-slate-400' }}"
                                                 {{ $isReadonly ? 'readonly' : '' }}
                                                 placeholder="Ingresa el contenido aquí...">{{ $value }}</textarea>
                                             @if(\Illuminate\Support\Str::contains($type, 'json'))
-                                                <div class="absolute top-2 right-2 px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 text-xs font-semibold rounded opacity-75">
+                                                <div class="absolute top-2 right-2 px-2 py-1 bg-blue-100 text-blue-700 text-xs font-semibold rounded opacity-75">
                                                     JSON
                                                 </div>
                                             @endif
@@ -141,7 +141,7 @@
                                             name="{{ $field }}" 
                                             id="{{ $field }}" 
                                             rows="4"
-                                            class="w-full px-4 py-3 rounded-lg border-2 {{ $hasError ? 'border-red-500 focus:border-red-600' : 'border-slate-300 dark:border-slate-600 focus:border-blue-500' }} bg-white dark:bg-slate-900 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none transition-all duration-200 resize-vertical {{ $isReadonly ? 'bg-slate-100 dark:bg-slate-900/70 text-slate-600 dark:text-slate-400 cursor-not-allowed opacity-75' : 'hover:border-slate-400 dark:hover:border-slate-500' }}"
+                                            class="w-full px-4 py-3 rounded-lg border-2 {{ $hasError ? 'border-red-500 focus:border-red-600' : 'border-slate-300 focus:border-blue-500' }} bg-white text-slate-900 placeholder-slate-400 focus:outline-none transition-all duration-200 resize-vertical {{ $isReadonly ? 'bg-slate-100 text-slate-600 cursor-not-allowed opacity-75' : 'hover:border-slate-400' }}"
                                             {{ $isReadonly ? 'readonly' : '' }}
                                             placeholder="Ingresa el texto aquí...">{{ $value }}</textarea>
 
@@ -152,7 +152,7 @@
                                             name="{{ $field }}" 
                                             id="{{ $field }}" 
                                             value="{{ $value ? \Carbon\Carbon::parse($value)->format('Y-m-d') : '' }}"
-                                            class="w-full px-4 py-2.5 rounded-lg border-2 {{ $hasError ? 'border-red-500 focus:border-red-600' : 'border-slate-300 dark:border-slate-600 focus:border-blue-500' }} bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:outline-none transition-all duration-200 {{ $isReadonly ? 'bg-slate-100 dark:bg-slate-900/70 text-slate-600 dark:text-slate-400 cursor-not-allowed opacity-75' : 'hover:border-slate-400 dark:hover:border-slate-500' }}"
+                                            class="w-full px-4 py-2.5 rounded-lg border-2 {{ $hasError ? 'border-red-500 focus:border-red-600' : 'border-slate-300 focus:border-blue-500' }} bg-white text-slate-900 focus:outline-none transition-all duration-200 {{ $isReadonly ? 'bg-slate-100 text-slate-600 cursor-not-allowed opacity-75' : 'hover:border-slate-400' }}"
                                             {{ $isReadonly ? 'readonly' : '' }}>
 
                                     @elseif(\Illuminate\Support\Str::contains($type, ['timestamp', 'datetime']))
@@ -162,7 +162,7 @@
                                             name="{{ $field }}" 
                                             id="{{ $field }}" 
                                             value="{{ $value ? \Carbon\Carbon::parse($value)->format('Y-m-d\TH:i') : '' }}"
-                                            class="w-full px-4 py-2.5 rounded-lg border-2 {{ $hasError ? 'border-red-500 focus:border-red-600' : 'border-slate-300 dark:border-slate-600 focus:border-blue-500' }} bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:outline-none transition-all duration-200 {{ $isReadonly ? 'bg-slate-100 dark:bg-slate-900/70 text-slate-600 dark:text-slate-400 cursor-not-allowed opacity-75' : 'hover:border-slate-400 dark:hover:border-slate-500' }}"
+                                            class="w-full px-4 py-2.5 rounded-lg border-2 {{ $hasError ? 'border-red-500 focus:border-red-600' : 'border-slate-300 focus:border-blue-500' }} bg-white text-slate-900 focus:outline-none transition-all duration-200 {{ $isReadonly ? 'bg-slate-100 text-slate-600 cursor-not-allowed opacity-75' : 'hover:border-slate-400' }}"
                                             {{ $isReadonly ? 'readonly' : '' }}>
 
                                     @elseif(\Illuminate\Support\Str::contains($type, ['tinyint(1)', 'boolean', 'bit']))
@@ -181,10 +181,10 @@
                                                     class="sr-only peer" 
                                                     {{ $value ? 'checked' : '' }}
                                                     {{ $isReadonly ? 'disabled' : '' }}>
-                                                <div class="w-12 h-7 bg-slate-300 dark:bg-slate-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300/50 dark:peer-focus:ring-blue-800/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-1 after:left-1 after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all after:duration-300 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-500 shadow-sm group-hover/switch:shadow-md transition-shadow {{ $isReadonly ? 'opacity-50 cursor-not-allowed' : '' }}"></div>
+                                                <div class="w-12 h-7 bg-slate-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-1 after:left-1 after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all after:duration-300 peer-checked:bg-blue-600 shadow-sm group-hover/switch:shadow-md transition-shadow {{ $isReadonly ? 'opacity-50 cursor-not-allowed' : '' }}"></div>
                                             </label>
                                             <div class="flex items-center gap-2">
-                                                <span class="text-sm font-medium {{ $value ? 'text-green-600 dark:text-green-400' : 'text-slate-600 dark:text-slate-400' }}">
+                                                <span class="text-sm font-medium {{ $value ? 'text-green-600' : 'text-slate-600' }}">
                                                     {{ $value ? '✓ Habilitado' : '✗ Deshabilitado' }}
                                                 </span>
                                             </div>
@@ -198,7 +198,7 @@
                                             id="{{ $field }}" 
                                             value="{{ $value }}"
                                             step="1"
-                                            class="w-full px-4 py-2.5 rounded-lg border-2 {{ $hasError ? 'border-red-500 focus:border-red-600' : 'border-slate-300 dark:border-slate-600 focus:border-blue-500' }} bg-white dark:bg-slate-900 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none transition-all duration-200 {{ $isReadonly ? 'bg-slate-100 dark:bg-slate-900/70 text-slate-600 dark:text-slate-400 cursor-not-allowed opacity-75' : 'hover:border-slate-400 dark:hover:border-slate-500' }}"
+                                            class="w-full px-4 py-2.5 rounded-lg border-2 {{ $hasError ? 'border-red-500 focus:border-red-600' : 'border-slate-300 focus:border-blue-500' }} bg-white text-slate-900 placeholder-slate-400 focus:outline-none transition-all duration-200 {{ $isReadonly ? 'bg-slate-100 text-slate-600 cursor-not-allowed opacity-75' : 'hover:border-slate-400' }}"
                                             {{ $isReadonly ? 'readonly' : '' }}
                                             placeholder="Ingresa un número entero...">
 
@@ -210,7 +210,7 @@
                                             id="{{ $field }}" 
                                             value="{{ $value }}"
                                             step="0.01"
-                                            class="w-full px-4 py-2.5 rounded-lg border-2 {{ $hasError ? 'border-red-500 focus:border-red-600' : 'border-slate-300 dark:border-slate-600 focus:border-blue-500' }} bg-white dark:bg-slate-900 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none transition-all duration-200 {{ $isReadonly ? 'bg-slate-100 dark:bg-slate-900/70 text-slate-600 dark:text-slate-400 cursor-not-allowed opacity-75' : 'hover:border-slate-400 dark:hover:border-slate-500' }}"
+                                            class="w-full px-4 py-2.5 rounded-lg border-2 {{ $hasError ? 'border-red-500 focus:border-red-600' : 'border-slate-300 focus:border-blue-500' }} bg-white text-slate-900 placeholder-slate-400 focus:outline-none transition-all duration-200 {{ $isReadonly ? 'bg-slate-100 text-slate-600 cursor-not-allowed opacity-75' : 'hover:border-slate-400' }}"
                                             {{ $isReadonly ? 'readonly' : '' }}
                                             placeholder="Ingresa un número decimal...">
 
@@ -221,7 +221,7 @@
                                             name="{{ $field }}" 
                                             id="{{ $field }}" 
                                             value="{{ $value }}"
-                                            class="w-full px-4 py-2.5 rounded-lg border-2 {{ $hasError ? 'border-red-500 focus:border-red-600' : 'border-slate-300 dark:border-slate-600 focus:border-blue-500' }} bg-white dark:bg-slate-900 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none transition-all duration-200 {{ $isReadonly ? 'bg-slate-100 dark:bg-slate-900/70 text-slate-600 dark:text-slate-400 cursor-not-allowed opacity-75' : 'hover:border-slate-400 dark:hover:border-slate-500' }}"
+                                            class="w-full px-4 py-2.5 rounded-lg border-2 {{ $hasError ? 'border-red-500 focus:border-red-600' : 'border-slate-300 focus:border-blue-500' }} bg-white text-slate-900 placeholder-slate-400 focus:outline-none transition-all duration-200 {{ $isReadonly ? 'bg-slate-100 text-slate-600 cursor-not-allowed opacity-75' : 'hover:border-slate-400' }}"
                                             {{ $isReadonly ? 'readonly' : '' }}
                                             placeholder="Ingresa el valor aquí...">
                                     @endif
@@ -230,11 +230,11 @@
                                     @if($hasError)
                                         <div class="mt-2.5 space-y-2 animate-slideDown">
                                             @foreach($fieldErrors as $error)
-                                                <div class="flex items-start gap-3 p-3 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-200 dark:border-red-800/50 backdrop-blur-sm">
-                                                    <svg class="w-5 h-5 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                                <div class="flex items-start gap-3 p-3 bg-red-50 rounded-lg border border-red-200 backdrop-blur-sm">
+                                                    <svg class="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                                                         <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
                                                     </svg>
-                                                    <span class="text-sm font-medium text-red-700 dark:text-red-200">{{ $error }}</span>
+                                                    <span class="text-sm font-medium text-red-700">{{ $error }}</span>
                                                 </div>
                                             @endforeach
                                         </div>
@@ -242,7 +242,7 @@
 
                                     <!-- Help Text -->
                                     @if($isRequired)
-                                        <p class="mt-1.5 text-xs font-medium text-blue-600 dark:text-blue-400">Campo requerido</p>
+                                        <p class="mt-1.5 text-xs font-medium text-blue-600">Campo requerido</p>
                                     @endif
                                 </div>
                             @endforeach
@@ -253,9 +253,9 @@
         @endforeach
 
         <!-- Form Actions -->
-        <div class="flex flex-col sm:flex-row gap-3 pt-8 border-t border-slate-200 dark:border-slate-700">
+        <div class="flex flex-col sm:flex-row gap-3 pt-8 border-t border-slate-200">
             <!-- Save Button -->
-            <button type="submit" name="action" value="save" class="flex-1 px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 dark:from-blue-700 dark:to-blue-800 dark:hover:from-blue-600 dark:hover:to-blue-700 text-white font-semibold rounded-lg transition-all duration-200 flex items-center justify-center gap-2 shadow-md hover:shadow-lg transform hover:scale-105 active:scale-95">
+            <button type="submit" name="action" value="save" class="flex-1 px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold rounded-lg transition-all duration-200 flex items-center justify-center gap-2 shadow-md hover:shadow-lg transform hover:scale-105 active:scale-95">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                 </svg>
@@ -263,7 +263,7 @@
             </button>
 
             <!-- Save and Return Button -->
-            <button type="submit" name="action" value="save_and_return" class="flex-1 px-6 py-3 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 dark:from-green-700 dark:to-green-800 dark:hover:from-green-600 dark:hover:to-green-700 text-white font-semibold rounded-lg transition-all duration-200 flex items-center justify-center gap-2 shadow-md hover:shadow-lg transform hover:scale-105 active:scale-95">
+            <button type="submit" name="action" value="save_and_return" class="flex-1 px-6 py-3 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-semibold rounded-lg transition-all duration-200 flex items-center justify-center gap-2 shadow-md hover:shadow-lg transform hover:scale-105 active:scale-95">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7M7 13H3"/>
                 </svg>
@@ -271,7 +271,7 @@
             </button>
 
             <!-- Cancel Button -->
-            <a href="{{ route('admin.table.index', ['table' => $table]) }}" class="flex-1 px-6 py-3 bg-slate-300 dark:bg-slate-600 hover:bg-slate-400 dark:hover:bg-slate-500 text-slate-900 dark:text-white font-semibold rounded-lg transition-all duration-200 flex items-center justify-center gap-2 shadow-md hover:shadow-lg transform hover:scale-105 active:scale-95">
+            <a href="{{ route('admin.table.index', ['table' => $table]) }}" class="flex-1 px-6 py-3 bg-slate-300 hover:bg-slate-400 text-slate-900 font-semibold rounded-lg transition-all duration-200 flex items-center justify-center gap-2 shadow-md hover:shadow-lg transform hover:scale-105 active:scale-95">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                 </svg>

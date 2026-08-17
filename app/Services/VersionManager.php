@@ -35,7 +35,7 @@ class VersionManager
             $version->change_summary = $this->generateDiff($version);
         }
 
-        $version->save();
+        $version->saveQuietly();
     }
 
     public function refreshStats(ManuscriptVersion $version): void
@@ -122,7 +122,7 @@ class VersionManager
         }
 
         $version->chapter_count = count($chapters);
-        $version->save();
+        $version->saveQuietly();
 
         return count($chapters);
     }

@@ -8,7 +8,6 @@ use Filament\Actions\EditAction;
 use Filament\Forms\Components\Textarea;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
-use Filament\Support\Icons\Heroicon;
 
 class EditPrompt extends EditRecord
 {
@@ -21,7 +20,7 @@ class EditPrompt extends EditRecord
         return [
             Action::make('execute')
                 ->label('Ejecutar Prompt')
-                ->icon(Heroicon::OutlinedPlay)
+                ->icon('heroicon-o-play')
                 ->modalHeading('Ejecutar Prompt')
                 ->modalDescription('El prompt será enviado a la IA seleccionada.')
                 ->modalWidth('2xl')

@@ -4,38 +4,22 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use App\Models\Series;
+
+use Illuminate\Database\Eloquent\Relations\{BelongsTo, HasMany};
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
 
 class Work extends Model
 {
-    use HasFactory;
+    use HasFactory, LogsActivity;
 
     protected $fillable = [
-        'user_id',
-        'series_id',
-        'series_number',
-        'title_internal',
-        'title_public',
-        'title',
-        'slug',
-        'subtitle',
-        'author_name',
-        'pen_name',
-        'genre',
-        'subgenre',
-        'work_type',
-        'original_language',
-        'status',
-        'target_audience',
-        'age_recommendation',
-        'description',
-        'description_internal',
-        'description_marketing',
-        'start_date',
-        'planned_publish_date',
-        'notes',
+        'user_id', 'series_id', 'series_number', 'title', 'slug', 'description',
+        'title_internal', 'title_public',
+        'subtitle', 'author_name', 'pen_name', 'genre', 'subgenre', 'work_type',
+        'original_language', 'status', 'target_audience', 'age_recommendation',
+        'description_internal', 'description_marketing', 'start_date',
+        'planned_publish_date', 'notes'
     ];
 
     protected $casts = [
@@ -43,29 +27,17 @@ class Work extends Model
         'planned_publish_date' => 'date',
     ];
 
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly(['title_public', 'status', 'author_name'])
+            ->logOnlyDirty()
+            ->dontSubmitEmptyLogs();
+    }
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
-    }
-
-    public function series(): BelongsTo
-    {
-        return $this->belongsTo(Series::class);
-    }
-
-    public function languages(): HasMany
-    {
-        return $this->hasMany(WorkLanguage::class);
-    }
-
-    public function editions(): HasMany
-    {
-        return $this->hasMany(Edition::class);
-    }
-
-    public function manuscriptVersions(): HasMany
-    {
-        return $this->hasMany(ManuscriptVersion::class);
     }
 
     public function publications(): HasMany
@@ -73,63 +45,13 @@ class Work extends Model
         return $this->hasMany(Publication::class);
     }
 
-    public function illustrations(): HasMany
+    public function series(): BelongsTo
     {
-        return $this->hasMany(Illustration::class);
+        return $this->belongsTo(Series::class);
     }
 
-    public function sources(): HasMany
+    public function workLanguages(): HasMany
     {
-        return $this->hasMany(Source::class);
-    }
-
-    public function chapters(): HasMany
-    {
-        return $this->hasMany(Chapter::class);
-    }
-
-    public function tasks(): HasMany
-    {
-        return $this->hasMany(Task::class);
-    }
-
-    public function royaltyEntries(): HasMany
-    {
-        return $this->hasMany(RoyaltyEntry::class, 'work_id');
-    }
-
-    public function bookEvents(): HasMany
-    {
-        return $this->hasMany(BookEvent::class, 'work_id');
-    }
-
-    public function physicalPrintRuns(): HasMany
-    {
-        return $this->hasMany(PhysicalPrintRun::class);
-    }
-
-    public function stockMovements(): HasMany
-    {
-        return $this->hasMany(StockMovement::class);
-    }
-
-    public function bookDeliveries(): HasMany
-    {
-        return $this->hasMany(BookDelivery::class);
-    }
-
-    public function awardSubmissions(): HasMany
-    {
-        return $this->hasMany(AwardSubmission::class);
-    }
-
-    public function promotionalAssets(): HasMany
-    {
-        return $this->hasMany(PromotionalAsset::class);
-    }
-
-    public function aPlusProjects(): HasMany
-    {
-        return $this->hasMany(AplusProject::class);
+        return $this->hasMany(WorkLanguage::class);
     }
 }

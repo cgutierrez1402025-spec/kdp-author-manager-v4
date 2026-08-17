@@ -20,7 +20,7 @@ class GlobalSearchService
             ->get()
             ->map(fn ($work) => [
                 'title' => $work->title_public,
-                'description' => 'Obra: ' . $work->author_name,
+                'description' => 'Obra: '.$work->author_name,
                 'url' => "/admin/works/{$work->id}/edit",
                 'type' => 'work',
             ]);
@@ -31,7 +31,7 @@ class GlobalSearchService
             ->get()
             ->map(fn ($pub) => [
                 'title' => $pub->work->title_public ?? 'Sin título',
-                'description' => 'Publicación: ' . $pub->platform->name ?? '',
+                'description' => 'Publicación: '.$pub->platform->name ?? '',
                 'url' => "/admin/publications/{$pub->id}/edit",
                 'type' => 'publication',
             ]);
@@ -42,7 +42,7 @@ class GlobalSearchService
             ->get()
             ->map(fn ($task) => [
                 'title' => $task->title,
-                'description' => 'Tarea: ' . ($task->work->title_public ?? 'Sin obra'),
+                'description' => 'Tarea: '.($task->work->title_public ?? 'Sin obra'),
                 'url' => "/admin/tasks/{$task->id}/edit",
                 'type' => 'task',
             ]);

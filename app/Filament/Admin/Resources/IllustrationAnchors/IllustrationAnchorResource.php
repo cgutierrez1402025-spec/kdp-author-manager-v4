@@ -11,9 +11,12 @@ use App\Models\IllustrationAnchor;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
+use Filament\Tables;
 
 class IllustrationAnchorResource extends Resource
 {
+    protected static ?string $slug = 'illustration-anchors';
+
     protected static ?string $model = IllustrationAnchor::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-document-text';

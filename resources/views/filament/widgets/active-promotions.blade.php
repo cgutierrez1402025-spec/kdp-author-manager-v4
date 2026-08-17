@@ -1,12 +1,13 @@
+@php($promotions = $this->getPromotionsProperty())
 <div class="space-y-3">
     @if(empty($promotions))
-        <p class="text-gray-500 dark:text-gray-400">No active promotions found.</p>
+        <p class="text-gray-500">No hay promociones activas.</p>
     @else
         @foreach($promotions as $promotion)
-            <div class="p-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+            <div class="p-3 bg-white rounded-lg border border-gray-200">
                 <div class="flex items-start justify-between">
                     <div>
-                        <h4 class="font-medium text-gray-900 dark:text-gray-100">
+                        <h4 class="font-medium text-gray-900">
                             {{ $promotion['promotion_name'] ?? 'Untitled' }}
                         </h4>
                         <p class="text-sm text-gray-500">{{ $promotion['work_title'] ?? 'N/A' }}</p>
@@ -23,7 +24,7 @@
                 </div>
                 @if($promotion['end_date'])
                     <p class="text-xs text-gray-400 mt-2">
-                        Ends: {{ \Carbon\Carbon::parse($promotion['end_date'])->format('M d, Y') }}
+                        Finaliza: {{ \Carbon\Carbon::parse($promotion['end_date'])->locale('es')->translatedFormat('d M Y') }}
                     </p>
                 @endif
             </div>

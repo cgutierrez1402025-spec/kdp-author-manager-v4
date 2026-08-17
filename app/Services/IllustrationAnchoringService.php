@@ -2,8 +2,8 @@
 
 namespace App\Services;
 
-use App\Models\IllustrationAnchor;
 use App\Models\Illustration;
+use App\Models\IllustrationAnchor;
 use App\Models\ManuscriptVersion;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\DomCrawler\Crawler;
@@ -91,7 +91,7 @@ class IllustrationAnchoringService
 
         return str_replace(
             $anchor->html_marker,
-            $anchor->html_marker . $imageTag,
+            $anchor->html_marker.$imageTag,
             $html
         );
     }
@@ -101,7 +101,7 @@ class IllustrationAnchoringService
         $crawler = new Crawler($html);
         $imageTag = $this->buildImageTag($illustration);
 
-        $crawler->filter($anchor->css_selector)->each(function (Crawler $node, $i) use ($anchor, &$html, $imageTag) {
+        $crawler->filter($anchor->css_selector)->each(function (Crawler $node, $i) use (&$html, $imageTag) {
             if ($i === 0) {
                 $node->getNode(0)->appendChild(
                     $node->getDocument()->createElement('div', $imageTag)
@@ -118,7 +118,7 @@ class IllustrationAnchoringService
 
         return str_replace(
             $anchor->search_text,
-            $anchor->search_text . $imageTag,
+            $anchor->search_text.$imageTag,
             $html
         );
     }

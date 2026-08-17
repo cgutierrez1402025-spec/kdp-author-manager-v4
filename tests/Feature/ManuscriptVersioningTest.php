@@ -33,10 +33,12 @@ class ManuscriptVersioningTest extends TestCase
             'is_candidate' => false,
             'is_final' => false,
             'is_published' => false,
+            'created_by' => $user->id,
         ]);
 
         $childVersion = $version->createChildVersion([
             'name' => 'Draft 2',
+            'created_by' => $user->id,
         ]);
 
         $this->assertEquals('2', $childVersion->version_number);

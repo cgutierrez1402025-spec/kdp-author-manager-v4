@@ -2,27 +2,27 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Attributes\Fillable;
-use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Filament\Auth\MultiFactor\App\Contracts\HasAppAuthentication;
-use Filament\Auth\MultiFactor\App\Contracts\HasAppAuthenticationRecovery;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-
-#[Fillable(['name', 'email', 'password'])]
-#[Hidden(['password', 'remember_token'])]
-class User extends Authenticatable implements MustVerifyEmail, HasAppAuthentication, HasAppAuthenticationRecovery
+class User extends Authenticatable implements FilamentUser
 {
     use HasFactory, Notifiable;
 
-    public function roles(): BelongsToMany
-    {
-        return $this->belongsToMany(Role::class, 'model_has_roles', 'model_id', 'role_id');
-    }
+    protected $fillable = [
+        'name',
+        'email',
+        'password',
+    ];
+
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
 
     protected function casts(): array
     {
@@ -32,30 +32,34 @@ class User extends Authenticatable implements MustVerifyEmail, HasAppAuthenticat
         ];
     }
 
-    public function getAppAuthenticationSecret(): ?string
+    public function canAccessPanel(Panel $panel): bool
     {
-        return $this->app_authentication_secret;
+        return $this->hasAnyRole(['admin', 'author', 'editor', 'accountant']);
     }
 
-    public function getAppAuthenticationHolderName(): string
+    public function roles(): MorphToMany
     {
-        return $this->email;
+        return $this->morphToMany(Role::class, 'model', 'model_has_roles');
     }
 
-    public function saveAppAuthenticationSecret(?string $secret): void
+    public function permissions(): MorphToMany
     {
-        $this->app_authentication_secret = $secret;
-        $this->save();
+        return $this->morphToMany(Permission::class, 'model', 'model_has_permissions');
     }
 
-    public function getAppAuthenticationRecoveryCodes(): ?array
+    public function hasRole(string $role): bool
     {
-        return $this->app_authentication_recovery_codes ? json_decode($this->app_authentication_recovery_codes, true) : null;
+        return $this->roles()->where('name', $role)->exists();
     }
 
-    public function saveAppAuthenticationRecoveryCodes(?array $codes): void
+    public function hasAnyRole(array $roles): bool
     {
-        $this->app_authentication_recovery_codes = $codes ? json_encode($codes) : null;
-        $this->save();
+        return $this->roles()->whereIn('name', $roles)->exists();
+    }
+
+    public function hasPermission(string $permission): bool
+    {
+        return $this->permissions()->where('name', $permission)->exists()
+            || $this->roles()->whereHas('permissions', fn ($query) => $query->where('name', $permission))->exists();
     }
 }

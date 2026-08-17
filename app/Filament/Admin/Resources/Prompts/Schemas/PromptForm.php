@@ -3,7 +3,6 @@
 namespace App\Filament\Admin\Resources\Prompts\Schemas;
 
 use Filament\Forms;
-use Filament\Forms\Components\Rating;
 use Filament\Forms\Form;
 
 class PromptForm
@@ -15,17 +14,25 @@ class PromptForm
                 Forms\Components\Section::make('Información del Prompt')
                     ->schema([
                         Forms\Components\Select::make('work_id')
-                            ->relationship('work', 'title_public')
+                            ->relationship('work', 'title_public', modifyQueryUsing: fn ($query) =>
+                                auth()->user()?->hasRole('admin') ? $query : $query->where('user_id', auth()->id())
+                            )
+                            ->live()
+                            ->afterStateUpdated(fn ($set) => $set('task_id', null))
                             ->label('Obra')
                             ->required(),
 
                         Forms\Components\Select::make('ai_tool_id')
-                            ->relationship('aiTool', 'name')
+                            ->relationship('aiTool', 'name', modifyQueryUsing: fn ($query) =>
+                                auth()->user()?->hasRole('admin') ? $query : $query->where('user_id', auth()->id())
+                            )
                             ->label('Herramienta IA')
                             ->required(),
 
                         Forms\Components\Select::make('task_id')
-                            ->relationship('task', 'task_type')
+                            ->relationship('task', 'task_type', modifyQueryUsing: fn ($query, $get) =>
+                                $query->when($get('work_id'), fn ($q, $workId) => $q->where('work_id', $workId))
+                            )
                             ->label('Tarea IA')
                             ->nullable(),
 
@@ -73,10 +80,9 @@ class PromptForm
                         Forms\Components\Toggle::make('generated_final_content')
                             ->label('Contenido Final'),
 
-                        Rating::make('rating')
+                        Forms\Components\Select::make('rating')
                             ->label('Rating')
-                            ->minValue(1)
-                            ->maxValue(5),
+                            ->options(array_combine(range(1, 5), range(1, 5))),
                     ])
                     ->columns(2),
             ]);

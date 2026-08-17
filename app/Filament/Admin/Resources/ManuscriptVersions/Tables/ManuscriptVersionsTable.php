@@ -3,11 +3,11 @@
 namespace App\Filament\Admin\Resources\ManuscriptVersions\Tables;
 
 use App\Filament\Admin\Resources\ManuscriptVersions\ManuscriptVersionResource;
-use Filament\Actions\Action;
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\EditAction;
-use Filament\Actions\ViewAction;
+use Filament\Tables\Actions\Action;
+use Filament\Tables\Actions\BulkActionGroup;
+use Filament\Tables\Actions\DeleteBulkAction;
+use Filament\Tables\Actions\EditAction;
+use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Filters\SelectFilter;
@@ -81,7 +81,7 @@ class ManuscriptVersionsTable
                         'published' => 'Publicado',
                     ]),
             ])
-            ->recordActions([
+            ->actions([
                 ViewAction::make(),
                 EditAction::make(),
                 Action::make('createVersion')
@@ -97,7 +97,7 @@ class ManuscriptVersionsTable
                     })
                     ->visible(fn ($record) => ! $record->is_published),
             ])
-            ->toolbarActions([
+            ->bulkActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
                 ]),

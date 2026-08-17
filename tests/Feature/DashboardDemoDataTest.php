@@ -1,0 +1,42 @@
+<?php
+
+namespace Tests\Feature;
+
+use App\Models\User;
+use App\Filament\Admin\Widgets\ActivePromotionsWidget;
+use App\Filament\Admin\Widgets\ExpiringKdpSelectWidget;
+use App\Filament\Admin\Widgets\MyTasksWidget;
+use App\Filament\Admin\Widgets\RevenueChartWidget;
+use App\Filament\Admin\Widgets\TopWorksByRevenueWidget;
+use App\Filament\Admin\Widgets\UpcomingEventsWidget;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Livewire\Livewire;
+use Tests\TestCase;
+
+class DashboardDemoDataTest extends TestCase
+{
+    use RefreshDatabase;
+
+    public function test_admin_dashboard_renders_seeded_business_data(): void
+    {
+        $this->seed();
+
+        $admin = User::where('email', 'admin@kdpmanager.local')->firstOrFail();
+
+        $this->actingAs($admin)->get('/admin')->assertOk();
+        $this->get('/admin/book-events')
+            ->assertOk()
+            ->assertSeeText('Presentación y firma demo');
+
+        Livewire::test(ActivePromotionsWidget::class)->assertSee('Campaña demo 1');
+        Livewire::test(MyTasksWidget::class)->assertSee('Revisar traducción inglesa');
+        Livewire::test(UpcomingEventsWidget::class)->assertSee('Presentación y firma demo');
+        Livewire::test(TopWorksByRevenueWidget::class)->assertSee('Obra de demostración 20');
+        Livewire::test(ExpiringKdpSelectWidget::class)
+            ->assertSee('Obra de demostración 01')
+            ->assertSee('20 días');
+        Livewire::test(RevenueChartWidget::class)
+            ->assertSee('Ingresos Últimos 6 Meses')
+            ->assertSee('118.60 €');
+    }
+}

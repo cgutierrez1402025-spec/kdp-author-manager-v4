@@ -15,7 +15,7 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        $roles = ['Admin', 'Author', 'Editor', 'Accountant'];
+        $roles = ['admin', 'author', 'editor', 'accountant'];
         foreach ($roles as $roleName) {
             Role::firstOrCreate(
                 ['name' => $roleName, 'guard_name' => 'web'],
@@ -38,18 +38,23 @@ class DatabaseSeeder extends Seeder
             );
         }
 
-        $adminRole = Role::where('name', 'Admin')->first();
-        if ($adminRole) {
-            foreach ($permissions as $permissionName) {
+        $permissionMatrix = [
+            'admin' => $permissions,
+            'author' => ['view_works', 'create_works', 'edit_works', 'delete_works', 'view_royalties', 'manage_promotions'],
+            'editor' => ['view_works', 'edit_works'],
+            'accountant' => ['view_works', 'view_royalties'],
+        ];
+
+        foreach ($permissionMatrix as $roleName => $rolePermissions) {
+            $role = Role::where('name', $roleName)->first();
+
+            foreach ($rolePermissions as $permissionName) {
                 $permission = Permission::where('name', $permissionName)->first();
-                if ($permission) {
-                    DB::table('role_has_permissions')->updateOrInsert([
-                        'role_id' => $adminRole->id,
-                        'permission_id' => $permission->id,
-                    ]);
-                }
+                $role?->permissions()->syncWithoutDetaching([$permission?->id]);
             }
         }
+
+        $adminRole = Role::where('name', 'admin')->first();
 
         $admin = User::firstOrCreate(
             ['email' => 'admin@kdpmanager.local'],
@@ -71,7 +76,7 @@ class DatabaseSeeder extends Seeder
             ['name' => 'Author Example', 'password' => Hash::make('password')]
         );
 
-        $authorRole = Role::where('name', 'Author')->first();
+        $authorRole = Role::where('name', 'author')->first();
         if ($authorRole) {
             DB::table('model_has_roles')->updateOrInsert(
                 [
@@ -106,5 +111,8 @@ class DatabaseSeeder extends Seeder
             ['name' => 'Draft2Digital'],
             ['description' => 'Distribución y publicación digital']
         );
+
+        $this->call(DemoCatalogSeeder::class);
+        $this->call(ComprehensiveDemoSeeder::class);
     }
 }

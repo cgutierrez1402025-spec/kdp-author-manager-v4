@@ -19,16 +19,28 @@ class EventBookForm
                             ->required(),
 
                         Forms\Components\Select::make('work_id')
-                            ->relationship('work', 'title_public')
+                            ->relationship('work', 'title_public', modifyQueryUsing: fn ($query) =>
+                                auth()->user()?->hasRole('admin') ? $query : $query->where('user_id', auth()->id())
+                            )
+                            ->live()
+                            ->afterStateUpdated(function ($set): void {
+                                $set('edition_id', null);
+                                $set('work_language_id', null);
+                            })
                             ->label('Obra')
                             ->required(),
 
                         Forms\Components\Select::make('edition_id')
-                            ->relationship('edition', 'edition_name')
+                            ->relationship('edition', 'edition_name', modifyQueryUsing: fn ($query, $get) =>
+                                $query->when($get('work_id'), fn ($q, $workId) => $q->where('work_id', $workId))
+                            )
+                            ->getOptionLabelFromRecordUsing(fn ($record): string => $record->edition_name ?? "Edición {$record->edition_number}")
                             ->label('Edición'),
 
                         Forms\Components\Select::make('work_language_id')
-                            ->relationship('workLanguage', 'language_code')
+                            ->relationship('workLanguage', 'language_code', modifyQueryUsing: fn ($query, $get) =>
+                                $query->when($get('work_id'), fn ($q, $workId) => $q->where('work_id', $workId))
+                            )
                             ->label('Idioma'),
                     ])
                     ->columns(2),

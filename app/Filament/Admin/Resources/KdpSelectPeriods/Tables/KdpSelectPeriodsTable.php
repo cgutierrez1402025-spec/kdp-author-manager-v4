@@ -2,10 +2,11 @@
 
 namespace App\Filament\Admin\Resources\KdpSelectPeriods\Tables;
 
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\EditAction;
+use Filament\Tables\Actions\BulkActionGroup;
+use Filament\Tables\Actions\DeleteBulkAction;
+use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
@@ -44,7 +45,7 @@ class KdpSelectPeriodsTable
                         default => 'gray',
                     }),
 
-                TextColumn::make('auto_renewal')
+                IconColumn::make('auto_renewal')
                     ->label('Auto Renovación')
                     ->boolean(),
 
@@ -62,10 +63,10 @@ class KdpSelectPeriodsTable
                         'cancelled' => 'Cancelado',
                     ]),
             ])
-            ->recordActions([
+            ->actions([
                 EditAction::make(),
             ])
-            ->toolbarActions([
+            ->bulkActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
                 ]),

@@ -1,12 +1,13 @@
+@php($tasks = $this->getTasksProperty())
 <div class="space-y-3">
     @if(empty($tasks))
-        <p class="text-gray-500 dark:text-gray-400">No hay tareas pendientes.</p>
+        <p class="text-gray-500">No hay tareas pendientes.</p>
     @else
         @foreach($tasks as $task)
-            <div class="p-3 bg-white dark:bg-gray-800 rounded-lg border {{ $task['is_overdue'] ? 'border-red-300' : 'border-gray-200 dark:border-gray-700' }}">
+            <div class="p-3 bg-white rounded-lg border {{ $task['is_overdue'] ? 'border-red-300' : 'border-gray-200' }}">
                 <div class="flex items-start justify-between">
                     <div>
-                        <h4 class="font-medium text-gray-900 dark:text-gray-100">
+                        <h4 class="font-medium text-gray-900">
                             {{ $task['title'] }}
                         </h4>
                         @if($task['work_title'])

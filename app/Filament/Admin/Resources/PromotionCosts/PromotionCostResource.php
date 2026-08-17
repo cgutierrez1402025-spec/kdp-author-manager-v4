@@ -11,16 +11,19 @@ use App\Models\PromotionCost;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
+use Filament\Tables;
 
 class PromotionCostResource extends Resource
 {
+    protected static ?string $slug = 'promotion-costs';
+
     protected static ?string $model = PromotionCost::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
 
     protected static ?string $navigationLabel = 'Costos de Promoción';
 
-    protected static ?string $navigationGroup = 'Publicaciones';
+    protected static ?string $navigationGroup = 'Marketing';
 
     protected static ?string $recordTitleAttribute = 'cost_type';
 

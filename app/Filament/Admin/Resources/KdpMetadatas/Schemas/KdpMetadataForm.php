@@ -14,7 +14,12 @@ class KdpMetadataForm
                 Forms\Components\Section::make('Información Básica')
                     ->schema([
                         Forms\Components\Select::make('publication_id')
-                            ->relationship('publication', 'id')
+                            ->relationship('publication', 'id', modifyQueryUsing: fn ($query) =>
+                                auth()->user()?->hasRole('admin') ? $query : $query->whereHas('work', fn ($work) => $work->where('user_id', auth()->id()))
+                            )
+                            ->getOptionLabelFromRecordUsing(fn ($record): string =>
+                                ($record->work?->title_public ?? 'Publicación').' · '.($record->asin ?? "#{$record->id}")
+                            )
                             ->label('Publicación')
                             ->required(),
 

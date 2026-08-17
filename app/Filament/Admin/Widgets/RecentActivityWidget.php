@@ -2,9 +2,9 @@
 
 namespace App\Filament\Admin\Widgets;
 
-use App\Models\ActivityLog;
 use Filament\Widgets\Widget;
 use Illuminate\Support\Facades\Cache;
+use Spatie\Activitylog\Models\Activity;
 
 class RecentActivityWidget extends Widget
 {
@@ -15,18 +15,47 @@ class RecentActivityWidget extends Widget
     public function getActivities(): array
     {
         return Cache::remember('dashboard_recent_activity', 3600, function () {
-            return ActivityLog::with('user')
+            return Activity::with(['causer', 'subject'])
                 ->latest()
                 ->limit(10)
                 ->get()
-                ->map(fn (ActivityLog $log) => [
-                    'user' => $log->user->name ?? 'Sistema',
-                    'action' => $log->action,
-                    'description' => $log->description,
-                    'created_at' => $log->created_at->diffForHumans(),
+                ->map(fn (Activity $log) => [
+                    'user' => $log->causer->name ?? 'Sistema',
+                    'action' => match ($log->event) {
+                        'created' => 'creó',
+                        'updated' => 'actualizó',
+                        'deleted' => 'eliminó',
+                        default => $log->event ?? 'registró',
+                    },
+                    'description' => $this->activityDescription($log),
+                    'created_at' => $log->created_at->locale('es')->diffForHumans(),
                 ])
                 ->values()
                 ->all();
         });
+    }
+
+    private function activityDescription(Activity $activity): string
+    {
+        $subject = $activity->subject;
+
+        if ($subject?->title_public || $subject?->title || $subject?->name) {
+            return (string) ($subject->title_public ?? $subject->title ?? $subject->name);
+        }
+
+        $model = class_basename((string) $activity->subject_type);
+        $labels = [
+            'WorkLanguage' => 'idioma de obra',
+            'ManuscriptVersion' => 'versión de manuscrito',
+            'Publication' => 'publicación',
+            'KdpMetadata' => 'metadatos KDP',
+            'RoyaltyEntry' => 'registro de regalías',
+            'BookPromotion' => 'promoción',
+            'PromotionCost' => 'coste de promoción',
+            'PromotionDailyResult' => 'resultado diario',
+        ];
+
+        return ($labels[$model] ?? str($model)->headline()->lower()->toString())
+            .' #'.($activity->subject_id ?? '—');
     }
 }

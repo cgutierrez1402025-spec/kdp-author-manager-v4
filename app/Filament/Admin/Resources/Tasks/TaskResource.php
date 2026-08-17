@@ -11,16 +11,19 @@ use App\Models\Task;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
+use Filament\Tables;
 
 class TaskResource extends Resource
 {
+    protected static ?string $slug = 'tasks';
+
     protected static ?string $model = Task::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
 
     protected static ?string $navigationLabel = 'Tareas';
 
-    protected static ?string $navigationGroup = 'Gestión';
+    protected static ?string $navigationGroup = 'Catálogo editorial';
 
     protected static ?string $recordTitleAttribute = 'title';
 

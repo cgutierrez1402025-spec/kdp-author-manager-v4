@@ -12,16 +12,19 @@ use App\Models\Checklist;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
+use Filament\Tables;
 
 class ChecklistResource extends Resource
 {
+    protected static ?string $slug = 'checklists';
+
     protected static ?string $model = Checklist::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
 
     protected static ?string $navigationLabel = 'Listas de Verificación';
 
-    protected static ?string $navigationGroup = 'Gestión';
+    protected static ?string $navigationGroup = 'Catálogo editorial';
 
     protected static ?string $recordTitleAttribute = 'name';
 

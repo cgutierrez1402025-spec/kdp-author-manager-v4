@@ -11,9 +11,16 @@ use App\Models\Marketplace;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
+use Filament\Tables;
 
 class MarketplaceResource extends Resource
 {
+    protected static ?string $slug = 'marketplaces';
+
+    protected static ?string $navigationLabel = 'Mercados';
+
+    protected static ?string $navigationGroup = 'Publicaciones';
+
     protected static ?string $model = Marketplace::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-document-text';

@@ -2,9 +2,9 @@
 
 namespace App\Filament\Admin\Resources\Platforms\RelationManagers;
 
-use Filament\Actions\CreateAction;
-use Filament\Actions\DeleteAction;
-use Filament\Actions\EditAction;
+use Filament\Tables\Actions\CreateAction;
+use Filament\Tables\Actions\DeleteAction;
+use Filament\Tables\Actions\EditAction;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -60,11 +60,11 @@ class MarketplacesRelationManager extends RelationManager
                     ->label('Publicaciones')
                     ->counts('publications'),
             ])
-            ->recordActions([
+            ->actions([
                 EditAction::make(),
                 DeleteAction::make(),
             ])
-            ->toolbarActions([
+            ->bulkActions([
                 CreateAction::make(),
             ]);
     }

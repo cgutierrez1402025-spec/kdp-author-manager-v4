@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9630e0eff7a0a24efa8aefe3ec0463da",
+    "content-hash": "39f24cd0d719ebf8d8497b306c9d196d",
     "packages": [
         {
             "name": "anourvalar/eloquent-serialize",
@@ -3076,16 +3076,16 @@
         },
         {
             "name": "livewire/livewire",
-            "version": "v3.8.0",
+            "version": "v3.8.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/livewire/livewire.git",
-                "reference": "d81d269243c3f18d302663c0ce5672990df08ca1"
+                "reference": "0a7c2ec6c5c958cab32870ce5a7836a2fca0b459"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/livewire/livewire/zipball/d81d269243c3f18d302663c0ce5672990df08ca1",
-                "reference": "d81d269243c3f18d302663c0ce5672990df08ca1",
+                "url": "https://api.github.com/repos/livewire/livewire/zipball/0a7c2ec6c5c958cab32870ce5a7836a2fca0b459",
+                "reference": "0a7c2ec6c5c958cab32870ce5a7836a2fca0b459",
                 "shasum": ""
             },
             "require": {
@@ -3140,7 +3140,7 @@
             "description": "A front-end framework for Laravel.",
             "support": {
                 "issues": "https://github.com/livewire/livewire/issues",
-                "source": "https://github.com/livewire/livewire/tree/v3.8.0"
+                "source": "https://github.com/livewire/livewire/tree/v3.8.1"
             },
             "funding": [
                 {
@@ -3148,7 +3148,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-04-30T23:56:43+00:00"
+            "time": "2026-06-02T08:18:44+00:00"
         },
         {
             "name": "masterminds/html5",
@@ -4829,6 +4829,97 @@
                 }
             ],
             "time": "2024-05-17T09:06:10+00:00"
+        },
+        {
+            "name": "spatie/laravel-activitylog",
+            "version": "4.12.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/spatie/laravel-activitylog.git",
+                "reference": "2a2024fcac05628b0d1bfdbb1b94dda8b0661dc0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/spatie/laravel-activitylog/zipball/2a2024fcac05628b0d1bfdbb1b94dda8b0661dc0",
+                "reference": "2a2024fcac05628b0d1bfdbb1b94dda8b0661dc0",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/config": "^8.0 || ^9.0 || ^10.0 || ^11.0 || ^12.0 || ^13.0",
+                "illuminate/database": "^8.69 || ^9.27 || ^10.0 || ^11.0 || ^12.0 || ^13.0",
+                "illuminate/support": "^8.0 || ^9.0 || ^10.0 || ^11.0 || ^12.0 || ^13.0",
+                "php": "^8.1",
+                "spatie/laravel-package-tools": "^1.6.3"
+            },
+            "require-dev": {
+                "ext-json": "*",
+                "orchestra/testbench": "^6.23 || ^7.0 || ^8.0 || ^9.6 || ^10.0 || ^11.0",
+                "pestphp/pest": "^1.20 || ^2.0 || ^3.0 || ^4.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Spatie\\Activitylog\\ActivitylogServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "files": [
+                    "src/helpers.php"
+                ],
+                "psr-4": {
+                    "Spatie\\Activitylog\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Freek Van der Herten",
+                    "email": "freek@spatie.be",
+                    "homepage": "https://spatie.be",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Sebastian De Deyne",
+                    "email": "sebastian@spatie.be",
+                    "homepage": "https://spatie.be",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Tom Witkowski",
+                    "email": "dev.gummibeer@gmail.com",
+                    "homepage": "https://gummibeer.de",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A very simple activity logger to monitor the users of your website or application",
+            "homepage": "https://github.com/spatie/activitylog",
+            "keywords": [
+                "activity",
+                "laravel",
+                "log",
+                "spatie",
+                "user"
+            ],
+            "support": {
+                "issues": "https://github.com/spatie/laravel-activitylog/issues",
+                "source": "https://github.com/spatie/laravel-activitylog/tree/4.12.3"
+            },
+            "funding": [
+                {
+                    "url": "https://spatie.be/open-source/support-us",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/spatie",
+                    "type": "github"
+                }
+            ],
+            "time": "2026-03-24T12:33:53+00:00"
         },
         {
             "name": "spatie/laravel-package-tools",
@@ -7785,6 +7876,67 @@
                 "source": "https://github.com/hamcrest/hamcrest-php/tree/v2.1.1"
             },
             "time": "2025-04-30T06:54:44+00:00"
+        },
+        {
+            "name": "laravel/breeze",
+            "version": "v2.4.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laravel/breeze.git",
+                "reference": "4f20e7b2cc8d25daa85d8647241a89c8e0930305"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laravel/breeze/zipball/4f20e7b2cc8d25daa85d8647241a89c8e0930305",
+                "reference": "4f20e7b2cc8d25daa85d8647241a89c8e0930305",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/console": "^11.0|^12.0|^13.0",
+                "illuminate/filesystem": "^11.0|^12.0|^13.0",
+                "illuminate/support": "^11.0|^12.0|^13.0",
+                "illuminate/validation": "^11.0|^12.0|^13.0",
+                "php": "^8.2.0",
+                "symfony/console": "^7.0|^8.0"
+            },
+            "require-dev": {
+                "laravel/framework": "^11.0|^12.0|^13.0",
+                "orchestra/testbench-core": "^9.0|^10.0|^11.0",
+                "phpstan/phpstan": "^2.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Laravel\\Breeze\\BreezeServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Laravel\\Breeze\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Taylor Otwell",
+                    "email": "taylor@laravel.com"
+                }
+            ],
+            "description": "Minimal Laravel authentication scaffolding with Blade and Tailwind.",
+            "keywords": [
+                "auth",
+                "laravel"
+            ],
+            "support": {
+                "issues": "https://github.com/laravel/breeze/issues",
+                "source": "https://github.com/laravel/breeze"
+            },
+            "time": "2026-05-14T16:54:25+00:00"
         },
         {
             "name": "laravel/pint",

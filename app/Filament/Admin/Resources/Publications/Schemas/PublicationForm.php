@@ -17,7 +17,13 @@ class PublicationForm
                         ->label('Seleccionar Obra')
                         ->schema([
                             Forms\Components\Select::make('work_id')
-                                ->relationship('work', 'title_public')
+                                ->relationship(
+                                    'work',
+                                    'title_public',
+                                    modifyQueryUsing: fn ($query) => auth()->user()?->hasRole('admin')
+                                        ? $query
+                                        : $query->where('user_id', auth()->id()),
+                                )
                                 ->label('Obra')
                                 ->required()
                                 ->live()
@@ -42,7 +48,7 @@ class PublicationForm
                         ->schema([
                             Forms\Components\Select::make('manuscript_version_id')
                                 ->relationship('manuscriptVersion', 'name', modifyQueryUsing: function ($query, $get) {
-                                    $workId = $get('../../work_id');
+                                    $workId = $get('work_id');
                                     $workLanguageId = $get('work_language_id');
 
                                     return $query->where('work_id', $workId)
@@ -78,6 +84,17 @@ class PublicationForm
                                     'hardcover' => 'Tapa Dura',
                                     'audiobook' => 'Audiolibro',
                                 ])
+                                ->required(),
+
+                            Forms\Components\Select::make('status')
+                                ->label('Estado')
+                                ->options([
+                                    'draft' => 'Borrador',
+                                    'processing' => 'En proceso',
+                                    'published' => 'Publicada',
+                                    'error' => 'Con errores',
+                                ])
+                                ->default('draft')
                                 ->required(),
 
                             Forms\Components\TextInput::make('price')

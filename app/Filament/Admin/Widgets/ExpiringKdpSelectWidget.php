@@ -25,7 +25,7 @@ class ExpiringKdpSelectWidget extends Widget
                 ->map(fn (KdpSelectPeriod $period) => [
                     'work_title' => $period->publication->work->title_public ?? 'N/A',
                     'end_date' => $period->end_date->format('d/m/Y'),
-                    'remaining_days' => now()->diffInDays($period->end_date, false),
+                    'remaining_days' => max(0, (int) ceil(now()->diffInDays($period->end_date, false))),
                     'free_days_remaining' => $period->getRemainingFreeDays(),
                 ])
                 ->values()

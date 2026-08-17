@@ -11,16 +11,19 @@ use App\Models\PromotionDailyResult;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
+use Filament\Tables;
 
 class PromotionDailyResultResource extends Resource
 {
+    protected static ?string $slug = 'promotion-daily-results';
+
     protected static ?string $model = PromotionDailyResult::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
 
     protected static ?string $navigationLabel = 'Resultados Diarios';
 
-    protected static ?string $navigationGroup = 'Publicaciones';
+    protected static ?string $navigationGroup = 'Marketing';
 
     protected static ?string $recordTitleAttribute = 'date';
 

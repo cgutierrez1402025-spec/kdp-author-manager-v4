@@ -11,14 +11,19 @@ use App\Models\KdpSelectPeriod;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
+use Filament\Tables;
 
 class KdpSelectPeriodResource extends Resource
 {
+    protected static ?string $slug = 'kdp-select-periods';
+
     protected static ?string $model = KdpSelectPeriod::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
 
     protected static ?string $navigationLabel = 'Períodos KDP Select';
+
+    protected static ?string $navigationGroup = 'Publicaciones';
 
     protected static ?string $recordTitleAttribute = 'id';
 

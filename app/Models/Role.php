@@ -14,11 +14,12 @@ class Role extends Model
 
     public function permissions(): BelongsToMany
     {
-        return $this->belongsToMany(Permission::class, 'model_has_permissions', 'role_id', 'permission_id');
+        return $this->belongsToMany(Permission::class, 'role_has_permissions');
     }
 
     public function users(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'model_has_roles', 'role_id', 'model_id');
+        return $this->belongsToMany(User::class, 'model_has_roles', 'role_id', 'model_id')
+            ->wherePivot('model_type', User::class);
     }
 }

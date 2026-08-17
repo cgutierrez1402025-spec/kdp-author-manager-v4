@@ -1,58 +1,104 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# KDP Author Manager
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Aplicación web para gestionar el ciclo editorial de obras publicadas mediante Amazon KDP: manuscritos, publicaciones, metadatos, regalías, promociones, eventos, fuentes, ilustraciones y tareas asistidas por IA.
 
-## About Laravel
+El panel de administración está construido con Laravel 11, Filament 3, Livewire 3, SQLite/MySQL y Vite.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Requisitos
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- PHP 8.2 o posterior, con las extensiones requeridas por Laravel y PDO para la base elegida.
+- Composer 2.
+- Node.js compatible con Vite 8 y npm.
+- SQLite para el entorno local predeterminado, o MySQL configurado mediante `.env`.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Las versiones exactas de las dependencias están fijadas en `composer.lock` y `package-lock.json`.
 
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+## Instalación local
 
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+composer install
+cp .env.example .env
+php artisan key:generate
+touch database/database.sqlite
+php artisan migrate --seed
+npm ci
+npm run build
+php artisan serve
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+Abra `http://127.0.0.1:8000/admin`.
 
-## Contributing
+## Acceso de demostración
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+- Administrador: `admin@kdpmanager.local`
+- Contraseña: `password`
+- Autor: `author@example.com`
+- Contraseña: `password`
 
-## Code of Conduct
+Estas credenciales proceden de `DatabaseSeeder` y solo deben utilizarse en desarrollo. Cámbielas o desactive los datos demo antes de desplegar la aplicación.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## Desarrollo
 
-## Security Vulnerabilities
+Para mantener Vite observando cambios:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```bash
+npm run dev
+```
 
-## License
+Después de modificar configuración, rutas o vistas puede limpiar las cachés con:
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```bash
+php artisan optimize:clear
+```
+
+## Pruebas y calidad
+
+```bash
+composer validate --strict
+php artisan test --compact
+npm run build
+```
+
+Para comprobar la instalación completa sobre una base prescindible:
+
+```bash
+php artisan migrate:fresh --seed
+```
+
+`migrate:fresh` elimina todas las tablas de la base configurada. No debe ejecutarse contra una base con información que se quiera conservar.
+
+## Configuración
+
+La plantilla `.env.example` usa SQLite, español y la zona horaria de Madrid. Para MySQL, configure `DB_CONNECTION`, `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME` y `DB_PASSWORD`.
+
+Las integraciones externas y proveedores de IA se configuran en `.env` siguiendo las claves declaradas en `config/services.php`. No se deben versionar secretos ni copias de archivos `.env`.
+
+## Documentación
+
+El índice de documentación técnica se encuentra en [`docs/README.md`](docs/README.md). Incluye el plan de pruebas, las relaciones de formularios, el informe de estabilización y el plan de limpieza del repositorio.
+
+## Estructura relevante
+
+- `app/Filament/Admin`: recursos, páginas y widgets del panel activo.
+- `app/Models`: entidades y relaciones del dominio.
+- `app/Services`: flujos editoriales, regalías, promociones e IA.
+- `database/migrations`: fuente autoritativa del esquema.
+- `database/seeders`: usuarios y datos coherentes de demostración.
+- `tests`: pruebas unitarias y funcionales.
+- `docs`: documentación técnica vigente e histórica.
+
+## Despliegue
+
+En producción deben instalarse dependencias desde los archivos de bloqueo, compilarse los activos y ejecutar las migraciones de forma explícita. Use credenciales propias, `APP_DEBUG=false`, HTTPS y una copia de seguridad antes de migrar.
+
+```bash
+composer install --no-dev --optimize-autoloader
+npm ci
+npm run build
+php artisan migrate --force
+php artisan optimize
+```
+
+## Licencia
+
+MIT.

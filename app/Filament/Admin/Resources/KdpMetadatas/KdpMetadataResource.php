@@ -11,9 +11,12 @@ use App\Models\KdpMetadata;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
+use Filament\Tables;
 
 class KdpMetadataResource extends Resource
 {
+    protected static ?string $slug = 'kdp-metadata';
+
     protected static ?string $model = KdpMetadata::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-document-text';

@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Models\ManuscriptVersion;
 use App\Models\Work;
 use App\Models\WorkLanguage;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -37,8 +38,10 @@ class ManuscriptVersionFactory extends Factory
             'is_published' => $this->faker->boolean(10), // 10% chance
             'html_content' => $this->faker->paragraphs(5, true),
             'change_summary' => $this->faker->sentence(),
-            'words_added' => $this->faker->numberBetween(0, 1000),
-            'words_deleted' => $this->faker->numberBetween(0, 500),
+            'word_count' => $this->faker->numberBetween(500, 100000),
+            'chapter_count' => $this->faker->numberBetween(1, 50),
+            'image_count' => $this->faker->numberBetween(0, 30),
+            'created_by' => User::factory(),
         ];
     }
 
@@ -80,7 +83,6 @@ class ManuscriptVersionFactory extends Factory
     public function draft(): static
     {
         return $this->state(fn (array $attributes) => [
-            'is_draft' => true,
             'status' => 'draft',
             'is_final' => false,
             'is_published' => false,

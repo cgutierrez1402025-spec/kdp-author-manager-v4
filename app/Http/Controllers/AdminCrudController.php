@@ -16,8 +16,104 @@ class AdminCrudController extends Controller
             ->sort()
             ->values();
 
+        $sectionMap = [
+            'dashboard' => ['label' => 'Tauler', 'icon' => '🏠', 'color' => 'blue'],
+            'usuaris' => ['label' => 'Usuaris', 'icon' => '👥', 'color' => 'blue', 'table' => 'users'],
+            'obres' => ['label' => 'Obres', 'icon' => '📖', 'color' => 'purple', 'table' => 'works'],
+            'series' => ['label' => 'Series', 'icon' => '📚', 'color' => 'indigo', 'table' => 'series'],
+            'idiomes' => ['label' => 'Idiomes obra', 'icon' => '🌐', 'color' => 'green', 'table' => 'work_language'],
+            'edicions' => ['label' => 'Edicions', 'icon' => '📘', 'color' => 'orange', 'table' => 'editions'],
+            'manuscrits' => ['label' => 'Manuscrits', 'icon' => '✍️', 'color' => 'yellow', 'table' => 'manuscript_versions'],
+            'capitols' => ['label' => 'Capítols', 'icon' => '📑', 'color' => 'slate', 'table' => 'chapters'],
+            'fonts' => ['label' => 'Fonts', 'icon' => '📎', 'color' => 'blue', 'table' => 'sources'],
+            'ia' => ['label' => 'IA i Prompts', 'icon' => '🤖', 'color' => 'indigo', 'table' => 'ai_tools'],
+            'ilustracions' => ['label' => 'Il·lustracions', 'icon' => '🖼️', 'color' => 'pink', 'table' => 'illustrations'],
+            'plataformes' => ['label' => 'Plataformes', 'icon' => '🏪', 'color' => 'emerald', 'table' => 'platforms'],
+            'mercats' => ['label' => 'Mercats', 'icon' => '🌍', 'color' => 'teal', 'table' => 'markets'],
+            'publicacions' => ['label' => 'Publicacions', 'icon' => '📱', 'color' => 'cyan', 'table' => 'publications'],
+            'metadades' => ['label' => 'Metadades KDP', 'icon' => '🏷️', 'color' => 'violet', 'table' => 'kdp_metadata'],
+            'regalies' => ['label' => 'Regalies', 'icon' => '💰', 'color' => 'green', 'table' => 'royalties'],
+            'pagaments' => ['label' => 'Pagaments', 'icon' => '💵', 'color' => 'lime', 'table' => 'payments'],
+            'promocions' => ['label' => 'Promocions', 'icon' => '🎯', 'color' => 'rose', 'table' => 'promotions'],
+            'premis' => ['label' => 'Premis', 'icon' => '🏆', 'color' => 'amber', 'table' => 'awards'],
+            'events' => ['label' => 'Events', 'icon' => '🎪', 'color' => 'fuchsia', 'table' => 'events'],
+            'distribucio' => ['label' => 'Distribució física', 'icon' => '📦', 'color' => 'orange', 'table' => 'distribution_points'],
+            'stock' => ['label' => 'Stock', 'icon' => '📊', 'color' => 'sky', 'table' => 'stock_movements'],
+            'tasques' => ['label' => 'Tasques', 'icon' => '✅', 'color' => 'emerald', 'table' => 'tasks'],
+            'comentaris' => ['label' => 'Comentaris', 'icon' => '💬', 'color' => 'blue', 'table' => 'comments'],
+            'etiquetes' => ['label' => 'Etiquetes', 'icon' => '🏷️', 'color' => 'purple', 'table' => 'tags'],
+            'auditoria' => ['label' => 'Auditoria', 'icon' => '🔍', 'color' => 'slate', 'table' => 'audit_logs'],
+            'importacions' => ['label' => 'Importacions', 'icon' => '📂', 'color' => 'stone', 'table' => 'import_batches'],
+            'informes' => ['label' => 'Informes', 'icon' => '📊', 'color' => 'blue'],
+        ];
+
+        $dashboardData = [];
+        foreach ($sectionMap as $key => $config) {
+            $dashboardData[$key] = [
+                'label' => $config['label'],
+                'icon' => $config['icon'],
+                'color' => $config['color'] ?? 'slate',
+                'table' => $config['table'] ?? null,
+            ];
+
+            if (!empty($config['table']) && in_array($config['table'], $tables->toArray(), true)) {
+                $table = $config['table'];
+                $columns = $this->getColumns($table);
+                $primaryKey = $this->getPrimaryKey($table);
+                $rows = collect(DB::table($table)->limit(5)->get());
+                $count = DB::table($table)->count();
+
+                $formFields = [];
+                $fieldCount = 0;
+                foreach ($columns as $column) {
+                    if ($fieldCount >= 5) {
+                        break;
+                    }
+                    if (in_array($column->Field, ['id', 'created_at', 'updated_at', 'deleted_at'], true) || $column->Key === 'PRI') {
+                        continue;
+                    }
+
+                    $type = Str::lower($column->Type);
+                    $field = [
+                        'name' => $column->Field,
+                        'label' => ucwords(str_replace('_', ' ', $column->Field)),
+                        'type' => 'text',
+                    ];
+
+                    if (Str::contains($type, ['int', 'bigint', 'smallint', 'tinyint', 'mediumint', 'decimal', 'float', 'double', 'real', 'numeric'])) {
+                        $field['type'] = 'number';
+                    } elseif (Str::contains($type, ['date', 'time', 'datetime', 'timestamp'])) {
+                        $field['type'] = 'date';
+                    } elseif (Str::contains($type, ['text', 'mediumtext', 'longtext'])) {
+                        $field['type'] = 'textarea';
+                    } elseif (Str::contains($type, ['tinyint(1)', 'boolean', 'bit'])) {
+                        $field['type'] = 'select';
+                        $field['options'] = [0 => 'No', 1 => 'Sí'];
+                    }
+
+                    $formFields[] = $field;
+                    $fieldCount++;
+                }
+
+                $dashboardData[$key]['columns'] = $columns;
+                $dashboardData[$key]['rows'] = $rows;
+                $dashboardData[$key]['count'] = $count;
+                $dashboardData[$key]['formFields'] = $formFields;
+                $dashboardData[$key]['primaryKey'] = $primaryKey;
+            }
+        }
+
+        $summary = [
+            'Usuaris' => $dashboardData['usuaris']['count'] ?? 0,
+            'Obres' => $dashboardData['obres']['count'] ?? 0,
+            'Publicacions' => $dashboardData['publicacions']['count'] ?? 0,
+            'Regalies registrades' => $dashboardData['regalies']['count'] ?? 0,
+            'Promocions actives' => $dashboardData['promocions']['count'] ?? 0,
+        ];
+
         return view('admin.dashboard', [
-            'tables' => $tables,
+            'tablesData' => $dashboardData,
+            'summary' => $summary,
         ]);
     }
 
@@ -77,13 +173,12 @@ class AdminCrudController extends Controller
     {
         $this->ensureTableExists($table);
         $columns = $this->getColumns($table);
-        
-        // Minimal validation - only for basic type safety
+
         $data = $this->normalizeRequestData($request, $columns);
-        
+
         try {
             $id = DB::table($table)->insertGetId($data);
-            
+
             return redirect()->route('admin.table.edit', ['table' => $table, 'key' => $this->encodeKey(['id' => $id])])
                 ->with('success', "Registro creado en {$table}.");
         } catch (\Exception $e) {
@@ -116,12 +211,12 @@ class AdminCrudController extends Controller
         $this->ensureTableExists($table);
         $columns = $this->getColumns($table);
         $primary = $this->decodeKey($key);
-        
+
         $data = $this->normalizeRequestData($request, $columns);
-        
+
         try {
             DB::table($table)->where($primary)->update($data);
-            
+
             return redirect()->route('admin.table.edit', ['table' => $table, 'key' => $key])
                 ->with('success', "Registro actualizado en {$table}.");
         } catch (\Exception $e) {
@@ -138,7 +233,7 @@ class AdminCrudController extends Controller
 
         try {
             DB::table($table)->where($primary)->delete();
-            
+
             return redirect()->route('admin.table.index', ['table' => $table])
                 ->with('success', "Registro eliminado de {$table}.");
         } catch (\Exception $e) {
@@ -190,7 +285,7 @@ class AdminCrudController extends Controller
             return !empty($keys) ? $keys : ['id'];
         }
 
-        $keys = DB::select("SHOW KEYS FROM `{$table}` WHERE Key_name = 'PRIMARY'");
+        $keys = DB::select("SHOW Keys FROM `{$table}` WHERE Key_name = 'PRIMARY'");
         if (empty($keys)) {
             return ['id'];
         }
@@ -202,35 +297,26 @@ class AdminCrudController extends Controller
     {
         $data = [];
         foreach ($columns as $column) {
-            // Skip auto-increment and timestamp fields
             if (in_array($column->Field, ['id', 'created_at', 'updated_at', 'deleted_at'], true) || $column->Key === 'PRI') {
                 continue;
             }
-            
+
             $value = $request->input($column->Field);
-            
-            // Handle empty strings and null values
+
             if ($value === '' || $value === null) {
                 if ($column->Null === 'YES') {
                     $data[$column->Field] = null;
                 }
                 continue;
             }
-            
-            // Handle boolean fields
+
             if ($this->isBooleanColumn($column)) {
                 $data[$column->Field] = $request->has($column->Field) ? 1 : 0;
-            } 
-            // Handle numeric fields
-            elseif ($this->isNumericColumn($column)) {
+            } elseif ($this->isNumericColumn($column)) {
                 $data[$column->Field] = is_numeric($value) ? $value : (empty($value) ? null : $value);
-            }
-            // Handle date fields
-            elseif ($this->isDateColumn($column)) {
+            } elseif ($this->isDateColumn($column)) {
                 $data[$column->Field] = !empty($value) ? $value : null;
-            }
-            // Default: store as string
-            else {
+            } else {
                 $data[$column->Field] = (string) $value;
             }
         }

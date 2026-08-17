@@ -2,12 +2,8 @@
 
 namespace App\Providers;
 
-use App\Models\ActivityLog;
-use App\Models\ManuscriptVersion;
-use App\Models\Publication;
-use App\Models\Work;
-use App\Observers\ActivityLogObserver;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Gate;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -18,8 +14,13 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        Work::observe(ActivityLogObserver::class);
-        ManuscriptVersion::observe(ActivityLogObserver::class);
-        Publication::observe(ActivityLogObserver::class);
+        Gate::before(function ($user, string $ability): ?bool {
+            if ($user->hasRole('admin')) {
+                return true;
+            }
+
+            return $user->hasPermission($ability) ? true : null;
+        });
+
     }
 }

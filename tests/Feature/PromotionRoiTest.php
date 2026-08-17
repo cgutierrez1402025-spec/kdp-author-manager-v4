@@ -19,8 +19,28 @@ class PromotionRoiTest extends TestCase
     {
         $user = User::factory()->create();
         $work = \App\Models\Work::factory()->create(['user_id' => $user->id]);
+        $workLanguage = \App\Models\WorkLanguage::create([
+            'work_id' => $work->id,
+            'language_code' => $work->original_language,
+            'translation_status' => 'original',
+        ]);
+        $manuscript = \App\Models\ManuscriptVersion::create([
+            'work_id' => $work->id,
+            'work_language_id' => $workLanguage->id,
+            'version_number' => '1',
+            'status' => 'final',
+            'created_by' => $user->id,
+        ]);
+        $platform = \App\Models\Platform::factory()->create();
+        $marketplace = \App\Models\Marketplace::factory()->create([
+            'platform_id' => $platform->id,
+        ]);
         $publication = Publication::create([
             'work_id' => $work->id,
+            'work_language_id' => $workLanguage->id,
+            'manuscript_version_id' => $manuscript->id,
+            'platform_id' => $platform->id,
+            'marketplace_id' => $marketplace->id,
             'format' => 'ebook',
             'status' => 'published',
         ]);
@@ -48,6 +68,7 @@ class PromotionRoiTest extends TestCase
             'date' => now()->subDays(3)->toDateString(),
             'paid_units' => 50,
             'free_units_promo' => 100,
+            'gross_royalties' => 75.00,
             'net_royalties' => 75.00,
             'currency' => 'EUR',
         ]);
@@ -61,5 +82,20 @@ class PromotionRoiTest extends TestCase
         $this->assertEquals(50.00, $costs);
         $this->assertEquals(75.00, $revenue);
         $this->assertEquals(50.0, round($roi));
+        $this->assertSame(50.0, $promotion->fresh()->calculateROI());
+    }
+
+    public function test_roi_is_zero_when_there_are_no_costs(): void
+    {
+        $promotion = BookPromotion::factory()->create();
+
+        PromotionDailyResult::factory()->create([
+            'book_promotion_id' => $promotion->id,
+            'gross_royalties' => 25,
+            'net_royalties' => 20,
+        ]);
+
+        $this->assertSame(0.0, app(PromotionAnalyticsService::class)->calculateROI($promotion->id));
+        $this->assertSame(0.0, $promotion->calculateROI());
     }
 }

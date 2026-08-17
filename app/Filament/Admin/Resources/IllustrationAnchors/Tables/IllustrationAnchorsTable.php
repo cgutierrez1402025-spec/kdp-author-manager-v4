@@ -3,12 +3,11 @@
 namespace App\Filament\Admin\Resources\IllustrationAnchors\Tables;
 
 use App\Services\IllustrationAnchoringService;
-use Filament\Actions\Action;
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\EditAction;
+use Filament\Tables\Actions\Action;
+use Filament\Tables\Actions\BulkActionGroup;
+use Filament\Tables\Actions\DeleteBulkAction;
+use Filament\Tables\Actions\EditAction;
 use Filament\Notifications\Notification;
-use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
@@ -68,14 +67,14 @@ class IllustrationAnchorsTable
                         'chapter_end' => 'Final de Capítulo',
                     ]),
             ])
-            ->recordActions([
+            ->actions([
                 Action::make('apply')
                     ->label('Aplicar al Manuscrito')
-                    ->icon(Heroicon::OutlinedArrowUpTray)
+                    ->icon('heroicon-o-arrow-up-tray')
                     ->modalHeading('Aplicar Ilustración')
                     ->modalDescription('Se insertará la imagen en el manuscrito y se creará una nueva versión.')
                     ->modalWidth('3xl')
-                    ->modalContentUsing(function (IllustrationAnchor $record) {
+                    ->modalContent(function (IllustrationAnchor $record) {
                         $service = app(IllustrationAnchoringService::class);
                         $result = $service->previewInsertion($record);
 
@@ -107,7 +106,7 @@ class IllustrationAnchorsTable
 
                 EditAction::make(),
             ])
-            ->toolbarActions([
+            ->bulkActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
                 ]),

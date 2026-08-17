@@ -11,20 +11,9 @@ class RoyaltyEntry extends Model
     use HasFactory;
 
     protected $fillable = [
-        'publication_id',
-        'year',
-        'month',
-        'paid_units',
-        'free_units',
-        'kenp_pages',
-        'royalty_ebook',
-        'royalty_paperback',
-        'royalty_hardcover',
-        'royalty_kenp',
-        'total_royalty',
-        'currency',
-        'source_file',
-        'notes',
+        'publication_id', 'year', 'month', 'paid_units', 'free_units',
+        'kenp_pages', 'royalty_ebook', 'royalty_paperback', 'royalty_hardcover',
+        'royalty_kenp', 'total_royalty', 'currency', 'source_file', 'notes'
     ];
 
     protected $casts = [
@@ -43,5 +32,12 @@ class RoyaltyEntry extends Model
     public function publication(): BelongsTo
     {
         return $this->belongsTo(Publication::class);
+    }
+
+    public function getPeriodLabelAttribute(): string
+    {
+        $months = [1=>'Ene',2=>'Feb',3=>'Mar',4=>'Abr',5=>'May',6=>'Jun',
+                   7=>'Jul',8=>'Ago',9=>'Sep',10=>'Oct',11=>'Nov',12=>'Dic'];
+        return "{$months[$this->month]} {$this->year}";
     }
 }

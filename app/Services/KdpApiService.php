@@ -10,8 +10,11 @@ use Illuminate\Support\Facades\Log;
 class KdpApiService
 {
     protected ?string $accessKey;
+
     protected ?string $secretKey;
+
     protected ?string $partnerTag;
+
     protected string $endpoint = 'https://webservices.amazon.com/paapi5';
 
     public function __construct()
@@ -42,7 +45,7 @@ class KdpApiService
             'Authorization' => $this->generateAuthHeader(),
             'Content-Type' => 'application/json',
         ])
-            ->post($this->endpoint . '/getitems', [
+            ->post($this->endpoint.'/getitems', [
                 'ItemIds' => [$asin],
                 'Resources' => [
                     'ItemInfo.Title',
@@ -54,7 +57,7 @@ class KdpApiService
             ]);
 
         if ($response->failed()) {
-            throw new \RuntimeException('Failed to lookup ASIN: ' . $response->body());
+            throw new \RuntimeException('Failed to lookup ASIN: '.$response->body());
         }
 
         $data = $response->json();
@@ -85,7 +88,7 @@ class KdpApiService
             return [
                 'success' => true,
                 'title' => $title,
-                'price' => rand(2, 15) . '.99',
+                'price' => rand(2, 15).'.99',
                 'ranking' => rand(1000, 50000),
                 'raw' => [],
             ];
@@ -140,7 +143,7 @@ class KdpApiService
             'Authorization' => $this->generateAuthHeader(),
             'Content-Type' => 'application/json',
         ])
-            ->put($this->endpoint . '/metadata/' . $publication->asin, $payload);
+            ->put($this->endpoint.'/metadata/'.$publication->asin, $payload);
 
         if ($response->failed()) {
             return [
@@ -195,7 +198,7 @@ class KdpApiService
             'Authorization' => $this->generateAuthHeader(),
             'Content-Type' => 'application/json',
         ])
-            ->get($this->endpoint . '/reports/sales', [
+            ->get($this->endpoint.'/reports/sales', [
                 'StartDate' => $startDate,
                 'EndDate' => $endDate,
             ]);
@@ -222,12 +225,12 @@ class KdpApiService
                 'success' => true,
                 'data' => [
                     'total_sales' => rand(100, 1000),
-                    'total_revenue' => rand(200, 2000) . '.00',
-                    'royalties_estimate' => rand(100, 1500) . '.00',
+                    'total_revenue' => rand(200, 2000).'.00',
+                    'royalties_estimate' => rand(100, 1500).'.00',
                     'period_sales' => collect(range(1, 30))->map(fn ($day) => [
                         'date' => now()->subDays(30 - $day)->format('Y-m-d'),
                         'units' => rand(0, 50),
-                        'revenue' => rand(10, 100) . '.00',
+                        'revenue' => rand(10, 100).'.00',
                     ])->toArray(),
                 ],
             ];

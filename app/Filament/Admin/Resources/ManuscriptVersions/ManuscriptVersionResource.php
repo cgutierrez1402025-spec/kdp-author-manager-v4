@@ -13,14 +13,20 @@ use App\Models\ManuscriptVersion;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
+use Filament\Tables;
+use Illuminate\Database\Eloquent\Builder;
 
 class ManuscriptVersionResource extends Resource
 {
+    protected static ?string $slug = 'manuscript-versions';
+
     protected static ?string $model = ManuscriptVersion::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
 
     protected static ?string $navigationLabel = 'Versiones de Manuscrito';
+
+    protected static ?string $navigationGroup = 'Catálogo editorial';
 
     protected static ?string $modelLabel = 'Versión';
 
@@ -36,6 +42,15 @@ class ManuscriptVersionResource extends Resource
     public static function table(Table $table): Table
     {
         return ManuscriptVersionsTable::configure($table);
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        $query = parent::getEloquentQuery();
+
+        return auth()->user()?->hasRole('admin')
+            ? $query
+            : $query->whereHas('work', fn (Builder $workQuery) => $workQuery->where('user_id', auth()->id()));
     }
 
     public static function getRelations(): array

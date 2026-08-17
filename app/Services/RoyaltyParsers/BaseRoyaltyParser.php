@@ -2,12 +2,13 @@
 
 namespace App\Services\RoyaltyParsers;
 
-use Illuminate\Support\Collection;
+use Carbon\Carbon;
 use Illuminate\Support\Str;
 
 abstract class BaseRoyaltyParser
 {
     protected array $requiredColumns = [];
+
     protected string $dateFormat = 'Y-m-d';
 
     abstract public function getPlatformCode(): string;
@@ -29,19 +30,35 @@ abstract class BaseRoyaltyParser
 
         if ($missing->isNotEmpty()) {
             throw new \InvalidArgumentException(
-                "Missing required columns: " . $missing->join(', ')
+                'Missing required columns: '.$missing->join(', ')
             );
         }
     }
 
     protected function parseDate(string $date): string
     {
-        return \Carbon\Carbon::parse($date)->format($this->dateFormat);
+        return Carbon::parse($date)->format($this->dateFormat);
     }
 
     protected function parseDecimal(string $value): float
     {
-        return (float) Str::of($value)->replaceMatches('/[^0-9.\-]/', '')->toString();
+        $number = Str::of($value)
+            ->replaceMatches('/[^0-9,.\-]/', '')
+            ->toString();
+
+        $comma = strrpos($number, ',');
+        $dot = strrpos($number, '.');
+
+        if ($comma !== false && $dot !== false) {
+            $decimalSeparator = $comma > $dot ? ',' : '.';
+            $thousandsSeparator = $decimalSeparator === ',' ? '.' : ',';
+            $number = str_replace($thousandsSeparator, '', $number);
+            $number = str_replace($decimalSeparator, '.', $number);
+        } elseif ($comma !== false) {
+            $number = str_replace(',', '.', $number);
+        }
+
+        return (float) $number;
     }
 
     protected function parseInteger(string $value): int

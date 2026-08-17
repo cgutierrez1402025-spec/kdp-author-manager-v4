@@ -11,14 +11,22 @@ use App\Models\Work;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
+use Filament\Tables;
+use Illuminate\Database\Eloquent\Builder;
 
 class WorkResource extends Resource
 {
+    protected static ?string $slug = 'works';
+
     protected static ?string $model = Work::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
 
     protected static ?string $recordTitleAttribute = 'title_public';
+
+    protected static ?string $navigationLabel = 'Obras';
+
+    protected static ?string $navigationGroup = 'Catálogo editorial';
 
     public static function form(Form $form): Form
     {
@@ -28,6 +36,15 @@ class WorkResource extends Resource
     public static function table(Table $table): Table
     {
         return WorksTable::configure($table);
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        $query = parent::getEloquentQuery();
+
+        return auth()->user()?->hasRole('admin')
+            ? $query
+            : $query->where('user_id', auth()->id());
     }
 
     public static function getRelations(): array

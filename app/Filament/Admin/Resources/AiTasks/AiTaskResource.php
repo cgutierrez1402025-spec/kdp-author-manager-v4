@@ -11,9 +11,12 @@ use Filament\Resources\Resource;
 use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Filament\Tables;
 
 class AiTaskResource extends Resource
 {
+    protected static ?string $slug = 'ai-tasks';
+
     protected static ?string $model = AiTask::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-queue-list';
@@ -24,7 +27,7 @@ class AiTaskResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'task_type';
 
-    protected static ?string $navigationGroup = 'AI Tasks';
+    protected static ?string $navigationGroup = 'Inteligencia artificial';
 
     public static function form(Form $form): Form
     {

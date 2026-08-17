@@ -2,28 +2,49 @@
 
 namespace App\Services;
 
-use App\Models\AiTool;
 use App\Models\Prompt;
 use App\Models\Work;
+use Illuminate\Support\Facades\Http;
 
 class AiService
 {
-    protected string $apiKey;
+    protected ?string $apiKey;
 
-    protected string $defaultModel = 'gpt-4';
+    protected string $defaultModel;
 
     public function __construct()
     {
         $this->apiKey = config('services.openai.key');
+        $this->defaultModel = config('services.openai.model', 'gpt-4o-mini');
     }
 
-    public function generateContent(string $prompt, string $model = 'gpt-4'): array
+    public function generateContent(string $prompt, ?string $model = null): array
     {
-        return [
-            'success' => true,
-            'result' => 'Generated content placeholder',
-            'error' => null,
-        ];
+        if (! $this->apiKey) {
+            return ['success' => false, 'result' => null, 'error' => 'OPENAI_API_KEY is not configured.'];
+        }
+
+        try {
+            $response = Http::withToken($this->apiKey)
+                ->acceptJson()
+                ->timeout(60)
+                ->retry(2, 250)
+                ->post('https://api.openai.com/v1/chat/completions', [
+                    'model' => $model ?: $this->defaultModel,
+                    'messages' => [['role' => 'user', 'content' => $prompt]],
+                ]);
+
+            $response->throw();
+
+            $result = $response->json('choices.0.message.content');
+            if (! is_string($result) || trim($result) === '') {
+                throw new \RuntimeException('The AI provider returned an empty response.');
+            }
+
+            return ['success' => true, 'result' => $result, 'error' => null];
+        } catch (\Throwable $exception) {
+            return ['success' => false, 'result' => null, 'error' => $exception->getMessage()];
+        }
     }
 
     public function suggestTags(string $workTitle, string $description): array

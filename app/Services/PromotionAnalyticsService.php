@@ -23,7 +23,7 @@ class PromotionAnalyticsService
         $revenue = $this->calculateTotalRevenue($promotionId);
 
         if ($costs == 0) {
-            return $revenue > 0 ? 100 : 0;
+            return 0;
         }
 
         $profit = $revenue - $costs;
@@ -45,7 +45,7 @@ class PromotionAnalyticsService
             ->get()
             ->map(fn ($result) => [
                 'date' => $result->date->format('Y-m-d'),
-                'units' => $result->paid_units + $result->free_units_promo,
+                'units' => $result->paid_units + $result->free_units_promo + $result->free_units_price_match,
                 'kenp_pages' => $result->kenp_pages_read,
                 'royalties' => (float) $result->net_royalties,
             ])
@@ -69,7 +69,9 @@ class PromotionAnalyticsService
             'total_cost' => $this->calculateTotalCost($promotionId),
             'total_revenue' => $this->calculateTotalRevenue($promotionId),
             'roi_percentage' => $this->calculateROI($promotionId),
-            'total_units' => $promotion->dailyResults->sum('paid_units') + $promotion->dailyResults->sum('free_units_promo'),
+            'total_units' => $promotion->dailyResults->sum('paid_units')
+                + $promotion->dailyResults->sum('free_units_promo')
+                + $promotion->dailyResults->sum('free_units_price_match'),
             'total_kenp_pages' => $promotion->dailyResults->sum('kenp_pages_read'),
             'daily_performance' => $this->getDailyPerformance($promotionId),
         ];

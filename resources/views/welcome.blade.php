@@ -47,7 +47,7 @@
 
                 <!-- CTA Button -->
                 <div class="flex flex-col sm:flex-row gap-4 justify-center pt-6">
-                    <a href="{{ route('admin.dashboard') }}" class="inline-flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 dark:from-blue-600 dark:to-blue-700 dark:hover:from-blue-700 dark:hover:to-blue-800 text-white font-bold rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95 transition-all duration-200">
+                    <a href="{{ url('admin') }}" class="inline-flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 dark:from-blue-600 dark:to-blue-700 dark:hover:from-blue-700 dark:hover:to-blue-800 text-white font-bold rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95 transition-all duration-200">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
                         </svg>
@@ -211,7 +211,7 @@
                     Accede al panel administrativo completo con todas las herramientas necesarias para gestionar tus obras, publicaciones y regalías en un solo lugar
                 </p>
             </div>
-            <a href="{{ route('admin.dashboard') }}" class="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white hover:bg-slate-50 text-blue-600 font-bold rounded-lg transition-all duration-200 shadow-xl hover:shadow-2xl transform hover:scale-105 active:scale-95">
+            <a href="{{ url('admin') }}" class="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white hover:bg-slate-50 text-blue-600 font-bold rounded-lg transition-all duration-200 shadow-xl hover:shadow-2xl transform hover:scale-105 active:scale-95">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
                 </svg>

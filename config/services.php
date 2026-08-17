@@ -35,4 +35,20 @@ return [
         ],
     ],
 
+    'openai' => [
+        'key' => env('OPENAI_API_KEY'),
+        'model' => env('OPENAI_MODEL', 'gpt-4o-mini'),
+    ],
+
+    'anthropic' => ['key' => env('ANTHROPIC_API_KEY')],
+    'google' => ['key' => env('GOOGLE_AI_API_KEY')],
+    'cohere' => ['key' => env('COHERE_API_KEY')],
+
+    'amazon_paapi' => [
+        'access_key' => env('AMAZON_PAAPI_ACCESS_KEY'),
+        'secret_key' => env('AMAZON_PAAPI_SECRET_KEY'),
+        'partner_tag' => env('AMAZON_PAAPI_PARTNER_TAG'),
+        'region' => env('AMAZON_PAAPI_REGION', 'eu-west-1'),
+    ],
+
 ];

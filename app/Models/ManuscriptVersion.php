@@ -7,10 +7,18 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class ManuscriptVersion extends Model
 {
-    use HasFactory;
+    use HasFactory, LogsActivity;
+
+    protected $attributes = [
+        'is_candidate' => false,
+        'is_final' => false,
+        'is_published' => false,
+    ];
 
     protected $fillable = [
         'work_id',
@@ -40,6 +48,14 @@ class ManuscriptVersion extends Model
         'is_published' => 'boolean',
         'published_at' => 'timestamp',
     ];
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly(['status', 'version_number', 'is_final', 'is_published'])
+            ->logOnlyDirty()
+            ->dontSubmitEmptyLogs();
+    }
 
     protected static function boot(): void
     {

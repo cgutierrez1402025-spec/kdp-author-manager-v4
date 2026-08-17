@@ -10,8 +10,8 @@
         document.documentElement.classList.toggle('dark', localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches));
     </script>
 </head>
-<body class="bg-slate-50 dark:bg-slate-950">
-    <div class="flex h-screen bg-white dark:bg-slate-900">
+<body class="bg-slate-50">
+    <div class="flex h-screen bg-white">
         <!-- Sidebar -->
         <aside id="sidebar" class="w-64 bg-slate-900 text-white flex flex-col fixed left-0 top-0 h-full shadow-lg transform -translate-x-full lg:translate-x-0 transition-transform duration-300 z-40">
             <!-- Logo/Brand -->
@@ -107,10 +107,10 @@
         <!-- Main Content -->
         <div class="flex-1 flex flex-col lg:ml-64 w-full lg:w-auto">
             <!-- Top Header -->
-            <header class="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 sticky top-0 z-30">
+            <header class="bg-white border-b border-slate-200 sticky top-0 z-30">
                 <div class="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4">
                     <!-- Mobile Menu Toggle -->
-                    <button id="menu-toggle" class="lg:hidden inline-flex items-center justify-center p-2 rounded-md text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 focus:outline-none">
+                    <button id="menu-toggle" class="lg:hidden inline-flex items-center justify-center p-2 rounded-md text-slate-600 hover:bg-slate-100 focus:outline-none">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
                         </svg>
@@ -118,17 +118,17 @@
 
                     <!-- Header Title/Breadcrumb Area -->
                     <div class="flex-1 ml-4 lg:ml-0">
-                        <h2 class="text-2xl font-bold text-slate-900 dark:text-white">{{ $pageTitle ?? 'Panel Administrativo' }}</h2>
+                        <h2 class="text-2xl font-bold text-slate-900">{{ $pageTitle ?? 'Panel Administrativo' }}</h2>
                     </div>
 
                     <!-- Right Actions -->
                     <div class="flex items-center gap-4">
-                        <button class="p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
+                        <button class="p-2 rounded-lg text-slate-600 hover:bg-slate-100 transition-colors">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
                         </button>
-                        <div class="h-8 w-px bg-slate-200 dark:bg-slate-700"></div>
+                        <div class="h-8 w-px bg-slate-200"></div>
                         <div class="relative group">
-                            <button class="flex items-center gap-2 text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white transition-colors">
+                            <button class="flex items-center gap-2 text-slate-700 hover:text-slate-900 transition-colors">
                                 <img src="https://ui-avatars.com/api/?name=Admin+User" alt="Profile" class="w-8 h-8 rounded-full">
                             </button>
                         </div>
@@ -137,14 +137,14 @@
 
                 <!-- Breadcrumb -->
                 @if(isset($breadcrumbs) && count($breadcrumbs) > 0)
-                <div class="px-4 sm:px-6 py-2 bg-slate-50 dark:bg-slate-900/50 border-t border-slate-200 dark:border-slate-700">
+                <div class="px-4 sm:px-6 py-2 bg-slate-50 border-t border-slate-200">
                     <nav class="flex items-center space-x-2 text-sm">
                         @foreach($breadcrumbs as $index => $crumb)
                             @if($index < count($breadcrumbs) - 1)
-                                <a href="{{ $crumb['url'] }}" class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300">{{ $crumb['label'] }}</a>
-                                <span class="text-slate-400 dark:text-slate-600">/</span>
+                                <a href="{{ $crumb['url'] }}" class="text-blue-600 hover:text-blue-800">{{ $crumb['label'] }}</a>
+                                <span class="text-slate-400">/</span>
                             @else
-                                <span class="text-slate-600 dark:text-slate-400">{{ $crumb['label'] }}</span>
+                                <span class="text-slate-600">{{ $crumb['label'] }}</span>
                             @endif
                         @endforeach
                     </nav>
@@ -155,38 +155,38 @@
             <!-- Alerts -->
             <div class="px-4 sm:px-6 py-4 space-y-3">
                 @if(session('success'))
-                    <div class="flex items-start gap-4 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg animate-in fade-in slide-in-from-top">
+                    <div class="flex items-start gap-4 p-4 bg-green-50 border border-green-200 rounded-lg animate-in fade-in slide-in-from-top">
                         <div class="flex-shrink-0">
-                            <svg class="w-6 h-6 text-green-600 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                            <svg class="w-6 h-6 text-green-600" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
                             </svg>
                         </div>
                         <div class="flex-1">
-                            <h3 class="font-semibold text-green-800 dark:text-green-200">¡Éxito!</h3>
-                            <p class="text-sm text-green-700 dark:text-green-300 mt-1">{{ session('success') }}</p>
+                            <h3 class="font-semibold text-green-800">¡Éxito!</h3>
+                            <p class="text-sm text-green-700 mt-1">{{ session('success') }}</p>
                         </div>
-                        <button onclick="this.closest('.animate-in').remove()" class="flex-shrink-0 text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-300">
+                        <button onclick="this.closest('.animate-in').remove()" class="flex-shrink-0 text-green-600 hover:text-green-800">
                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
                         </button>
                     </div>
                 @endif
 
                 @if($errors->any())
-                    <div class="flex items-start gap-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg animate-in fade-in slide-in-from-top">
+                    <div class="flex items-start gap-4 p-4 bg-red-50 border border-red-200 rounded-lg animate-in fade-in slide-in-from-top">
                         <div class="flex-shrink-0">
-                            <svg class="w-6 h-6 text-red-600 dark:text-red-400" fill="currentColor" viewBox="0 0 20 20">
+                            <svg class="w-6 h-6 text-red-600" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
                             </svg>
                         </div>
                         <div class="flex-1">
-                            <h3 class="font-semibold text-red-800 dark:text-red-200">¡Error!</h3>
-                            <ul class="text-sm text-red-700 dark:text-red-300 mt-2 space-y-1">
+                            <h3 class="font-semibold text-red-800">¡Error!</h3>
+                            <ul class="text-sm text-red-700 mt-2 space-y-1">
                                 @foreach($errors->all() as $error)
                                     <li>{{ $error }}</li>
                                 @endforeach
                             </ul>
                         </div>
-                        <button onclick="this.closest('.animate-in').remove()" class="flex-shrink-0 text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300">
+                        <button onclick="this.closest('.animate-in').remove()" class="flex-shrink-0 text-red-600 hover:text-red-800">
                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
                         </button>
                     </div>
@@ -196,7 +196,7 @@
             <!-- Main Content Area -->
             <main class="flex-1 overflow-auto">
                 <div class="px-4 sm:px-6 py-6">
-                    <div class="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-slate-200 dark:border-slate-700">
+                    <div class="bg-white rounded-lg shadow-sm border border-slate-200">
                         <div class="p-6">
                             {{ $slot }}
                         </div>

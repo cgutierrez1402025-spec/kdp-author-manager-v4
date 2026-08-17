@@ -11,9 +11,16 @@ use App\Models\Source;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
+use Filament\Tables;
 
 class SourceResource extends Resource
 {
+    protected static ?string $slug = 'sources';
+
+    protected static ?string $navigationLabel = 'Fuentes';
+
+    protected static ?string $navigationGroup = 'Documentación';
+
     protected static ?string $model = Source::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-document-text';

@@ -11,9 +11,12 @@ use App\Models\EventBook;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
+use Filament\Tables;
 
 class EventBookResource extends Resource
 {
+    protected static ?string $slug = 'event-books';
+
     protected static ?string $model = EventBook::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-document-text';

@@ -11,9 +11,12 @@ use App\Models\Platform;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
+use Filament\Tables;
 
 class PlatformResource extends Resource
 {
+    protected static ?string $slug = 'platforms';
+
     protected static ?string $model = Platform::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
@@ -21,6 +24,8 @@ class PlatformResource extends Resource
     protected static ?string $recordTitleAttribute = 'name';
 
     protected static ?string $navigationGroup = 'Publicaciones';
+
+    protected static ?string $navigationLabel = 'Plataformas';
 
     public static function form(Form $form): Form
     {

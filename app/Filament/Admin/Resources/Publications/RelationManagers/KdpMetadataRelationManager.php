@@ -2,8 +2,8 @@
 
 namespace App\Filament\Admin\Resources\Publications\RelationManagers;
 
-use Filament\Actions\CreateAction;
-use Filament\Actions\EditAction;
+use Filament\Tables\Actions\CreateAction;
+use Filament\Tables\Actions\EditAction;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
@@ -83,10 +83,10 @@ class KdpMetadataRelationManager extends RelationManager
                 TextColumn::make('series_name')
                     ->label('Serie'),
             ])
-            ->recordActions([
+            ->actions([
                 EditAction::make(),
             ])
-            ->toolbarActions([
+            ->bulkActions([
                 CreateAction::make()
                     ->slideOver(),
             ]);

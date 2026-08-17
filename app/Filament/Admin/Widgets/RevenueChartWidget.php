@@ -15,7 +15,7 @@ class RevenueChartWidget extends Widget
     public function getChartData(): array
     {
         return Cache::remember('dashboard_revenue_chart', 3600, function () {
-            $months = collect(range(1, 6))->map(fn ($i) => now()->subMonths($i)->startOfMonth());
+            $months = collect(range(5, 0))->map(fn ($i) => now()->subMonths($i)->startOfMonth());
 
             $entries = RoyaltyEntry::selectRaw('year, month, SUM(total_royalty) as total')
                 ->where(function ($query) {
@@ -35,9 +35,9 @@ class RevenueChartWidget extends Widget
             $data = [];
 
             foreach ($months as $date) {
-                $key = $date->format('Y-m');
-                $labels[] = $date->format('M Y');
-                $data[] = $entries->get($key)?->total ?? 0;
+                $key = $date->format('Y-n');
+                $labels[] = ucfirst($date->locale('es')->translatedFormat('M Y'));
+                $data[] = (float) ($entries->get($key)?->total ?? 0);
             }
 
             return [

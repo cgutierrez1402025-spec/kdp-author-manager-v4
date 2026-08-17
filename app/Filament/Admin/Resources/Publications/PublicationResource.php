@@ -11,9 +11,13 @@ use App\Models\Publication;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
+use Filament\Tables;
+use Illuminate\Database\Eloquent\Builder;
 
 class PublicationResource extends Resource
 {
+    protected static ?string $slug = 'publications';
+
     protected static ?string $model = Publication::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
@@ -21,6 +25,8 @@ class PublicationResource extends Resource
     protected static ?string $recordTitleAttribute = 'format';
 
     protected static ?string $navigationGroup = 'Publicaciones';
+
+    protected static ?string $navigationLabel = 'Ediciones publicadas';
 
     public static function form(Form $form): Form
     {
@@ -30,6 +36,15 @@ class PublicationResource extends Resource
     public static function table(Table $table): Table
     {
         return PublicationsTable::configure($table);
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        $query = parent::getEloquentQuery();
+
+        return auth()->user()?->hasRole('admin')
+            ? $query
+            : $query->whereHas('work', fn (Builder $workQuery) => $workQuery->where('user_id', auth()->id()));
     }
 
     public static function getRelations(): array

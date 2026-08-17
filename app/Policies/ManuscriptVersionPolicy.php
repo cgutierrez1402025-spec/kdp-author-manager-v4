@@ -9,26 +9,26 @@ class ManuscriptVersionPolicy
 {
     public function viewAny(User $user): bool
     {
-        return $user->can('view_works');
+        return $user->hasAnyRole(['admin', 'author', 'editor']);
     }
 
     public function view(User $user, ManuscriptVersion $manuscriptVersion): bool
     {
-        return $user->id === $manuscriptVersion->created_by || $user->can('view_works');
+        return $user->id === $manuscriptVersion->work->user_id || $user->hasAnyRole(['admin', 'editor']);
     }
 
     public function create(User $user): bool
     {
-        return $user->can('create_works');
+        return $user->hasAnyRole(['admin', 'author']);
     }
 
     public function update(User $user, ManuscriptVersion $manuscriptVersion): bool
     {
-        return $user->id === $manuscriptVersion->created_by || $user->can('edit_works');
+        return $user->id === $manuscriptVersion->work->user_id || $user->hasAnyRole(['admin', 'editor']);
     }
 
     public function delete(User $user, ManuscriptVersion $manuscriptVersion): bool
     {
-        return $user->can('delete_works');
+        return $user->id === $manuscriptVersion->work->user_id || $user->hasRole('admin');
     }
 }

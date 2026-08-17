@@ -46,12 +46,7 @@ class BookEvent extends Model
 
     public function eventBooks(): HasMany
     {
-        return $this->hasMany(EventBook::class);
-    }
-
-    public function distributionVisits(): HasMany
-    {
-        return $this->hasMany(DistributionVisit::class);
+        return $this->hasMany(EventBook::class, 'event_id');
     }
 
     public function scopeUpcoming($query, int $days = 30)

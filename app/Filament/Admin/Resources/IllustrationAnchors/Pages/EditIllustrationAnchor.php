@@ -7,7 +7,6 @@ use App\Services\IllustrationAnchoringService;
 use Filament\Actions\Action;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
-use Filament\Support\Icons\Heroicon;
 
 class EditIllustrationAnchor extends EditRecord
 {
@@ -18,11 +17,11 @@ class EditIllustrationAnchor extends EditRecord
         return [
             Action::make('apply')
                 ->label('Aplicar al Manuscrito')
-                ->icon(Heroicon::OutlinedArrowUpTray)
+                ->icon('heroicon-o-arrow-up-tray')
                 ->modalHeading('Aplicar Ilustración')
                 ->modalDescription('Se insertará la imagen en el manuscrito y se creará una nueva versión.')
                 ->modalWidth('3xl')
-                ->modalContentUsing(function () {
+                ->modalContent(function () {
                     $service = app(IllustrationAnchoringService::class);
                     $result = $service->previewInsertion($this->record);
 

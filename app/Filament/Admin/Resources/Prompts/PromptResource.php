@@ -11,14 +11,19 @@ use App\Models\Prompt;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables\Table;
+use Filament\Tables;
 
 class PromptResource extends Resource
 {
+    protected static ?string $slug = 'prompts';
+
     protected static ?string $model = Prompt::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
 
     protected static ?string $navigationLabel = 'Prompts';
+
+    protected static ?string $navigationGroup = 'Inteligencia artificial';
 
     protected static ?string $recordTitleAttribute = 'title';
 

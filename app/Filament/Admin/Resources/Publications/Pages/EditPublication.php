@@ -7,18 +7,23 @@ use App\Services\KdpApiService;
 use Filament\Actions\Action;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
-use Filament\Support\Icons\Heroicon;
+use App\Services\EditorialIntegrityService;
 
 class EditPublication extends EditRecord
 {
     protected static string $resource = PublicationResource::class;
+
+    protected function mutateFormDataBeforeSave(array $data): array
+    {
+        return app(EditorialIntegrityService::class)->validatePublication($data, auth()->user());
+    }
 
     protected function getHeaderActions(): array
     {
         return [
             Action::make('sync_with_kdp')
                 ->label('Sincronizar con KDP')
-                ->icon(Heroicon::OutlinedArrowPath)
+                ->icon('heroicon-o-arrow-path')
                 ->visible(fn () => $this->record->asin !== null)
                 ->action(function (KdpApiService $service) {
                     $result = $service->syncPublication($this->record);
@@ -42,7 +47,7 @@ class EditPublication extends EditRecord
 
             Action::make('push_metadata')
                 ->label('Enviar Metadatos a KDP')
-                ->icon(Heroicon::OutlinedArrowUpTray)
+                ->icon('heroicon-o-arrow-up-tray')
                 ->visible(fn () => $this->record->asin !== null)
                 ->requiresConfirmation()
                 ->modalHeading('Confirmar envío de metadatos')

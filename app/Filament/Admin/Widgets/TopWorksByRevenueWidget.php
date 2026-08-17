@@ -2,10 +2,8 @@
 
 namespace App\Filament\Admin\Widgets;
 
-use App\Models\RoyaltyEntry;
-use App\Models\Work;
 use Filament\Widgets\Widget;
-use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 class TopWorksByRevenueWidget extends Widget
 {
@@ -15,23 +13,23 @@ class TopWorksByRevenueWidget extends Widget
 
     public function getWorks(): array
     {
-        return Cache::remember('dashboard_top_works', 3600, function () {
-            $entries = RoyaltyEntry::selectRaw('publication_id, SUM(total_royalty) as total_revenue')
-                ->whereHas('publication.work')
-                ->groupBy('publication_id')
-                ->orderByDesc('total_revenue')
-                ->limit(10)
-                ->get();
+        $query = DB::table('royalty_entries')
+            ->join('publications', 'publications.id', '=', 'royalty_entries.publication_id')
+            ->join('works', 'works.id', '=', 'publications.work_id')
+            ->selectRaw('works.id, works.title_public, SUM(royalty_entries.total_royalty) AS total_revenue')
+            ->groupBy('works.id', 'works.title_public')
+            ->orderByDesc('total_revenue')
+            ->limit(10);
 
-            $works = Work::whereIn('id', $entries->pluck('publication.work_id'))
-                ->with('publications')
-                ->get()
-                ->keyBy('id');
+        if (! auth()->user()?->hasRole('admin')) {
+            $query->where('works.user_id', auth()->id());
+        }
 
-            return $entries->map(fn ($entry) => [
-                'title' => $works->get($entry->publication->work_id)?->title_public ?? 'N/A',
-                'revenue' => $entry->total_revenue,
-            ])->values()->all();
-        });
+        return $query->get()
+            ->map(fn ($work) => [
+                'title' => $work->title_public,
+                'revenue' => (float) $work->total_revenue,
+            ])
+            ->all();
     }
 }

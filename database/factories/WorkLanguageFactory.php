@@ -30,7 +30,7 @@ class WorkLanguageFactory extends Factory
             'language_code' => $this->faker->randomElement(['en', 'es', 'fr', 'de', 'it', 'pt', 'ja', 'zh', 'ru', 'ar']),
             'translation_status' => $this->faker->randomElement(['original', 'translation', 'in_progress', 'proofread', 'final']),
             'translator_name' => $this->faker->name(),
-            'translation_notes' => $this->faker->sentence(),
+            'notes' => $this->faker->sentence(),
         ];
     }
 

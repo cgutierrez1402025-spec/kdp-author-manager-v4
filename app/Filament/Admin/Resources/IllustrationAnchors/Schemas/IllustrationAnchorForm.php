@@ -14,17 +14,32 @@ class IllustrationAnchorForm
                 Forms\Components\Section::make('Información del Anclaje')
                     ->schema([
                         Forms\Components\Select::make('illustration_id')
-                            ->relationship('illustration', 'title')
+                            ->relationship('illustration', 'title', modifyQueryUsing: fn ($query) =>
+                                auth()->user()?->hasRole('admin') ? $query : $query->whereHas('work', fn ($work) => $work->where('user_id', auth()->id()))
+                            )
+                            ->live()
+                            ->afterStateUpdated(function ($set): void {
+                                $set('manuscript_version_id', null);
+                                $set('chapter_id', null);
+                            })
                             ->label('Ilustración')
                             ->required(),
 
                         Forms\Components\Select::make('manuscript_version_id')
-                            ->relationship('manuscriptVersion', 'name')
+                            ->relationship('manuscriptVersion', 'name', modifyQueryUsing: function ($query, $get) {
+                                $workId = $get('illustration_id') ? \App\Models\Illustration::find($get('illustration_id'))?->work_id : null;
+                                return $query->when($workId, fn ($q) => $q->where('work_id', $workId));
+                            })
+                            ->getOptionLabelFromRecordUsing(fn ($record): string => $record->name ?? "Versión {$record->version_number}")
+                            ->live()
+                            ->afterStateUpdated(fn ($set) => $set('chapter_id', null))
                             ->label('Versión Manuscrito')
                             ->required(),
 
                         Forms\Components\Select::make('chapter_id')
-                            ->relationship('chapter', 'title')
+                            ->relationship('chapter', 'title', modifyQueryUsing: fn ($query, $get) =>
+                                $query->when($get('manuscript_version_id'), fn ($q, $versionId) => $q->where('manuscript_version_id', $versionId))
+                            )
                             ->label('Capítulo')
                             ->nullable(),
 

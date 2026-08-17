@@ -2,10 +2,9 @@
 
 namespace App\Filament\Admin\Resources\Checklists\Tables;
 
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\EditAction;
-use Filament\Tables\Columns\ProgressBarColumn;
+use Filament\Tables\Actions\BulkActionGroup;
+use Filament\Tables\Actions\DeleteBulkAction;
+use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -24,8 +23,9 @@ class ChecklistsTable
                     ->searchable()
                     ->sortable(),
 
-                ProgressBarColumn::make('progress_percentage')
-                    ->label('Progreso'),
+                TextColumn::make('progress_percentage')
+                    ->label('Progreso')
+                    ->suffix('%'),
 
                 TextColumn::make('items_count')
                     ->label('Items')
@@ -36,10 +36,10 @@ class ChecklistsTable
                     ->dateTime()
                     ->sortable(),
             ])
-            ->recordActions([
+            ->actions([
                 EditAction::make(),
             ])
-            ->toolbarActions([
+            ->bulkActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
                 ]),

@@ -36,7 +36,6 @@ class WorkFactory extends Factory
             'series_id' => null, // Can be overridden with state
             'genre' => $this->faker->randomElement(['Fiction', 'Non-Fiction', 'Mystery', 'Romance', 'Sci-Fi', 'Fantasy', 'Thriller', 'Biography', 'History', 'Self-Help']),
             'target_audience' => $this->faker->randomElement(['Adult', 'Young Adult', 'Middle Grade', 'Children']),
-            'word_count_goal' => $this->faker->numberBetween(50000, 150000),
             'description_marketing' => $this->faker->paragraph(3),
             'notes' => $this->faker->sentence(),
         ];
@@ -72,13 +71,4 @@ class WorkFactory extends Factory
         ]);
     }
 
-    /**
-     * Indicate that the work has a specific word count.
-     */
-    public function withWordCount(int $count): static
-    {
-        return $this->state(fn (array $attributes) => [
-            'word_count_goal' => $count,
-        ]);
-    }
 }

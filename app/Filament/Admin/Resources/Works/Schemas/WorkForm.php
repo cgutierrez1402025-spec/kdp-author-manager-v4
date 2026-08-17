@@ -13,13 +13,17 @@ class WorkForm
             ->schema([
                 Forms\Components\Section::make('Información Básica')
                     ->schema([
-                        Forms\Components\Select::make('user_id')
-                            ->relationship('user', 'name')
-                            ->label('Usuario')
-                            ->required(),
+                        Forms\Components\Hidden::make('user_id')
+                            ->default(fn () => auth()->id()),
 
                         Forms\Components\Select::make('series_id')
-                            ->relationship('series', 'title')
+                            ->relationship(
+                                'series',
+                                'title',
+                                modifyQueryUsing: fn ($query) => auth()->user()?->hasRole('admin')
+                                    ? $query
+                                    : $query->where('user_id', auth()->id()),
+                            )
                             ->label('Serie')
                             ->nullable(),
 
@@ -84,9 +88,18 @@ class WorkForm
                             ->label('Tipo de Obra')
                             ->maxLength(100),
 
-                        Forms\Components\TextInput::make('original_language')
+                        Forms\Components\Select::make('original_language')
                             ->label('Idioma Original')
-                            ->maxLength(2)
+                            ->options([
+                                'es' => 'Español',
+                                'en' => 'Inglés',
+                                'ca' => 'Valenciano / Catalán',
+                                'fr' => 'Francés',
+                                'de' => 'Alemán',
+                                'it' => 'Italiano',
+                                'pt' => 'Portugués',
+                            ])
+                            ->searchable()
                             ->required(),
 
                         Forms\Components\Select::make('status')

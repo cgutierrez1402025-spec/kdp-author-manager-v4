@@ -4,6 +4,7 @@ namespace App\Filament\Admin\Resources\Publications\Pages;
 
 use App\Filament\Admin\Resources\Publications\PublicationResource;
 use Filament\Resources\Pages\CreateRecord;
+use App\Services\EditorialIntegrityService;
 
 class CreatePublication extends CreateRecord
 {
@@ -14,15 +15,20 @@ class CreatePublication extends CreateRecord
         $kdpMetadata = $data['kdpMetadata'] ?? [];
         unset($data['kdpMetadata']);
 
-        return $data;
+        return app(EditorialIntegrityService::class)->validatePublication($data, auth()->user());
     }
 
     protected function afterCreate(): void
     {
         $data = $this->form->getRawState();
+        $metadata = array_filter(
+            $data['kdpMetadata'] ?? [],
+            static fn ($value): bool => $value !== null && $value !== '',
+        );
 
-        if (! empty($data['kdpMetadata'])) {
-            $this->record->kdpMetadata()->create($data['kdpMetadata']);
+        if ($metadata !== []) {
+            $metadata['title'] ??= $this->record->work->title_public;
+            $this->record->kdpMetadata()->create($metadata);
         }
     }
 }
